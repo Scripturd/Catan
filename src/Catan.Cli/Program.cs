@@ -1,18 +1,13 @@
-using Catan.Application.Features.Dice;
-using Catan.Application.Features.Turn;
-using Catan.Application.Ports;
-using Catan.Cli.Adapters;
+using Catan.Domain.Board;
 
-// Composition root: build the adapters, inject them into the use cases, run a turn.
-// This is the ONLY place that knows about concrete implementations.
-IRandom random = new SystemRandom();
-IRollDice rollDice = new RollDice(random);
-IStartTurn startTurn = new StartTurn(rollDice);
+// The CLI is the console runner. For now it just proves the app builds and can reach
+// the domain. The real game loop grows here.
+Console.WriteLine("Catan (pure .NET) — terrain -> resource");
+Console.WriteLine();
 
-var turn = startTurn.Execute(new StartTurnCommand());
-
-Console.WriteLine("Catan (pure .NET) — start of turn");
-Console.WriteLine($"  Rolled {turn.Roll.First} + {turn.Roll.Second} = {turn.Roll.Total}");
-Console.WriteLine(turn.RobberActivated
-    ? "  Seven! The robber activates."
-    : "  Players collect resources for this roll.");
+foreach (var terrain in Enum.GetValues<TerrainType>())
+{
+    var produces = terrain.Produces();
+    var label = produces is { } resource ? resource.ToString() : "nothing";
+    Console.WriteLine($"  {terrain,-10} -> {label}");
+}

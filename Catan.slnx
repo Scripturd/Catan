@@ -1,11 +1,9 @@
 <Solution>
   <Folder Name="/src/">
-    <Project Path="src/Catan.Application/Catan.Application.csproj" />
     <Project Path="src/Catan.Cli/Catan.Cli.csproj" />
     <Project Path="src/Catan.Domain/Catan.Domain.csproj" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/Catan.Application.Tests/Catan.Application.Tests.csproj" />
     <Project Path="tests/Catan.Domain.Tests/Catan.Domain.Tests.csproj" />
   </Folder>
 </Solution>

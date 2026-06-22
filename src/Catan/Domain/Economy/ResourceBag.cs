@@ -1,8 +1,27 @@
 namespace Catan.Domain.Economy;
 
-public readonly record struct ResourceBag(
-    int Brick = 0, int Lumber = 0, int Wool = 0, int Grain = 0, int Ore = 0)
+public readonly record struct ResourceBag
 {
+    public int Brick { get; }
+    public int Lumber { get; }
+    public int Wool { get; }
+    public int Grain { get; }
+    public int Ore { get; }
+
+    public ResourceBag(int brick = 0, int lumber = 0, int wool = 0, int grain = 0, int ore = 0)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(brick);
+        ArgumentOutOfRangeException.ThrowIfNegative(lumber);
+        ArgumentOutOfRangeException.ThrowIfNegative(wool);
+        ArgumentOutOfRangeException.ThrowIfNegative(grain);
+        ArgumentOutOfRangeException.ThrowIfNegative(ore);
+        Brick = brick;
+        Lumber = lumber;
+        Wool = wool;
+        Grain = grain;
+        Ore = ore;
+    }
+
     public int this[ResourceKind r] => r switch
     {
         ResourceKind.Brick  => Brick,

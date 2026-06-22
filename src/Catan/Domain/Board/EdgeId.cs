@@ -1,3 +1,7 @@
-﻿namespace Catan.Domain.Board;
+namespace Catan.Domain.Board;
 
-public readonly record struct EdgeId(int Value);
+public readonly record struct EdgeId
+{
+    public int Value { get; }
+    public EdgeId(int value) { Value = value; }
+}

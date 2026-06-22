@@ -1,3 +1,7 @@
-﻿namespace Catan.Domain.Board;
+namespace Catan.Domain.Board;
 
-public readonly record struct VertexId(int Value);
+public readonly record struct VertexId
+{
+    public int Value { get; }
+    public VertexId(int value) { Value = value; }
+}

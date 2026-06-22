@@ -9,7 +9,7 @@ internal static class Program
         Console.WriteLine("Catan (pure .NET) — building types");
         Console.WriteLine();
 
-        foreach (var type in new[] { BuildingType.Settlement, BuildingType.City, BuildingType.Capital })
+        foreach (var type in new[] { BuildingKind.Settlement, BuildingKind.City })
         {
             Console.WriteLine($"  {type.Name,-11} yields {type.Yield} per adjacent tile");
         }

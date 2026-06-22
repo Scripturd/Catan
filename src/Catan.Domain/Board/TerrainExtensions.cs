@@ -1,0 +1,24 @@
+using System;
+
+namespace Catan.Domain.Board;
+
+public static class TerrainExtensions
+{
+    /// <summary>
+    /// The resource a terrain produces, or <c>null</c> for the Desert.
+    ///
+    /// Returning a nullable forces every caller to handle the
+    /// "desert produces nothing" case explicitly, instead of smuggling a
+    /// sentinel value into <see cref="ResourceType"/>.
+    /// </summary>
+    public static ResourceType? Produces(this TerrainType terrain) => terrain switch
+    {
+        TerrainType.Forest    => ResourceType.Lumber,
+        TerrainType.Hills     => ResourceType.Brick,
+        TerrainType.Pasture   => ResourceType.Wool,
+        TerrainType.Fields    => ResourceType.Grain,
+        TerrainType.Mountains => ResourceType.Ore,
+        TerrainType.Desert    => null,
+        _ => throw new ArgumentOutOfRangeException(nameof(terrain), terrain, null)
+    };
+}

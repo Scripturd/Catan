@@ -1,0 +1,15 @@
+## .NET build output
+bin/
+obj/
+
+## IDEs
+.vs/
+.idea/
+*.user
+*.suo
+*.userprefs
+*.DotSettings.user
+
+## Test results
+[Tt]est[Rr]esults/
+*.trx

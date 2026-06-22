@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <RootNamespace>Catan.Domain</RootNamespace>
+  </PropertyGroup>
+
+  <!--
+    Intentionally NO <ProjectReference> and NO package references.
+    The domain is the pure core; it depends on nothing. This emptiness is the
+    architecture being enforced by the build.
+  -->
+
+</Project>

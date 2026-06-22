@@ -1,4 +1,3 @@
-using System;
 using Catan.Domain.Economy;
 
 namespace Catan.Domain.Board;

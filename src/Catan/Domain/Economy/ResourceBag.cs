@@ -10,7 +10,7 @@ public readonly record struct ResourceBag(
         ResourceKind.Wool   => Wool,
         ResourceKind.Grain  => Grain,
         ResourceKind.Ore    => Ore,
-        _ => 0
+        _ => throw new ArgumentOutOfRangeException(nameof(r), r, null)
     };
 
     public bool Covers(ResourceBag other) =>

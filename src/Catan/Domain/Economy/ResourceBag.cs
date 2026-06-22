@@ -1,9 +1,5 @@
 namespace Catan.Domain.Economy;
 
-/// <summary>
-/// A tally of resources — a player's hand, a build cost, a trade offer, the bank.
-/// Immutable and value-equal.
-/// </summary>
 public readonly record struct ResourceBag(
     int Brick = 0, int Lumber = 0, int Wool = 0, int Grain = 0, int Ore = 0)
 {
@@ -17,7 +13,6 @@ public readonly record struct ResourceBag(
         _ => 0
     };
 
-    /// <summary>True if this bag (e.g. a hand) holds at least everything in <paramref name="other"/> (e.g. a cost).</summary>
     public bool Covers(ResourceBag other) =>
         Brick >= other.Brick && Lumber >= other.Lumber && Wool >= other.Wool &&
         Grain >= other.Grain && Ore >= other.Ore;

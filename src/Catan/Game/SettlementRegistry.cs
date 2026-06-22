@@ -1,7 +1,7 @@
-using Catan.Domain.Board;
-using Catan.Domain.Pieces;
+using Catan.Board;
+using Catan.Pieces;
 
-namespace Catan.Domain.Game;
+namespace Catan.Game;
 
 public sealed class SettlementRegistry
 {

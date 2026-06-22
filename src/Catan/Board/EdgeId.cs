@@ -1,4 +1,4 @@
-namespace Catan.Domain.Board;
+namespace Catan.Board;
 
 public readonly record struct EdgeId
 {

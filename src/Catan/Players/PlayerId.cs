@@ -1,4 +1,4 @@
-namespace Catan.Domain.Players;
+namespace Catan.Players;
 
 public readonly record struct PlayerId
 {

@@ -1,6 +1,6 @@
-﻿using Catan.Domain.Players;
+﻿using Catan.Players;
 
-namespace Catan.Domain.Pieces;
+namespace Catan.Pieces;
 
 public class City
 {

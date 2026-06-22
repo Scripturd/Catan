@@ -1,4 +1,4 @@
-namespace Catan.Domain.Economy;
+namespace Catan.Economy;
 
 public enum ResourceKind
 {

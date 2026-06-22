@@ -1,9 +1,9 @@
-using Catan.Domain.Board;
-using Catan.Domain.Pieces;
+﻿using Catan.Board;
+using Catan.Pieces;
 
-namespace Catan.Domain.Game;
+namespace Catan.Game;
 
-public sealed class CityRegistry
+internal class ShipRegistry
 {
     private readonly Dictionary<VertexId, City> _cities = new();
 

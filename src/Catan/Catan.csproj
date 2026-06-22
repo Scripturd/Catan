@@ -9,4 +9,8 @@
     <RootNamespace>Catan</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Game\Commands\" />
+  </ItemGroup>
+
 </Project>

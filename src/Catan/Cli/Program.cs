@@ -1,7 +1,7 @@
-using Catan.Domain.Board;
-using Catan.Domain.Game;
-using Catan.Domain.Pieces;
-using Catan.Domain.Players;
+using Catan.Board;
+using Catan.Game;
+using Catan.Pieces;
+using Catan.Players;
 
 namespace Catan.Cli;
 

@@ -1,4 +1,7 @@
+using Catan.Domain.Board;
+using Catan.Domain.Game;
 using Catan.Domain.Pieces;
+using Catan.Domain.Players;
 
 namespace Catan.Cli;
 
@@ -6,12 +9,9 @@ internal static class Program
 {
     private static void Main()
     {
-        Console.WriteLine("Catan (pure .NET) — building types");
-        Console.WriteLine();
+        var settlements = new SettlementRegistry();
+        settlements.Place(new VertexId(0), new Settlement(new PlayerId(0)));
 
-        foreach (var type in new[] { BuildingKind.Settlement, BuildingKind.City })
-        {
-            Console.WriteLine($"  {type.Name,-11} yields {type.Yield} per adjacent tile");
-        }
+        Console.WriteLine($"Catan (pure .NET) — {settlements.All.Count} settlement(s) placed");
     }
 }

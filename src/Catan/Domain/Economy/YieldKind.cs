@@ -1,4 +1,4 @@
-namespace Catan.Domain.Board;
+namespace Catan.Domain.Economy;
 
 public enum YieldKind
 {

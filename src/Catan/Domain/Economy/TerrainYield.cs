@@ -1,6 +1,4 @@
-using Catan.Domain.Economy;
-
-namespace Catan.Domain.Board;
+namespace Catan.Domain.Economy;
 
 public readonly record struct TerrainYield
 {

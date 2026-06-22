@@ -1,3 +1,5 @@
+using Catan.Domain.Economy;
+
 namespace Catan.Domain.Board;
 
 public sealed class Tile

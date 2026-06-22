@@ -1,24 +1,26 @@
 namespace Catan.Domain.Board;
 
-/// <summary>
-/// A single hex tile: its terrain, its number token (null for the desert), and the
-/// vertices/edges around it. Immutable; adjacency is held by ID.
-/// </summary>
 public sealed class Tile
 {
     public TileId Id { get; }
-    public TerrainType Terrain { get; }
+    public TerrainKind Terrain { get; }
     public int? NumberToken { get; }
     public IReadOnlyList<VertexId> Vertices { get; }
     public IReadOnlyList<EdgeId> Edges { get; }
 
     public Tile(
         TileId id,
-        TerrainType terrain,
+        TerrainKind terrain,
         int? numberToken,
         IReadOnlyList<VertexId> vertices,
         IReadOnlyList<EdgeId> edges)
     {
+        var producesNothing = terrain.Produces().Kind == YieldKind.Nothing;
+        if (producesNothing && numberToken.HasValue)
+            throw new ArgumentException($"{terrain} produces nothing and cannot carry a number token.", nameof(numberToken));
+        if (!producesNothing && numberToken is null)
+            throw new ArgumentException($"{terrain} must carry a number token.", nameof(numberToken));
+
         Id = id;
         Terrain = terrain;
         NumberToken = numberToken;

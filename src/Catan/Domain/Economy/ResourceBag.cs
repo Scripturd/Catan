@@ -3,13 +3,13 @@ namespace Catan.Domain.Economy;
 public readonly record struct ResourceBag(
     int Brick = 0, int Lumber = 0, int Wool = 0, int Grain = 0, int Ore = 0)
 {
-    public int this[ResourceType r] => r switch
+    public int this[ResourceKind r] => r switch
     {
-        ResourceType.Brick  => Brick,
-        ResourceType.Lumber => Lumber,
-        ResourceType.Wool   => Wool,
-        ResourceType.Grain  => Grain,
-        ResourceType.Ore    => Ore,
+        ResourceKind.Brick  => Brick,
+        ResourceKind.Lumber => Lumber,
+        ResourceKind.Wool   => Wool,
+        ResourceKind.Grain  => Grain,
+        ResourceKind.Ore    => Ore,
         _ => 0
     };
 

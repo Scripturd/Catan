@@ -1,10 +1,5 @@
 namespace Catan.Domain.Board;
 
-/// <summary>
-/// A settlement/city spot where up to three tiles meet. Knows the tiles it touches
-/// (for resource production), its incident edges, and its neighbour vertices (for the
-/// placement distance rule). Immutable; adjacency is held by ID.
-/// </summary>
 public sealed class Vertex
 {
     public VertexId Id { get; }

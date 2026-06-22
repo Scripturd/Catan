@@ -1,6 +1,6 @@
 namespace Catan.Domain.Board;
 
-public enum TerrainType
+public enum TerrainKind
 {
     Forest,
     Hills,

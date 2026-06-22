@@ -1,9 +1,5 @@
 namespace Catan.Domain.Board;
 
-/// <summary>
-/// A road spot: the side between two vertices. Borders one or two tiles. Immutable;
-/// adjacency is held by ID.
-/// </summary>
 public sealed class Edge
 {
     public EdgeId Id { get; }

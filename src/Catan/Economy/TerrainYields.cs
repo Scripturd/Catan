@@ -1,8 +1,8 @@
 namespace Catan.Economy;
 
-public static class TerrainProduction
+public static class TerrainYields
 {
-    public static Yield Of(TerrainKind terrain) => terrain switch
+    public static Yield For(TerrainKind terrain) => terrain switch
     {
         TerrainKind.Forest    => Yield.Of(ResourceKind.Lumber),
         TerrainKind.Hills     => Yield.Of(ResourceKind.Brick),

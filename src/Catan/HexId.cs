@@ -1,10 +1,10 @@
 namespace Catan;
 
-public readonly record struct TileId
+public readonly record struct HexId
 {
     public int Value { get; }
 
-    public TileId(int value)
+    public HexId(int value)
     {
         Value = value;
     }

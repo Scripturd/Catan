@@ -27,16 +27,16 @@ public static class StandardBoard
 
         var vertexIds = new Dictionary<(long, long), VertexId>();
         var edgeIds = new Dictionary<(int, int), EdgeId>();
-        var vertexTiles = new Dictionary<VertexId, HashSet<TileId>>();
+        var vertexHexes = new Dictionary<VertexId, HashSet<HexId>>();
         var vertexEdges = new Dictionary<VertexId, HashSet<EdgeId>>();
         var vertexAdjacent = new Dictionary<VertexId, HashSet<VertexId>>();
         var edgeEnds = new Dictionary<EdgeId, (VertexId A, VertexId B)>();
-        var tileCorners = new List<VertexId[]>();
-        var tileEdgeIds = new List<List<EdgeId>>();
+        var hexCorners = new List<VertexId[]>();
+        var hexEdgeIds = new List<List<EdgeId>>();
 
         for (int h = 0; h < hexes.Count; h++)
         {
-            var tileId = new TileId(h);
+            var hexId = new HexId(h);
             double cx = Math.Sqrt(3) * (hexes[h].Q + hexes[h].R / 2.0);
             double cy = 1.5 * hexes[h].R;
 
@@ -51,13 +51,13 @@ public static class StandardBoard
                 {
                     vertexId = new VertexId(vertexIds.Count);
                     vertexIds[key] = vertexId;
-                    vertexTiles[vertexId] = new HashSet<TileId>();
+                    vertexHexes[vertexId] = new HashSet<HexId>();
                     vertexEdges[vertexId] = new HashSet<EdgeId>();
                     vertexAdjacent[vertexId] = new HashSet<VertexId>();
                 }
 
                 corners[i] = vertexId;
-                vertexTiles[vertexId].Add(tileId);
+                vertexHexes[vertexId].Add(hexId);
             }
 
             var edges = new List<EdgeId>(6);
@@ -80,27 +80,27 @@ public static class StandardBoard
                 edges.Add(edgeId);
             }
 
-            tileCorners.Add(corners);
-            tileEdgeIds.Add(edges);
+            hexCorners.Add(corners);
+            hexEdgeIds.Add(edges);
         }
 
         var builtEdges = edgeEnds
             .Select(e => new Edge(e.Key, e.Value.A, e.Value.B))
             .ToList();
 
-        var builtVertices = vertexTiles.Keys
-            .Select(v => new Vertex(v, vertexTiles[v].ToList(), vertexEdges[v].ToList(), vertexAdjacent[v].ToList()))
+        var builtVertices = vertexHexes.Keys
+            .Select(v => new Vertex(v, vertexHexes[v].ToList(), vertexEdges[v].ToList(), vertexAdjacent[v].ToList()))
             .ToList();
 
-        var builtTiles = new List<Tile>();
+        var builtHexes = new List<Hex>();
         int tokenIndex = 0;
         for (int h = 0; h < hexes.Count; h++)
         {
             var terrain = Terrains[h];
             int? token = terrain == TerrainKind.Desert ? null : NumberTokens[tokenIndex++];
-            builtTiles.Add(new Tile(new TileId(h), terrain, token, tileCorners[h].ToList(), tileEdgeIds[h]));
+            builtHexes.Add(new Hex(new HexId(h), terrain, token, hexCorners[h].ToList(), hexEdgeIds[h]));
         }
 
-        return new Board(builtTiles, builtVertices, builtEdges);
+        return new Board(builtHexes, builtVertices, builtEdges);
     }
 }

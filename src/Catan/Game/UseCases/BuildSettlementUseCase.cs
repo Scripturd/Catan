@@ -1,5 +1,4 @@
 ﻿using Catan.Board;
-using Catan.Economy;
 using Catan.Pieces;
 using Catan.Players;
 
@@ -12,7 +11,7 @@ public class BuildSettlementUseCase
     private readonly ResourceRegistry _resourceRegistry;
 
     public BuildSettlementUseCase(
-        SettlementRegistry settlementRegistry, 
+        SettlementRegistry settlementRegistry,
         CityRegistry cityRegistry,
         ResourceRegistry resourceRegistry)
     {

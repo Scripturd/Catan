@@ -22,13 +22,15 @@ public class BuildCityUseCase
 
     public void Execute(PlayerId playerId, VertexId vertexId)
     {
-        if (!_settlementRegistry.ExistsAt(vertexId))
-            return;
+        var settlement = _settlementRegistry.At(vertexId);
+        if (settlement is null || settlement.Owner != playerId) return;
 
         if (!_resourceRegistry.CanAfford(playerId, City.Cost))
             return;
 
-        _resourceRegistry.Take(playerId, Settlement.Cost);
+        _resourceRegistry.Take(playerId, City.Cost);
+
+        _settlementRegistry.Remove(vertexId);
 
         var city = new City(playerId);
         _cityRegistry.Place(vertexId, city);

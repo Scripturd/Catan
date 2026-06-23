@@ -15,7 +15,7 @@ public sealed class SettlementRegistry
     public void Place(VertexId vertex, Settlement settlement)
     {
         if (_settlements.ContainsKey(vertex))
-            throw new InvalidOperationException($"Vertex {vertex.Value} is already occupied.");
+            throw new InvalidOperationException($"A settlement already exists at vertex {vertex.Value}.");
 
         _settlements[vertex] = settlement;
     }

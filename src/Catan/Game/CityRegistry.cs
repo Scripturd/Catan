@@ -15,7 +15,7 @@ public sealed class CityRegistry
     public void Place(VertexId vertex, City city)
     {
         if (_cities.ContainsKey(vertex))
-            throw new InvalidOperationException($"Vertex {vertex.Value} is already occupied.");
+            throw new InvalidOperationException($"A city already exists at vertex {vertex.Value}.");
 
         _cities[vertex] = city;
     }

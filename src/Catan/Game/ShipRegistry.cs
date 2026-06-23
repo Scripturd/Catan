@@ -5,17 +5,17 @@ namespace Catan.Game;
 
 internal class ShipRegistry
 {
-    private readonly Dictionary<VertexId, City> _cities = new();
+    private readonly Dictionary<VertexId, Ship> _ships = new();
 
-    public IReadOnlyDictionary<VertexId, City> All => _cities;
+    public IReadOnlyDictionary<VertexId, Ship> All => _ships;
 
-    public City? At(VertexId vertex) => _cities.GetValueOrDefault(vertex);
+    public Ship? At(VertexId vertex) => _ships.GetValueOrDefault(vertex);
 
-    public void Place(VertexId vertex, City city)
+    public void Place(VertexId vertex, Ship ship)
     {
-        if (_cities.ContainsKey(vertex))
-            throw new InvalidOperationException($"Vertex {vertex.Value} is already occupied.");
+        if (_ships.ContainsKey(vertex))
+            throw new InvalidOperationException($"A ship already exists at edge {vertex.Value}.");
 
-        _cities[vertex] = city;
+        _ships[vertex] = ship;
     }
 }

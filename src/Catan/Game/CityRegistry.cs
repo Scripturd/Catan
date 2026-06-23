@@ -9,6 +9,7 @@ public sealed class CityRegistry
 
     public IReadOnlyDictionary<VertexId, City> All => _cities;
 
+    public bool ExistsAt(VertexId vertex) => _cities.ContainsKey(vertex);
     public City? At(VertexId vertex) => _cities.GetValueOrDefault(vertex);
 
     public void Place(VertexId vertex, City city)

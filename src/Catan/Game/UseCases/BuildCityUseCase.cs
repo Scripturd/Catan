@@ -1,18 +1,17 @@
 ﻿using Catan.Board;
-using Catan.Economy;
 using Catan.Pieces;
 using Catan.Players;
 
 namespace Catan.Game.UseCases;
 
-public class BuildSettlementUseCase
+public class BuildCityUseCase
 {
     private readonly SettlementRegistry _settlementRegistry;
     private readonly CityRegistry _cityRegistry;
     private readonly ResourceRegistry _resourceRegistry;
 
-    public BuildSettlementUseCase(
-        SettlementRegistry settlementRegistry, 
+    public BuildCityUseCase(
+        SettlementRegistry settlementRegistry,
         CityRegistry cityRegistry,
         ResourceRegistry resourceRegistry)
     {
@@ -23,15 +22,15 @@ public class BuildSettlementUseCase
 
     public void Execute(PlayerId playerId, VertexId vertexId)
     {
-        if (_settlementRegistry.ExistsAt(vertexId) || _cityRegistry.ExistsAt(vertexId))
+        if (!_settlementRegistry.ExistsAt(vertexId))
             return;
 
-        if (!_resourceRegistry.CanAfford(playerId, Settlement.Cost))
+        if (!_resourceRegistry.CanAfford(playerId, City.Cost))
             return;
 
         _resourceRegistry.Take(playerId, Settlement.Cost);
 
-        var settlement = new Settlement(playerId);
-        _settlementRegistry.Place(vertexId, settlement);
+        var city = new City(playerId);
+        _cityRegistry.Place(vertexId, city);
     }
 }

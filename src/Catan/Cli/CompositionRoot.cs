@@ -1,6 +1,7 @@
 using Catan.Game;
 using Catan.Game.UseCases;
 using Catan.Pieces;
+using Catan.Players;
 
 namespace Catan.Cli;
 
@@ -22,6 +23,7 @@ public sealed class CompositionRoot
     public BuildRoadUseCase BuildRoad { get; }
     public PlaceStartingSettlementUseCase PlaceStartingSettlement { get; }
     public PlaceStartingRoadUseCase PlaceStartingRoad { get; }
+    public GrantStartingResourcesUseCase GrantStartingResources { get; }
 
     public CompositionRoot()
     {
@@ -42,5 +44,9 @@ public sealed class CompositionRoot
         BuildRoad = new BuildRoadUseCase(Roads, Ships, Resources, Settlements, Cities, Grid);
         PlaceStartingSettlement = new PlaceStartingSettlementUseCase(Settlements, Cities, Grid);
         PlaceStartingRoad = new PlaceStartingRoadUseCase(Roads, Ships, Settlements, Cities, Grid);
+        GrantStartingResources = new GrantStartingResourcesUseCase(Grid, Terrain, Settlements, Resources);
     }
+
+    public SetupPhase NewSetupPhase(IReadOnlyList<PlayerId> players) =>
+        new(players, PlaceStartingSettlement, PlaceStartingRoad, GrantStartingResources);
 }

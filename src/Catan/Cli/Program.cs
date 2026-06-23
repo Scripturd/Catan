@@ -1,3 +1,4 @@
+using Catan.Economy;
 using Catan.Players;
 
 namespace Catan.Cli;
@@ -7,23 +8,46 @@ internal static class Program
     private static void Main()
     {
         var root = new CompositionRoot();
-        var player = new PlayerId(0);
+        var players = new[] { new PlayerId(0), new PlayerId(1) };
+        var setup = root.NewSetupPhase(players);
 
-        var v0 = new VertexId(0);
-        root.PlaceStartingSettlement.Execute(player, v0);
+        while (!setup.IsComplete)
+        {
+            var player = setup.Current;
+            var vertex = PickSettlementSpot(root);
+            var road = root.Grid.EdgesOf(vertex).First(e => !root.Roads.ExistsAt(e));
+            setup.PlaceFor(vertex, road);
+            Console.WriteLine($"player {player.Value} placed settlement v{vertex.Value} + road e{road.Value}");
+        }
 
-        var neighbour = root.Grid.AdjacentVertices(v0)[0];
-        root.PlaceStartingSettlement.Execute(player, neighbour);
+        Console.WriteLine();
+        Console.WriteLine("starting hands (granted by each player's second settlement):");
+        foreach (var player in players)
+            Console.WriteLine($"  player {player.Value}: {Describe(root.Resources.Of(player))}");
+    }
 
-        var touching = root.Grid.EdgesOf(v0)[0];
-        root.PlaceStartingRoad.Execute(player, touching);
+    private static VertexId PickSettlementSpot(CompositionRoot root)
+    {
+        foreach (var vertex in root.Grid.Vertices)
+        {
+            if (root.Settlements.ExistsAt(vertex.Id) || root.Cities.ExistsAt(vertex.Id))
+                continue;
 
-        var detached = root.Grid.Edges.First(e => e.A != v0 && e.B != v0 && !root.Roads.ExistsAt(e.Id)).Id;
-        root.PlaceStartingRoad.Execute(player, detached);
+            if (root.Grid.AdjacentVertices(vertex.Id).Any(n => root.Settlements.ExistsAt(n) || root.Cities.ExistsAt(n)))
+                continue;
 
-        Console.WriteLine($"starting settlement v{v0.Value} (free, no road needed): placed = {root.Settlements.ExistsAt(v0)}");
-        Console.WriteLine($"starting settlement v{neighbour.Value} (adjacent): placed = {root.Settlements.ExistsAt(neighbour)}");
-        Console.WriteLine($"starting road e{touching.Value} (touches settlement): placed = {root.Roads.ExistsAt(touching)}");
-        Console.WriteLine($"starting road e{detached.Value} (no building): placed = {root.Roads.ExistsAt(detached)}");
+            return vertex.Id;
+        }
+
+        throw new InvalidOperationException("no legal settlement spot left");
+    }
+
+    private static string Describe(ResourceBag hand)
+    {
+        var parts = Enum.GetValues<ResourceKind>()
+            .Where(kind => hand[kind] > 0)
+            .Select(kind => $"{hand[kind]} {kind}")
+            .ToArray();
+        return parts.Length == 0 ? "nothing" : string.Join(", ", parts);
     }
 }

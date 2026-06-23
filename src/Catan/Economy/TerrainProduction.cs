@@ -2,16 +2,16 @@ namespace Catan.Economy;
 
 public static class TerrainProduction
 {
-    public static TerrainYield Of(TerrainKind terrain) => terrain switch
+    public static Yield Of(TerrainKind terrain) => terrain switch
     {
-        TerrainKind.Forest    => TerrainYield.Of(ResourceKind.Lumber),
-        TerrainKind.Hills     => TerrainYield.Of(ResourceKind.Brick),
-        TerrainKind.Pasture   => TerrainYield.Of(ResourceKind.Wool),
-        TerrainKind.Fields    => TerrainYield.Of(ResourceKind.Grain),
-        TerrainKind.Mountains => TerrainYield.Of(ResourceKind.Ore),
-        TerrainKind.Desert    => TerrainYield.Nothing,
-        TerrainKind.Sea       => TerrainYield.Nothing,
-        TerrainKind.Gold      => TerrainYield.PlayersChoice,
+        TerrainKind.Forest    => Yield.Of(ResourceKind.Lumber),
+        TerrainKind.Hills     => Yield.Of(ResourceKind.Brick),
+        TerrainKind.Pasture   => Yield.Of(ResourceKind.Wool),
+        TerrainKind.Fields    => Yield.Of(ResourceKind.Grain),
+        TerrainKind.Mountains => Yield.Of(ResourceKind.Ore),
+        TerrainKind.Desert    => Yield.Nothing,
+        TerrainKind.Sea       => Yield.Nothing,
+        TerrainKind.Gold      => Yield.PlayersChoice,
         _ => throw new ArgumentOutOfRangeException(nameof(terrain), terrain, null)
     };
 }

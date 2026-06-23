@@ -1,0 +1,50 @@
+using Catan.Economy;
+
+namespace Catan.Game.UseCases;
+
+public class ProduceResourcesUseCase
+{
+    private readonly HexGrid _grid;
+    private readonly NumberLayout _numbers;
+    private readonly TerrainLayout _terrain;
+    private readonly SettlementRegistry _settlements;
+    private readonly CityRegistry _cities;
+    private readonly ResourceRegistry _resources;
+
+    public ProduceResourcesUseCase(
+        HexGrid grid,
+        NumberLayout numbers,
+        TerrainLayout terrain,
+        SettlementRegistry settlements,
+        CityRegistry cities,
+        ResourceRegistry resources)
+    {
+        _grid = grid;
+        _numbers = numbers;
+        _terrain = terrain;
+        _settlements = settlements;
+        _cities = cities;
+        _resources = resources;
+    }
+
+    public void Execute(int roll)
+    {
+        foreach (var hexId in _numbers.HexesWith(roll))
+        {
+            var yield = TerrainYields.For(_terrain.At(hexId));
+            if (yield.Kind != YieldKind.Resource)
+                continue;
+
+            foreach (var vertex in _grid.GetHex(hexId).Vertices)
+            {
+                var settlement = _settlements.At(vertex);
+                if (settlement is not null)
+                    _resources.Give(settlement.Owner, ResourceBag.Of(yield.Resource, 1));
+
+                var city = _cities.At(vertex);
+                if (city is not null)
+                    _resources.Give(city.Owner, ResourceBag.Of(yield.Resource, 2));
+            }
+        }
+    }
+}

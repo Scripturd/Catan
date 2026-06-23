@@ -32,6 +32,16 @@ public readonly record struct ResourceBag
         _ => throw new ArgumentOutOfRangeException(nameof(r), r, null)
     };
 
+    public static ResourceBag Of(ResourceKind resource, int amount) => resource switch
+    {
+        ResourceKind.Brick  => new ResourceBag(brick: amount),
+        ResourceKind.Lumber => new ResourceBag(lumber: amount),
+        ResourceKind.Wool   => new ResourceBag(wool: amount),
+        ResourceKind.Grain  => new ResourceBag(grain: amount),
+        ResourceKind.Ore    => new ResourceBag(ore: amount),
+        _ => throw new ArgumentOutOfRangeException(nameof(resource), resource, null)
+    };
+
     public bool Covers(ResourceBag other) =>
         Brick >= other.Brick && Lumber >= other.Lumber && Wool >= other.Wool &&
         Grain >= other.Grain && Ore >= other.Ore;

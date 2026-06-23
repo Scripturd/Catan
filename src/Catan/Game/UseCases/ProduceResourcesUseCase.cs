@@ -1,4 +1,5 @@
 using Catan.Economy;
+using Catan.Pieces;
 
 namespace Catan.Game.UseCases;
 
@@ -10,6 +11,7 @@ public class ProduceResourcesUseCase
     private readonly SettlementRegistry _settlements;
     private readonly CityRegistry _cities;
     private readonly ResourceRegistry _resources;
+    private readonly Robber _robber;
 
     public ProduceResourcesUseCase(
         HexGrid grid,
@@ -17,7 +19,8 @@ public class ProduceResourcesUseCase
         TerrainLayout terrain,
         SettlementRegistry settlements,
         CityRegistry cities,
-        ResourceRegistry resources)
+        ResourceRegistry resources,
+        Robber robber)
     {
         _grid = grid;
         _numbers = numbers;
@@ -25,12 +28,16 @@ public class ProduceResourcesUseCase
         _settlements = settlements;
         _cities = cities;
         _resources = resources;
+        _robber = robber;
     }
 
     public void Execute(int roll)
     {
         foreach (var hexId in _numbers.HexesWith(roll))
         {
+            if (hexId == _robber.Hex)
+                continue;
+
             var yield = TerrainYields.For(_terrain.At(hexId));
             if (yield.Kind != YieldKind.Resource)
                 continue;

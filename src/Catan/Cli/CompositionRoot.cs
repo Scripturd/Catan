@@ -1,5 +1,6 @@
 using Catan.Game;
 using Catan.Game.UseCases;
+using Catan.Pieces;
 
 namespace Catan.Cli;
 
@@ -12,6 +13,7 @@ public sealed class CompositionRoot
     public SettlementRegistry Settlements { get; }
     public CityRegistry Cities { get; }
     public ResourceRegistry Resources { get; }
+    public Robber Robber { get; }
 
     public ProduceResourcesUseCase ProduceResources { get; }
 
@@ -25,7 +27,8 @@ public sealed class CompositionRoot
         Settlements = new SettlementRegistry();
         Cities = new CityRegistry();
         Resources = new ResourceRegistry();
+        Robber = new Robber(terrain.HexesOf(TerrainKind.Desert).First());
 
-        ProduceResources = new ProduceResourcesUseCase(grid, numbers, terrain, Settlements, Cities, Resources);
+        ProduceResources = new ProduceResourcesUseCase(grid, numbers, terrain, Settlements, Cities, Resources, Robber);
     }
 }

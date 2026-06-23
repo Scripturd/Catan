@@ -17,6 +17,7 @@ public sealed class CompositionRoot
     public ShipRegistry Ships { get; }
     public ResourceRegistry Resources { get; }
     public Robber Robber { get; }
+    public PlacementRules PlacementRules { get; }
 
     public ProduceResourcesUseCase ProduceResources { get; }
     public BuildSettlementUseCase BuildSettlement { get; }
@@ -38,12 +39,13 @@ public sealed class CompositionRoot
         Ships = new ShipRegistry();
         Resources = new ResourceRegistry();
         Robber = new Robber(terrain.HexesOf(TerrainKind.Desert).First());
+        PlacementRules = new PlacementRules(Settlements, Cities, Roads, Ships, Grid);
 
         ProduceResources = new ProduceResourcesUseCase(grid, numbers, terrain, Settlements, Cities, Resources, Robber);
-        BuildSettlement = new BuildSettlementUseCase(Settlements, Cities, Resources, Roads, Grid);
-        BuildRoad = new BuildRoadUseCase(Roads, Ships, Resources, Settlements, Cities, Grid);
-        PlaceStartingSettlement = new PlaceStartingSettlementUseCase(Settlements, Cities, Grid);
-        PlaceStartingRoad = new PlaceStartingRoadUseCase(Roads, Ships, Settlements, Cities, Grid);
+        BuildSettlement = new BuildSettlementUseCase(PlacementRules, Settlements, Resources);
+        BuildRoad = new BuildRoadUseCase(PlacementRules, Roads, Resources);
+        PlaceStartingSettlement = new PlaceStartingSettlementUseCase(PlacementRules, Settlements);
+        PlaceStartingRoad = new PlaceStartingRoadUseCase(PlacementRules, Roads);
         GrantStartingResources = new GrantStartingResourcesUseCase(Grid, Terrain, Settlements, Resources);
     }
 

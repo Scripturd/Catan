@@ -5,36 +5,26 @@ namespace Catan.Game.UseCases;
 
 public class BuildSettlementUseCase
 {
+    private readonly PlacementRules _rules;
     private readonly SettlementRegistry _settlementRegistry;
-    private readonly CityRegistry _cityRegistry;
     private readonly ResourceRegistry _resourceRegistry;
-    private readonly RoadRegistry _roadRegistry;
-    private readonly HexGrid _grid;
 
     public BuildSettlementUseCase(
+        PlacementRules rules,
         SettlementRegistry settlementRegistry,
-        CityRegistry cityRegistry,
-        ResourceRegistry resourceRegistry,
-        RoadRegistry roadRegistry,
-        HexGrid grid)
+        ResourceRegistry resourceRegistry)
     {
+        _rules = rules;
         _settlementRegistry = settlementRegistry;
-        _cityRegistry = cityRegistry;
         _resourceRegistry = resourceRegistry;
-        _roadRegistry = roadRegistry;
-        _grid = grid;
     }
 
     public void Execute(PlayerId playerId, VertexId vertex)
     {
-        if (_settlementRegistry.ExistsAt(vertex) || _cityRegistry.ExistsAt(vertex))
+        if (!_rules.SatisfiesDistanceRule(vertex))
             return;
 
-        foreach (var neighbour in _grid.AdjacentVertices(vertex))
-            if (_settlementRegistry.ExistsAt(neighbour) || _cityRegistry.ExistsAt(neighbour))
-                return;
-
-        if (!_grid.EdgesOf(vertex).Any(e => _roadRegistry.At(e)?.Owner == playerId))
+        if (!_rules.TouchesOwnRoad(playerId, vertex))
             return;
 
         if (!_resourceRegistry.CanAfford(playerId, Settlement.Cost))

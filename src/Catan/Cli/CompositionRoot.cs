@@ -16,6 +16,7 @@ public sealed class CompositionRoot
     public Robber Robber { get; }
 
     public ProduceResourcesUseCase ProduceResources { get; }
+    public BuildSettlementUseCase BuildSettlement { get; }
 
     public CompositionRoot()
     {
@@ -30,5 +31,6 @@ public sealed class CompositionRoot
         Robber = new Robber(terrain.HexesOf(TerrainKind.Desert).First());
 
         ProduceResources = new ProduceResourcesUseCase(grid, numbers, terrain, Settlements, Cities, Resources, Robber);
+        BuildSettlement = new BuildSettlementUseCase(Settlements, Cities, Resources, Grid);
     }
 }

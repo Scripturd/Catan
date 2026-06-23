@@ -1,4 +1,4 @@
-using Catan.Pieces;
+using Catan.Economy;
 using Catan.Players;
 
 namespace Catan.Cli;
@@ -9,16 +9,19 @@ internal static class Program
     {
         var root = new CompositionRoot();
         var player = new PlayerId(0);
+        root.Resources.Give(player, new ResourceBag(brick: 3, lumber: 3, wool: 3, grain: 3));
 
-        var hex = root.Grid.Hexes.First(h => root.Numbers.At(h.Id) is not null);
-        var roll = root.Numbers.At(hex.Id)!.Value.Value;
-        root.Settlements.Place(hex.Vertices[0], new Settlement(player));
+        var a = new VertexId(0);
+        var adjacent = root.Grid.AdjacentVertices(a);
+        var neighbour = adjacent[0];
+        var far = root.Grid.Vertices.First(v => v.Id != a && !adjacent.Contains(v.Id)).Id;
 
-        root.ProduceResources.Execute(roll);
-        Console.WriteLine($"Rolled {roll}, robber on desert  -> player 0 lumber = {root.Resources.Of(player).Lumber}");
+        root.BuildSettlement.Execute(player, a);
+        root.BuildSettlement.Execute(player, neighbour);
+        root.BuildSettlement.Execute(player, far);
 
-        root.Robber.MoveTo(hex.Id);
-        root.ProduceResources.Execute(roll);
-        Console.WriteLine($"Rolled {roll}, robber on hex {hex.Id.Value} -> player 0 lumber = {root.Resources.Of(player).Lumber}");
+        Console.WriteLine($"vertex {a.Value}: settlement = {root.Settlements.ExistsAt(a)}");
+        Console.WriteLine($"vertex {neighbour.Value} (adjacent to {a.Value}): settlement = {root.Settlements.ExistsAt(neighbour)}");
+        Console.WriteLine($"vertex {far.Value} (not adjacent): settlement = {root.Settlements.ExistsAt(far)}");
     }
 }

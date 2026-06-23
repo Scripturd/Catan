@@ -8,15 +8,18 @@ public class BuildSettlementUseCase
     private readonly SettlementRegistry _settlementRegistry;
     private readonly CityRegistry _cityRegistry;
     private readonly ResourceRegistry _resourceRegistry;
+    private readonly HexGrid _grid;
 
     public BuildSettlementUseCase(
         SettlementRegistry settlementRegistry,
         CityRegistry cityRegistry,
-        ResourceRegistry resourceRegistry)
+        ResourceRegistry resourceRegistry,
+        HexGrid grid)
     {
         _settlementRegistry = settlementRegistry;
         _cityRegistry = cityRegistry;
         _resourceRegistry = resourceRegistry;
+        _grid = grid;
     }
 
     public void Execute(PlayerId playerId, VertexId vertex)
@@ -24,12 +27,14 @@ public class BuildSettlementUseCase
         if (_settlementRegistry.ExistsAt(vertex) || _cityRegistry.ExistsAt(vertex))
             return;
 
+        foreach (var neighbour in _grid.AdjacentVertices(vertex))
+            if (_settlementRegistry.ExistsAt(neighbour) || _cityRegistry.ExistsAt(neighbour))
+                return;
+
         if (!_resourceRegistry.CanAfford(playerId, Settlement.Cost))
             return;
 
         _resourceRegistry.Take(playerId, Settlement.Cost);
-
-        var settlement = new Settlement(playerId);
-        _settlementRegistry.Place(vertex, settlement);
+        _settlementRegistry.Place(vertex, new Settlement(playerId));
     }
 }

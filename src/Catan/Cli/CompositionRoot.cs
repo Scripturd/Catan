@@ -20,6 +20,8 @@ public sealed class CompositionRoot
     public ProduceResourcesUseCase ProduceResources { get; }
     public BuildSettlementUseCase BuildSettlement { get; }
     public BuildRoadUseCase BuildRoad { get; }
+    public PlaceStartingSettlementUseCase PlaceStartingSettlement { get; }
+    public PlaceStartingRoadUseCase PlaceStartingRoad { get; }
 
     public CompositionRoot()
     {
@@ -38,5 +40,7 @@ public sealed class CompositionRoot
         ProduceResources = new ProduceResourcesUseCase(grid, numbers, terrain, Settlements, Cities, Resources, Robber);
         BuildSettlement = new BuildSettlementUseCase(Settlements, Cities, Resources, Roads, Grid);
         BuildRoad = new BuildRoadUseCase(Roads, Ships, Resources, Settlements, Cities, Grid);
+        PlaceStartingSettlement = new PlaceStartingSettlementUseCase(Settlements, Cities, Grid);
+        PlaceStartingRoad = new PlaceStartingRoadUseCase(Roads, Ships, Settlements, Cities, Grid);
     }
 }

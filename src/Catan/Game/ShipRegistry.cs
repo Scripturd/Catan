@@ -1,21 +1,21 @@
-﻿using Catan.Board;
 using Catan.Pieces;
 
 namespace Catan.Game;
 
-internal class ShipRegistry
+public class ShipRegistry
 {
-    private readonly Dictionary<VertexId, Ship> _ships = new();
+    private readonly Dictionary<EdgeId, Ship> _ships = new();
 
-    public IReadOnlyDictionary<VertexId, Ship> All => _ships;
+    public IReadOnlyDictionary<EdgeId, Ship> All => _ships;
 
-    public Ship? At(VertexId vertex) => _ships.GetValueOrDefault(vertex);
+    public bool ExistsAt(EdgeId edge) => _ships.ContainsKey(edge);
+    public Ship? At(EdgeId edge) => _ships.GetValueOrDefault(edge);
 
-    public void Place(VertexId vertex, Ship ship)
+    public void Place(EdgeId edge, Ship ship)
     {
-        if (_ships.ContainsKey(vertex))
-            throw new InvalidOperationException($"A ship already exists at edge {vertex.Value}.");
+        if (_ships.ContainsKey(edge))
+            throw new InvalidOperationException($"A ship already exists at edge {edge.Value}.");
 
-        _ships[vertex] = ship;
+        _ships[edge] = ship;
     }
 }

@@ -1,21 +1,21 @@
-﻿using Catan.Board;
 using Catan.Pieces;
 
 namespace Catan.Game;
 
 public class RoadRegistry
 {
-    private readonly Dictionary<VertexId, Road> _roads = new();
+    private readonly Dictionary<EdgeId, Road> _roads = new();
 
-    public IReadOnlyDictionary<VertexId, Road> All => _roads;
+    public IReadOnlyDictionary<EdgeId, Road> All => _roads;
 
-    public Road? At(VertexId vertex) => _roads.GetValueOrDefault(vertex);
+    public bool ExistsAt(EdgeId edge) => _roads.ContainsKey(edge);
+    public Road? At(EdgeId edge) => _roads.GetValueOrDefault(edge);
 
-    public void Place(VertexId vertex, Road road)
+    public void Place(EdgeId edge, Road road)
     {
-        if (_roads.ContainsKey(vertex))
-            throw new InvalidOperationException($"A road already exists at edge {vertex.Value}.");
+        if (_roads.ContainsKey(edge))
+            throw new InvalidOperationException($"A road already exists at edge {edge.Value}.");
 
-        _roads[vertex] = road;
+        _roads[edge] = road;
     }
 }

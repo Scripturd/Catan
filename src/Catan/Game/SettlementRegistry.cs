@@ -1,4 +1,3 @@
-using Catan.Board;
 using Catan.Pieces;
 
 namespace Catan.Game;

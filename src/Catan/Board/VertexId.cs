@@ -1,4 +1,4 @@
-namespace Catan.Board;
+namespace Catan;
 
 public readonly record struct VertexId
 {

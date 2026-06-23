@@ -1,4 +1,3 @@
-﻿using Catan.Board;
 using Catan.Pieces;
 using Catan.Players;
 
@@ -20,9 +19,9 @@ public class BuildCityUseCase
         _resourceRegistry = resourceRegistry;
     }
 
-    public void Execute(PlayerId playerId, VertexId vertexId)
+    public void Execute(PlayerId playerId, VertexId vertex)
     {
-        var settlement = _settlementRegistry.At(vertexId);
+        var settlement = _settlementRegistry.At(vertex);
         if (settlement is null || settlement.Owner != playerId) return;
 
         if (!_resourceRegistry.CanAfford(playerId, City.Cost))
@@ -30,9 +29,9 @@ public class BuildCityUseCase
 
         _resourceRegistry.Take(playerId, City.Cost);
 
-        _settlementRegistry.Remove(vertexId);
+        _settlementRegistry.Remove(vertex);
 
         var city = new City(playerId);
-        _cityRegistry.Place(vertexId, city);
+        _cityRegistry.Place(vertex, city);
     }
 }

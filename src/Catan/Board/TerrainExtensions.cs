@@ -1,6 +1,6 @@
 using Catan.Economy;
 
-namespace Catan.Board;
+namespace Catan;
 
 public static class TerrainExtensions
 {

@@ -1,4 +1,3 @@
-using Catan.Board;
 using Catan.Game;
 using Catan.Pieces;
 using Catan.Players;

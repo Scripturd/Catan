@@ -26,5 +26,4 @@ public sealed class Board
 
     public IReadOnlyList<VertexId> AdjacentVertices(VertexId vertex) => _vertices[vertex].AdjacentVertices;
     public IReadOnlyList<EdgeId> EdgesOf(VertexId vertex) => _vertices[vertex].Edges;
-    public IEnumerable<Hex> HexesWithNumber(int number) => Hexes.Where(t => t.NumberToken == number);
 }

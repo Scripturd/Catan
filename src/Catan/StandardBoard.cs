@@ -17,7 +17,7 @@ public static class StandardBoard
         2, 3, 3, 4, 4, 5, 5, 6, 6, 8, 8, 9, 9, 10, 10, 11, 11, 12
     };
 
-    public static Board Create()
+    public static (Board Board, NumberLayout Numbers) Create()
     {
         var hexes = new List<(int Q, int R)>();
         for (int q = -2; q <= 2; q++)
@@ -93,14 +93,18 @@ public static class StandardBoard
             .ToList();
 
         var builtHexes = new List<Hex>();
+        var tokens = new Dictionary<HexId, NumberToken>();
         int tokenIndex = 0;
         for (int h = 0; h < hexes.Count; h++)
         {
             var terrain = Terrains[h];
-            int? token = terrain == TerrainKind.Desert ? null : NumberTokens[tokenIndex++];
-            builtHexes.Add(new Hex(new HexId(h), terrain, token, hexCorners[h].ToList(), hexEdgeIds[h]));
+            var hexId = new HexId(h);
+            if (terrain != TerrainKind.Desert)
+                tokens[hexId] = new NumberToken(NumberTokens[tokenIndex++]);
+
+            builtHexes.Add(new Hex(hexId, terrain, hexCorners[h].ToList(), hexEdgeIds[h]));
         }
 
-        return new Board(builtHexes, builtVertices, builtEdges);
+        return (new Board(builtHexes, builtVertices, builtEdges), new NumberLayout(tokens));
     }
 }

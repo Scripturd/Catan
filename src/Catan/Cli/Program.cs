@@ -4,8 +4,8 @@ internal static class Program
 {
     private static void Main()
     {
-        var (board, terrain, numbers) = StandardBoard.Create();
-        Console.WriteLine($"Catan board — {board.Hexes.Count} hexes, {board.Vertices.Count} vertices, {board.Edges.Count} edges");
-        Console.WriteLine($"{numbers.Count} number tokens, {terrain.HexesOf(TerrainKind.Forest).Count()} forests");
+        var root = new CompositionRoot();
+        Console.WriteLine($"Catan board — {root.Board.Hexes.Count} hexes, {root.Board.Vertices.Count} vertices, {root.Board.Edges.Count} edges");
+        Console.WriteLine($"{root.Numbers.Count} number tokens, {root.Terrain.HexesOf(TerrainKind.Forest).Count()} forests");
     }
 }

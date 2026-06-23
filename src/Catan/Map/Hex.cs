@@ -1,4 +1,4 @@
-namespace Catan.Geometry;
+namespace Catan.Map;
 
 public sealed class Hex
 {

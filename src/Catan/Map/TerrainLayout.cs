@@ -1,4 +1,4 @@
-namespace Catan;
+namespace Catan.Map;
 
 public sealed class TerrainLayout
 {

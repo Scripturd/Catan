@@ -1,1 +1,1 @@
-global using Catan.Geometry;
+global using Catan.Map;

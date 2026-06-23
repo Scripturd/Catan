@@ -1,12 +1,12 @@
-namespace Catan;
+namespace Catan.Geometry;
 
-public sealed class Board
+public sealed class HexGrid
 {
     private readonly Dictionary<HexId, Hex> _hexes;
     private readonly Dictionary<VertexId, Vertex> _vertices;
     private readonly Dictionary<EdgeId, Edge> _edges;
 
-    public Board(IReadOnlyList<Hex> hexes, IReadOnlyList<Vertex> vertices, IReadOnlyList<Edge> edges)
+    public HexGrid(IReadOnlyList<Hex> hexes, IReadOnlyList<Vertex> vertices, IReadOnlyList<Edge> edges)
     {
         Hexes = hexes;
         Vertices = vertices;

@@ -17,7 +17,7 @@ public static class StandardBoard
         2, 3, 3, 4, 4, 5, 5, 6, 6, 8, 8, 9, 9, 10, 10, 11, 11, 12
     };
 
-    public static (Board Board, TerrainLayout Terrain, NumberLayout Numbers) Create()
+    public static (HexGrid Grid, TerrainLayout Terrain, NumberLayout Numbers) Create()
     {
         var hexes = new List<(int Q, int R)>();
         for (int q = -2; q <= 2; q++)
@@ -107,6 +107,6 @@ public static class StandardBoard
             builtHexes.Add(new Hex(hexId, hexCorners[h].ToList(), hexEdgeIds[h]));
         }
 
-        return (new Board(builtHexes, builtVertices, builtEdges), new TerrainLayout(terrains), new NumberLayout(tokens));
+        return (new HexGrid(builtHexes, builtVertices, builtEdges), new TerrainLayout(terrains), new NumberLayout(tokens));
     }
 }

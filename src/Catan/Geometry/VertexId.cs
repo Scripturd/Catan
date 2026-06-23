@@ -1,4 +1,4 @@
-namespace Catan;
+namespace Catan.Geometry;
 
 public readonly record struct VertexId
 {

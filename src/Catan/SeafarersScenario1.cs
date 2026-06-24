@@ -78,7 +78,7 @@ internal static class SeafarersScenario1
         2, 3, 4, 5, 6, 8, 9, 10, 11
     };
 
-    public static (HexGrid Grid, NumberLayout Numbers) Create(int playerCount)
+    public static (HexGrid Grid, NumberTokenLayout Numbers) Create(int playerCount)
     {
         var setup = playerCount switch
         {
@@ -150,7 +150,7 @@ internal static class SeafarersScenario1
         }
     }
 
-    private static NumberLayout PlaceTokens(
+    private static NumberTokenLayout PlaceTokens(
         IReadOnlyList<(int Q, int R)> coords,
         IReadOnlyList<TerrainType> terrains,
         IReadOnlyList<Region> regions,
@@ -171,7 +171,7 @@ internal static class SeafarersScenario1
                 tokens[new HexId(h)] = new NumberToken(smallTokens[smallIndex++]);
         }
 
-        return new NumberLayout(tokens);
+        return new NumberTokenLayout(tokens);
     }
 
     private static List<T> Shuffle<T>(IReadOnlyList<T> items, Random random)

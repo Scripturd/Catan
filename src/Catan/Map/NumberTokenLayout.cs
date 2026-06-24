@@ -1,10 +1,10 @@
 namespace Catan.Map;
 
-public sealed class NumberLayout
+public sealed class NumberTokenLayout
 {
     private readonly IReadOnlyDictionary<HexId, NumberToken> _tokens;
 
-    public NumberLayout(IReadOnlyDictionary<HexId, NumberToken> tokens)
+    public NumberTokenLayout(IReadOnlyDictionary<HexId, NumberToken> tokens)
     {
         _tokens = tokens;
     }

@@ -12,7 +12,7 @@ public static class StandardBoard
         TerrainType.Mountains, TerrainType.Mountains, TerrainType.Mountains
     };
 
-    public static (HexGrid Grid, NumberLayout Numbers) Create()
+    public static (HexGrid Grid, NumberTokenLayout Numbers) Create()
     {
         var random = new Random();
         var coords = Coords();

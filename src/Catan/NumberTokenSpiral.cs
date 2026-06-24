@@ -12,7 +12,7 @@ internal static class NumberTokenSpiral
         (1, 0), (1, -1), (0, -1), (-1, 0), (-1, 1), (0, 1)
     };
 
-    public static NumberLayout Place(IReadOnlyList<Hex> hexes, Random random)
+    public static NumberTokenLayout Place(IReadOnlyList<Hex> hexes, Random random)
     {
         var hexIdAt = hexes.ToDictionary(h => (h.Q, h.R), h => h.Id);
         var terrainOf = hexes.ToDictionary(h => h.Id, h => h.TerrainType);
@@ -27,7 +27,7 @@ internal static class NumberTokenSpiral
             tokens[hexId] = new NumberToken(NumberTokenSequence[tokenIndex++]);
         }
 
-        return new NumberLayout(tokens);
+        return new NumberTokenLayout(tokens);
     }
 
     private static IEnumerable<HexId> SpiralFromCorner(

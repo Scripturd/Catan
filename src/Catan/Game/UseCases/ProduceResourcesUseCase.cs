@@ -6,7 +6,7 @@ namespace Catan.Game.UseCases;
 public class ProduceResourcesUseCase
 {
     private readonly HexGrid _grid;
-    private readonly NumberLayout _numbers;
+    private readonly NumberTokenLayout _numbers;
     private readonly SettlementRegistry _settlements;
     private readonly CityRegistry _cities;
     private readonly ResourceRegistry _resources;
@@ -14,7 +14,7 @@ public class ProduceResourcesUseCase
 
     public ProduceResourcesUseCase(
         HexGrid grid,
-        NumberLayout numbers,
+        NumberTokenLayout numbers,
         SettlementRegistry settlements,
         CityRegistry cities,
         ResourceRegistry resources,

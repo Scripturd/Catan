@@ -8,7 +8,7 @@ namespace Catan.Cli;
 public sealed class CompositionRoot
 {
     public HexGrid Grid { get; }
-    public NumberLayout Numbers { get; }
+    public NumberTokenLayout Numbers { get; }
 
     public SettlementRegistry Settlements { get; }
     public CityRegistry Cities { get; }

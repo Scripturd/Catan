@@ -1,8 +1,8 @@
-namespace Catan;
+namespace Catan.Cli;
 
 internal static class BoardRenderer
 {
-    public static string ToText(HexGrid grid, NumberLayout numbers)
+    public static string ToText(HexGrid grid, NumberTokenLayout numbers)
     {
         int minRow = grid.Hexes.Min(h => h.R);
         int minSlot = grid.Hexes.Min(h => h.Q * 2 + h.R);
@@ -29,7 +29,7 @@ internal static class BoardRenderer
         return string.Join("\n", lines.OrderBy(l => l.Key).Select(l => new string(l.Value).TrimEnd()));
     }
 
-    private static string Label(Hex hex, NumberLayout numbers)
+    private static string Label(Hex hex, NumberTokenLayout numbers)
     {
         if (hex.TerrainType == TerrainType.Sea)
             return "~";

@@ -122,14 +122,21 @@ internal static class SeafarersScenario1
         var small = new List<(int Q, int R)>();
         var sea = new List<(int Q, int R)>();
         var rows = map.Split('\n');
+        int mid = rows.Length / 2;
         for (int r = 0; r < rows.Length; r++)
+        {
+            int shift = Math.Max(0, r - mid);
             for (int c = 0; c < rows[r].Length; c++)
+            {
+                int q = c - r + shift;
                 switch (rows[r][c])
                 {
-                    case 'M': main.Add((c - r, r)); break;
-                    case 'o': small.Add((c - r, r)); break;
-                    case '~': sea.Add((c - r, r)); break;
+                    case 'M': main.Add((q, r)); break;
+                    case 'o': small.Add((q, r)); break;
+                    case '~': sea.Add((q, r)); break;
                 }
+            }
+        }
 
         return (main, small, sea);
     }

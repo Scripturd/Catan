@@ -2,14 +2,8 @@ namespace Catan;
 
 internal static class HexGridBuilder
 {
-    public static HexGrid Build(IReadOnlyList<TerrainType> terrains)
+    public static HexGrid Build(IReadOnlyList<(int Q, int R)> hexes, IReadOnlyList<TerrainType> terrains)
     {
-        var hexes = new List<(int Q, int R)>();
-        for (int q = -2; q <= 2; q++)
-            for (int r = -2; r <= 2; r++)
-                if (Math.Abs(q + r) <= 2)
-                    hexes.Add((q, r));
-
         var vertexIds = new Dictionary<(long, long), VertexId>();
         var edgeIds = new Dictionary<(int, int), EdgeId>();
         var vertexHexes = new Dictionary<VertexId, HashSet<HexId>>();

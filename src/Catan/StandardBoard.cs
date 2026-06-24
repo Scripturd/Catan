@@ -16,7 +16,7 @@ public static class StandardBoard
     {
         var random = new Random();
         var coords = Coords();
-        var terrains = Shuffle(TerrainTypes, random);
+        var terrains = Shuffler.Shuffle(TerrainTypes, random);
         var grid = HexGridBuilder.Build(coords, terrains);
         var numbers = NumberTokenSpiral.Place(grid.Hexes, random);
         return (grid, numbers);
@@ -31,19 +31,5 @@ public static class StandardBoard
                     coords.Add((q, r));
 
         return coords;
-    }
-
-    private static List<TerrainType> Shuffle(IReadOnlyList<TerrainType> terrains, Random random)
-    {
-        var pool = terrains.ToList();
-        var shuffled = new List<TerrainType>(pool.Count);
-        while (pool.Count > 0)
-        {
-            var index = random.Next(0, pool.Count);
-            shuffled.Add(pool[index]);
-            pool.RemoveAt(index);
-        }
-
-        return shuffled;
     }
 }

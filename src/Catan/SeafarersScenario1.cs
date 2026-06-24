@@ -90,11 +90,11 @@ internal static class SeafarersScenario1
         var random = new Random();
         var (mainCoords, smallCoords, seaCoords) = Parse(setup.Map);
 
-        var mainTerrain = Shuffle(setup.MainLand, random);
+        var mainTerrain = Shuffler.Shuffle(setup.MainLand, random);
         var smallBag = setup.SmallLand.ToList();
         while (smallBag.Count < smallCoords.Count)
             smallBag.Add(TerrainType.Sea);
-        var smallTerrain = Shuffle(smallBag, random);
+        var smallTerrain = Shuffler.Shuffle(smallBag, random);
 
         var coords = new List<(int Q, int R)>();
         var terrains = new List<TerrainType>();
@@ -104,7 +104,7 @@ internal static class SeafarersScenario1
         Add(coords, terrains, regions, seaCoords, seaCoords.Select(_ => TerrainType.Sea).ToList(), Region.Sea);
 
         var grid = HexGridBuilder.Build(coords, terrains);
-        var numbers = PlaceTokens(coords, terrains, regions, Shuffle(setup.MainTokens, random), Shuffle(setup.SmallTokens, random));
+        var numbers = PlaceTokens(coords, terrains, regions, Shuffler.Shuffle(setup.MainTokens, random), Shuffler.Shuffle(setup.SmallTokens, random));
 
         return (grid, numbers);
     }
@@ -179,19 +179,5 @@ internal static class SeafarersScenario1
         }
 
         return new NumberTokenLayout(tokens);
-    }
-
-    private static List<T> Shuffle<T>(IReadOnlyList<T> items, Random random)
-    {
-        var pool = items.ToList();
-        var shuffled = new List<T>(pool.Count);
-        while (pool.Count > 0)
-        {
-            var index = random.Next(0, pool.Count);
-            shuffled.Add(pool[index]);
-            pool.RemoveAt(index);
-        }
-
-        return shuffled;
     }
 }

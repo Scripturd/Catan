@@ -22,23 +22,23 @@ public readonly record struct ResourceBag
         Ore = ore;
     }
 
-    public int this[ResourceKind r] => r switch
+    public int this[ResourceType r] => r switch
     {
-        ResourceKind.Brick  => Brick,
-        ResourceKind.Lumber => Lumber,
-        ResourceKind.Wool   => Wool,
-        ResourceKind.Grain  => Grain,
-        ResourceKind.Ore    => Ore,
+        ResourceType.Brick  => Brick,
+        ResourceType.Lumber => Lumber,
+        ResourceType.Wool   => Wool,
+        ResourceType.Grain  => Grain,
+        ResourceType.Ore    => Ore,
         _ => throw new ArgumentOutOfRangeException(nameof(r), r, null)
     };
 
-    public static ResourceBag Of(ResourceKind resource, int amount) => resource switch
+    public static ResourceBag Of(ResourceType resource, int amount) => resource switch
     {
-        ResourceKind.Brick  => new ResourceBag(brick: amount),
-        ResourceKind.Lumber => new ResourceBag(lumber: amount),
-        ResourceKind.Wool   => new ResourceBag(wool: amount),
-        ResourceKind.Grain  => new ResourceBag(grain: amount),
-        ResourceKind.Ore    => new ResourceBag(ore: amount),
+        ResourceType.Brick  => new ResourceBag(brick: amount),
+        ResourceType.Lumber => new ResourceBag(lumber: amount),
+        ResourceType.Wool   => new ResourceBag(wool: amount),
+        ResourceType.Grain  => new ResourceBag(grain: amount),
+        ResourceType.Ore    => new ResourceBag(ore: amount),
         _ => throw new ArgumentOutOfRangeException(nameof(resource), resource, null)
     };
 

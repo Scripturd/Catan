@@ -36,8 +36,8 @@ public class ProduceResourcesUseCase
                 continue;
 
             var hex = _grid.GetHex(hexId);
-            var yield = TerrainYields.For(hex.Terrain);
-            if (yield.Kind != YieldKind.Resource)
+            var yield = TerrainYields.For(hex.TerrainType);
+            if (yield.Type != YieldType.Resource)
                 continue;
 
             foreach (var vertex in hex.Vertices)

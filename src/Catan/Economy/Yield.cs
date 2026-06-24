@@ -2,16 +2,16 @@ namespace Catan.Economy;
 
 public readonly record struct Yield
 {
-    public YieldKind Kind { get; }
-    public ResourceKind Resource { get; }
+    public YieldType Type { get; }
+    public ResourceType Resource { get; }
 
-    public Yield(YieldKind kind, ResourceKind resource = default)
+    public Yield(YieldType kind, ResourceType resource = default)
     {
-        Kind = kind;
+        Type = kind;
         Resource = resource;
     }
 
-    public static readonly Yield Nothing = new(YieldKind.Nothing);
-    public static readonly Yield PlayersChoice = new(YieldKind.PlayersChoice);
-    public static Yield Of(ResourceKind resource) => new(YieldKind.Resource, resource);
+    public static readonly Yield Nothing = new(YieldType.Nothing);
+    public static readonly Yield PlayersChoice = new(YieldType.PlayersChoice);
+    public static Yield Of(ResourceType resource) => new(YieldType.Resource, resource);
 }

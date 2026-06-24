@@ -1,6 +1,6 @@
 namespace Catan.Map;
 
-public enum TerrainKind
+public enum TerrainType
 {
     Forest,
     Hills,

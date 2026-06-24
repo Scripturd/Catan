@@ -18,13 +18,13 @@ internal static class Program
 
         foreach (var hex in root.Grid.Hexes)
         {
-            var terrainKind = hex.Terrain;
+            var terrainType = hex.TerrainType;
             var numberToken = root.Numbers.At(hex.Id);
 
             if (numberToken.HasValue)
-                Console.WriteLine($"(q: {hex.Q}, r: {hex.R}): {terrainKind} {numberToken.Value.Number}");            
+                Console.WriteLine($"(q: {hex.Q}, r: {hex.R}): {terrainType} {numberToken.Value.Number}");            
             else
-                Console.WriteLine($"(q: {hex.Q}, r: {hex.R}): {terrainKind}");
+                Console.WriteLine($"(q: {hex.Q}, r: {hex.R}): {terrainType}");
         }
 
         var setup = root.NewSetupPhase(players);
@@ -63,7 +63,7 @@ internal static class Program
 
     private static string Describe(ResourceBag hand)
     {
-        var parts = Enum.GetValues<ResourceKind>()
+        var parts = Enum.GetValues<ResourceType>()
             .Where(kind => hand[kind] > 0)
             .Select(kind => $"{hand[kind]} {kind}")
             .ToArray();

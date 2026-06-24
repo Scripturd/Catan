@@ -26,8 +26,8 @@ public class GrantStartingResourcesUseCase
 
         foreach (var hexId in _grid.GetVertex(vertex).Hexes)
         {
-            var yield = TerrainYields.For(_grid.GetHex(hexId).Terrain);
-            if (yield.Kind != YieldKind.Resource)
+            var yield = TerrainYields.For(_grid.GetHex(hexId).TerrainType);
+            if (yield.Type != YieldType.Resource)
                 continue;
 
             _resources.Give(playerId, ResourceBag.Of(yield.Resource, 1));

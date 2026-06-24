@@ -1,6 +1,6 @@
 namespace Catan.Economy;
 
-public enum YieldKind
+public enum YieldType
 {
     Nothing,
     Resource,

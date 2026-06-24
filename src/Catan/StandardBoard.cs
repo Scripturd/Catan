@@ -2,23 +2,30 @@ namespace Catan;
 
 public static class StandardBoard
 {
-    private static readonly TerrainKind[] Terrains =
+    private static readonly TerrainType[] TerrainTypes =
     {
-        TerrainKind.Desert,
-        TerrainKind.Forest, TerrainKind.Forest, TerrainKind.Forest, TerrainKind.Forest,
-        TerrainKind.Fields, TerrainKind.Fields, TerrainKind.Fields, TerrainKind.Fields,
-        TerrainKind.Pasture, TerrainKind.Pasture, TerrainKind.Pasture, TerrainKind.Pasture,
-        TerrainKind.Hills, TerrainKind.Hills, TerrainKind.Hills,
-        TerrainKind.Mountains, TerrainKind.Mountains, TerrainKind.Mountains
+        TerrainType.Desert,
+        TerrainType.Forest, TerrainType.Forest, TerrainType.Forest, TerrainType.Forest,
+        TerrainType.Fields, TerrainType.Fields, TerrainType.Fields, TerrainType.Fields,
+        TerrainType.Pasture, TerrainType.Pasture, TerrainType.Pasture, TerrainType.Pasture,
+        TerrainType.Hills, TerrainType.Hills, TerrainType.Hills,
+        TerrainType.Mountains, TerrainType.Mountains, TerrainType.Mountains
     };
 
-    private static readonly int[] NumberTokens =
+    private static readonly int[] NumberTokenSequence =
     {
-        2, 3, 3, 4, 4, 5, 5, 6, 6, 8, 8, 9, 9, 10, 10, 11, 11, 12
+        5, 2, 6, 3, 8, 10, 9, 12, 11, 4, 8, 10, 9, 4, 5, 6, 3, 11
+    };
+
+    private static readonly (int Q, int R)[] Directions =
+    {
+        (1, 0), (1, -1), (0, -1), (-1, 0), (-1, 1), (0, 1)
     };
 
     public static (HexGrid Grid, NumberLayout Numbers) Create()
     {
+        var random = new Random();
+
         var hexes = new List<(int Q, int R)>();
         for (int q = -2; q <= 2; q++)
             for (int r = -2; r <= 2; r++)
@@ -93,19 +100,59 @@ public static class StandardBoard
             .ToList();
 
         var builtHexes = new List<Hex>();
-        var tokens = new Dictionary<HexId, NumberToken>();
-        int tokenIndex = 0;
+        var hexIdAt = new Dictionary<(int Q, int R), HexId>();
+        var terrainOf = new Dictionary<HexId, TerrainType>();
+        var remainingTerrainTypes = TerrainTypes.ToList();
         for (int h = 0; h < hexes.Count; h++)
         {
-            var terrain = Terrains[h];
-            var hexId = new HexId(h);
-            if (terrain != TerrainKind.Desert)
-                tokens[hexId] = new NumberToken(NumberTokens[tokenIndex++]);
+            var terrainTypeIndex = random.Next(0, remainingTerrainTypes.Count);
+            var terrainType = remainingTerrainTypes[terrainTypeIndex];
+            remainingTerrainTypes.RemoveAt(terrainTypeIndex);
 
+            var hexId = new HexId(h);
             var (Q, R) = hexes[h];
-            builtHexes.Add(new Hex(hexId, Q, R, terrain, hexCorners[h].ToList(), hexEdgeIds[h]));
+            hexIdAt[(Q, R)] = hexId;
+            terrainOf[hexId] = terrainType;
+            builtHexes.Add(new Hex(hexId, Q, R, terrainType, hexCorners[h].ToList(), hexEdgeIds[h]));
+        }
+
+        var tokens = new Dictionary<HexId, NumberToken>();
+        int tokenIndex = 0;
+        foreach (var hexId in SpiralFromCorner(hexIdAt, random.Next(0, Directions.Length)))
+        {
+            if (terrainOf[hexId] == TerrainType.Desert)
+                continue;
+
+            tokens[hexId] = new NumberToken(NumberTokenSequence[tokenIndex++]);
         }
 
         return (new HexGrid(builtHexes, builtVertices, builtEdges), new NumberLayout(tokens));
+    }
+
+    private static IEnumerable<HexId> SpiralFromCorner(
+        IReadOnlyDictionary<(int Q, int R), HexId> hexIdAt,
+        int corner)
+    {
+        for (int radius = 2; radius >= 1; radius--)
+            foreach (var coord in Ring(radius, corner))
+                yield return hexIdAt[coord];
+
+        yield return hexIdAt[(0, 0)];
+    }
+
+    private static IEnumerable<(int Q, int R)> Ring(int radius, int corner)
+    {
+        int q = Directions[corner].Q * radius;
+        int r = Directions[corner].R * radius;
+        for (int side = 0; side < Directions.Length; side++)
+        {
+            var step = Directions[(corner + 2 + side) % Directions.Length];
+            for (int i = 0; i < radius; i++)
+            {
+                yield return (q, r);
+                q += step.Q;
+                r += step.R;
+            }
+        }
     }
 }

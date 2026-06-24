@@ -1,6 +1,6 @@
 namespace Catan.Economy;
 
-public enum ResourceKind
+public enum ResourceType
 {
     Brick,
     Lumber,

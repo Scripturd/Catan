@@ -36,7 +36,7 @@ public sealed class CompositionRoot
         Roads = new RoadRegistry();
         Ships = new ShipRegistry();
         Resources = new ResourceRegistry();
-        Robber = new Robber(grid.HexesOf(TerrainKind.Desert).First().Id);
+        Robber = new Robber(grid.HexesOf(TerrainType.Desert).First().Id);
         PlacementRules = new PlacementRules(Settlements, Cities, Roads, Ships, Grid);
 
         ProduceResources = new ProduceResourcesUseCase(grid, numbers, Settlements, Cities, Resources, Robber);

@@ -7,7 +7,6 @@ public class ProduceResourcesUseCase
 {
     private readonly HexGrid _grid;
     private readonly NumberLayout _numbers;
-    private readonly TerrainLayout _terrain;
     private readonly SettlementRegistry _settlements;
     private readonly CityRegistry _cities;
     private readonly ResourceRegistry _resources;
@@ -16,7 +15,6 @@ public class ProduceResourcesUseCase
     public ProduceResourcesUseCase(
         HexGrid grid,
         NumberLayout numbers,
-        TerrainLayout terrain,
         SettlementRegistry settlements,
         CityRegistry cities,
         ResourceRegistry resources,
@@ -24,7 +22,6 @@ public class ProduceResourcesUseCase
     {
         _grid = grid;
         _numbers = numbers;
-        _terrain = terrain;
         _settlements = settlements;
         _cities = cities;
         _resources = resources;
@@ -38,11 +35,12 @@ public class ProduceResourcesUseCase
             if (hexId == _robber.Hex)
                 continue;
 
-            var yield = TerrainYields.For(_terrain.At(hexId));
+            var hex = _grid.GetHex(hexId);
+            var yield = TerrainYields.For(hex.Terrain);
             if (yield.Kind != YieldKind.Resource)
                 continue;
 
-            foreach (var vertex in _grid.GetHex(hexId).Vertices)
+            foreach (var vertex in hex.Vertices)
             {
                 var settlement = _settlements.At(vertex);
                 if (settlement is not null)

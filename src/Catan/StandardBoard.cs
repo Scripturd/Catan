@@ -17,7 +17,7 @@ public static class StandardBoard
         2, 3, 3, 4, 4, 5, 5, 6, 6, 8, 8, 9, 9, 10, 10, 11, 11, 12
     };
 
-    public static (HexGrid Grid, TerrainLayout Terrain, NumberLayout Numbers) Create()
+    public static (HexGrid Grid, NumberLayout Numbers) Create()
     {
         var hexes = new List<(int Q, int R)>();
         for (int q = -2; q <= 2; q++)
@@ -93,20 +93,19 @@ public static class StandardBoard
             .ToList();
 
         var builtHexes = new List<Hex>();
-        var terrains = new Dictionary<HexId, TerrainKind>();
         var tokens = new Dictionary<HexId, NumberToken>();
         int tokenIndex = 0;
         for (int h = 0; h < hexes.Count; h++)
         {
             var terrain = Terrains[h];
             var hexId = new HexId(h);
-            terrains[hexId] = terrain;
             if (terrain != TerrainKind.Desert)
                 tokens[hexId] = new NumberToken(NumberTokens[tokenIndex++]);
 
-            builtHexes.Add(new Hex(hexId, hexCorners[h].ToList(), hexEdgeIds[h]));
+            var (Q, R) = hexes[h];
+            builtHexes.Add(new Hex(hexId, Q, R, terrain, hexCorners[h].ToList(), hexEdgeIds[h]));
         }
 
-        return (new HexGrid(builtHexes, builtVertices, builtEdges), new TerrainLayout(terrains), new NumberLayout(tokens));
+        return (new HexGrid(builtHexes, builtVertices, builtEdges), new NumberLayout(tokens));
     }
 }

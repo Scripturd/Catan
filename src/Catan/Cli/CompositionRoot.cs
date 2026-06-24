@@ -8,7 +8,6 @@ namespace Catan.Cli;
 public sealed class CompositionRoot
 {
     public HexGrid Grid { get; }
-    public TerrainLayout Terrain { get; }
     public NumberLayout Numbers { get; }
 
     public SettlementRegistry Settlements { get; }
@@ -28,9 +27,8 @@ public sealed class CompositionRoot
 
     public CompositionRoot()
     {
-        var (grid, terrain, numbers) = StandardBoard.Create();
+        var (grid, numbers) = StandardBoard.Create();
         Grid = grid;
-        Terrain = terrain;
         Numbers = numbers;
 
         Settlements = new SettlementRegistry();
@@ -38,15 +36,15 @@ public sealed class CompositionRoot
         Roads = new RoadRegistry();
         Ships = new ShipRegistry();
         Resources = new ResourceRegistry();
-        Robber = new Robber(terrain.HexesOf(TerrainKind.Desert).First());
+        Robber = new Robber(grid.HexesOf(TerrainKind.Desert).First().Id);
         PlacementRules = new PlacementRules(Settlements, Cities, Roads, Ships, Grid);
 
-        ProduceResources = new ProduceResourcesUseCase(grid, numbers, terrain, Settlements, Cities, Resources, Robber);
+        ProduceResources = new ProduceResourcesUseCase(grid, numbers, Settlements, Cities, Resources, Robber);
         BuildSettlement = new BuildSettlementUseCase(PlacementRules, Settlements, Resources);
         BuildRoad = new BuildRoadUseCase(PlacementRules, Roads, Resources);
         PlaceStartingSettlement = new PlaceStartingSettlementUseCase(PlacementRules, Settlements);
         PlaceStartingRoad = new PlaceStartingRoadUseCase(PlacementRules, Roads);
-        GrantStartingResources = new GrantStartingResourcesUseCase(Grid, Terrain, Settlements, Resources);
+        GrantStartingResources = new GrantStartingResourcesUseCase(Grid, Settlements, Resources);
     }
 
     public SetupPhase NewSetupPhase(IReadOnlyList<PlayerId> players) =>

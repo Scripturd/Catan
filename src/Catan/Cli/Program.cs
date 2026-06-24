@@ -8,7 +8,25 @@ internal static class Program
     private static void Main()
     {
         var root = new CompositionRoot();
-        var players = new[] { new PlayerId(0), new PlayerId(1) };
+
+        var playerAmount = UI.AskUserForInt("How many players do you want in this session?", min: 2, max: 4);
+        PlayerId[] players = new PlayerId[playerAmount];
+        for (int i = 0; i < playerAmount; i++)
+        {
+            players[i] = new PlayerId(i);
+        }
+
+        foreach (var hex in root.Grid.Hexes)
+        {
+            var terrainKind = hex.Terrain;
+            var numberToken = root.Numbers.At(hex.Id);
+
+            if (numberToken.HasValue)
+                Console.WriteLine($"(q: {hex.Q}, r: {hex.R}): {terrainKind} {numberToken.Value.Number}");            
+            else
+                Console.WriteLine($"(q: {hex.Q}, r: {hex.R}): {terrainKind}");
+        }
+
         var setup = root.NewSetupPhase(players);
 
         while (!setup.IsComplete)
@@ -22,6 +40,7 @@ internal static class Program
 
         Console.WriteLine();
         Console.WriteLine("starting hands (granted by each player's second settlement):");
+
         foreach (var player in players)
             Console.WriteLine($"  player {player.Value}: {Describe(root.Resources.Of(player))}");
     }

@@ -13,5 +13,5 @@ public sealed class NumberLayout
 
     public NumberToken? At(HexId hex) => _tokens.TryGetValue(hex, out var token) ? token : null;
 
-    public IEnumerable<HexId> HexesWith(int roll) => _tokens.Where(t => t.Value.Value == roll).Select(t => t.Key);
+    public IEnumerable<HexId> HexesWith(int roll) => _tokens.Where(t => t.Value.Number == roll).Select(t => t.Key);
 }

@@ -26,4 +26,6 @@ public sealed class HexGrid
 
     public IReadOnlyList<VertexId> AdjacentVertices(VertexId vertex) => _vertices[vertex].AdjacentVertices;
     public IReadOnlyList<EdgeId> EdgesOf(VertexId vertex) => _vertices[vertex].Edges;
+
+    public IEnumerable<Hex> HexesOf(TerrainKind terrain) => Hexes.Where(h => h.Terrain == terrain);
 }

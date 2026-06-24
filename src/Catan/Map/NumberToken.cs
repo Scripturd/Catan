@@ -2,15 +2,15 @@ namespace Catan.Map;
 
 public readonly record struct NumberToken
 {
-    public int Value { get; }
+    public int Number { get; }
 
-    public int Pips => 6 - Math.Abs(7 - Value);
+    public int Pips => 6 - Math.Abs(7 - Number);
 
-    public NumberToken(int value)
+    public NumberToken(int number)
     {
-        if (value is < 2 or > 12 or 7)
-            throw new ArgumentOutOfRangeException(nameof(value), value, null);
+        if (number is < 2 or > 12 or 7)
+            throw new ArgumentOutOfRangeException(nameof(number), number, null);
 
-        Value = value;
+        Number = number;
     }
 }

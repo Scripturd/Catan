@@ -6,18 +6,15 @@ namespace Catan.Game.UseCases;
 public class GrantStartingResourcesUseCase
 {
     private readonly HexGrid _grid;
-    private readonly TerrainLayout _terrain;
     private readonly SettlementRegistry _settlements;
     private readonly ResourceRegistry _resources;
 
     public GrantStartingResourcesUseCase(
         HexGrid grid,
-        TerrainLayout terrain,
         SettlementRegistry settlements,
         ResourceRegistry resources)
     {
         _grid = grid;
-        _terrain = terrain;
         _settlements = settlements;
         _resources = resources;
     }
@@ -29,7 +26,7 @@ public class GrantStartingResourcesUseCase
 
         foreach (var hexId in _grid.GetVertex(vertex).Hexes)
         {
-            var yield = TerrainYields.For(_terrain.At(hexId));
+            var yield = TerrainYields.For(_grid.GetHex(hexId).Terrain);
             if (yield.Kind != YieldKind.Resource)
                 continue;
 

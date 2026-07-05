@@ -1,4 +1,4 @@
-namespace Catan.Board;
+namespace Catan.Geometry;
 
 internal static class HexGeometry
 {
@@ -87,6 +87,17 @@ internal static class HexGeometry
             ],
             _ => throw new ArgumentOutOfRangeException(nameof(vertex))
         };
+    }
+
+    public static VertexCoordinate Opposite(EdgeCoordinate edge, VertexCoordinate vertex)
+    {
+        var (a, b) = EndpointsOf(edge);
+        if (vertex == a)
+            return b;
+        if (vertex == b)
+            return a;
+
+        throw new ArgumentException($"Vertex {vertex} is not an endpoint of edge {edge}.", nameof(vertex));
     }
 
     private static HexCoordinate Hex(int q, int r) => new(q, r);

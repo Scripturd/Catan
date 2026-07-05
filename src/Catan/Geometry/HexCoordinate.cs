@@ -1,4 +1,4 @@
-namespace Catan.Board;
+namespace Catan.Geometry;
 
 public readonly record struct HexCoordinate
 {

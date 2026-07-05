@@ -2,52 +2,32 @@ namespace Catan.Board;
 
 public sealed class BoardService
 {
-    private readonly Dictionary<HexCoordinate, TerrainType> _hexes = [];
-    private readonly HashSet<VertexCoordinate> _vertices = [];
-    private readonly HashSet<EdgeCoordinate> _edges = [];
+    private readonly HexTopology _topology = new();
+    private readonly Dictionary<HexCoordinate, TerrainType> _terrains = [];
 
-    public IReadOnlyList<HexCoordinate> Hexes => [.. _hexes.Keys];
-    public IReadOnlyList<VertexCoordinate> Vertices => [.. _vertices];
-    public IReadOnlyList<EdgeCoordinate> Edges => [.. _edges];
+    public IReadOnlyList<HexCoordinate> Hexes => _topology.Hexes;
+    public IReadOnlyList<VertexCoordinate> Vertices => _topology.Vertices;
+    public IReadOnlyList<EdgeCoordinate> Edges => _topology.Edges;
 
     public void AddHex(HexCoordinate hex, TerrainType terrainType)
     {
-        _hexes[hex] = terrainType;
-
-        foreach (var vertex in HexGeometry.VerticesOf(hex))
-            _vertices.Add(vertex);
-
-        foreach (var edge in HexGeometry.EdgesOf(hex))
-            _edges.Add(edge);
+        _topology.AddHex(hex);
+        _terrains[hex] = terrainType;
     }
 
     public void Clear()
     {
-        _hexes.Clear();
-        _vertices.Clear();
-        _edges.Clear();
+        _topology.Clear();
+        _terrains.Clear();
     }
 
-    public TerrainType TerrainAt(HexCoordinate hex) => _hexes[hex];
-
-    public IReadOnlyList<VertexCoordinate> VerticesOf(HexCoordinate hex) => HexGeometry.VerticesOf(hex);
-    public (VertexCoordinate A, VertexCoordinate B) EndpointsOf(EdgeCoordinate edge) => HexGeometry.EndpointsOf(edge);
-
-    public IReadOnlyList<HexCoordinate> HexesAround(VertexCoordinate vertex) =>
-        [.. HexGeometry.HexesAround(vertex).Where(_hexes.ContainsKey)];
-
-    public IReadOnlyList<EdgeCoordinate> EdgesAround(VertexCoordinate vertex) =>
-        [.. HexGeometry.EdgesAround(vertex).Where(_edges.Contains)];
-
-    public IReadOnlyList<VertexCoordinate> AdjacentVertices(VertexCoordinate vertex) =>
-        [.. EdgesAround(vertex).Select(edge => Opposite(edge, vertex))];
-
+    public TerrainType TerrainAt(HexCoordinate hex) => _terrains[hex];
     public IEnumerable<HexCoordinate> HexesOf(TerrainType terrain) =>
-        _hexes.Where(entry => entry.Value == terrain).Select(entry => entry.Key);
+        _terrains.Where(entry => entry.Value == terrain).Select(entry => entry.Key);
 
-    private static VertexCoordinate Opposite(EdgeCoordinate edge, VertexCoordinate vertex)
-    {
-        var (a, b) = HexGeometry.EndpointsOf(edge);
-        return a == vertex ? b : a;
-    }
+    public static IReadOnlyList<VertexCoordinate> VerticesOf(HexCoordinate hex) => HexGeometry.VerticesOf(hex);
+    public static (VertexCoordinate A, VertexCoordinate B) EndpointsOf(EdgeCoordinate edge) => HexGeometry.EndpointsOf(edge);
+    public IReadOnlyList<HexCoordinate> HexesAround(VertexCoordinate vertex) => _topology.HexesAround(vertex);
+    public IReadOnlyList<EdgeCoordinate> EdgesAround(VertexCoordinate vertex) => _topology.EdgesAround(vertex);
+    public IReadOnlyList<VertexCoordinate> AdjacentVertices(VertexCoordinate vertex) => _topology.AdjacentVertices(vertex);
 }

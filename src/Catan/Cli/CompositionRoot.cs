@@ -2,13 +2,22 @@ using Catan.Game;
 using Catan.Game.UseCases;
 using Catan.Pieces;
 using Catan.Players;
+using Catan.SeafarersScenario1;
+using Catan.StandardBoard;
 
 namespace Catan.Cli;
 
 public sealed class CompositionRoot
 {
-    public HexGrid Grid { get; }
-    public NumberTokenLayout Numbers { get; }
+    public Random Random = new();
+    public BoardService Grid { get; }
+    public NumberTokenService Numbers { get; }
+    public Shuffler Shuffler { get; }
+
+    public NumberTokenSpiral NumberTokenSpiral { get; }
+    public StandardBoardGenerator StandardBoardGenerator { get; }
+
+    public SeafarersScenario1BoardGenerator SeafarersScenario1BoardGenerator { get; }
 
     public SettlementRegistry Settlements { get; }
     public CityRegistry Cities { get; }
@@ -27,16 +36,21 @@ public sealed class CompositionRoot
 
     public CompositionRoot()
     {
-        var (grid, numbers) = StandardBoard.Create();
-        Grid = grid;
-        Numbers = numbers;
+        Grid = ;
+        Numbers = ;
+        Shuffler = new Shuffler(Random);
+
+        NumberTokenSpiral = new NumberTokenSpiral(Random);
+        StandardBoardGenerator = new StandardBoardGenerator(Shuffler, NumberTokenSpiral);
+
+        SeafarersScenario1BoardGenerator = new SeafarersScenario1BoardGenerator(Shuffler);
 
         Settlements = new SettlementRegistry();
         Cities = new CityRegistry();
         Roads = new RoadRegistry();
         Ships = new ShipRegistry();
         Resources = new ResourceRegistry();
-        Robber = new Robber(grid.HexesOf(TerrainType.Desert).First().Id);
+        Robber = new Robber(grid.HexesOf(TerrainType.Desert).First());
         PlacementRules = new PlacementRules(Settlements, Cities, Roads, Ships, Grid);
 
         ProduceResources = new ProduceResourcesUseCase(grid, numbers, Settlements, Cities, Resources, Robber);

@@ -16,7 +16,7 @@ public class PlaceStartingSettlementUseCase
         _settlementRegistry = settlementRegistry;
     }
 
-    public void Execute(PlayerId playerId, VertexId vertex)
+    public void Execute(PlayerId playerId, VertexCoordinate vertex)
     {
         if (!_rules.SatisfiesDistanceRule(vertex))
             return;

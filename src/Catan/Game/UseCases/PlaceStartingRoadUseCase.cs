@@ -16,7 +16,7 @@ public class PlaceStartingRoadUseCase
         _roadRegistry = roadRegistry;
     }
 
-    public void Execute(PlayerId playerId, EdgeId edge)
+    public void Execute(PlayerId playerId, EdgeCoordinate edge)
     {
         if (!_rules.EdgeIsVacant(edge))
             return;

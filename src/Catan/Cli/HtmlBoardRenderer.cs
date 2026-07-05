@@ -8,10 +8,10 @@ internal static class HtmlBoardRenderer
     private const double Size = 60;
     private const double Margin = 40;
 
-    public static string ToHtml(HexGrid grid, NumberTokenLayout numbers)
+    public static string ToHtml(BoardService grid, NumberTokenService numbers)
     {
         var centres = grid.Hexes.ToDictionary(
-            h => h.Id,
+            h => h,
             h => (X: Size * Math.Sqrt(3) * (h.Q + h.R / 2.0), Y: Size * 1.5 * h.R));
 
         double minX = centres.Values.Min(c => c.X) - Size - Margin;
@@ -28,13 +28,14 @@ internal static class HtmlBoardRenderer
 
         foreach (var hex in grid.Hexes)
         {
-            var (cx, cy) = centres[hex.Id];
-            svg.Append(Hexagon(cx, cy, Fill(hex.TerrainType)));
+            var (cx, cy) = centres[hex];
+            var terrain = grid.TerrainAt(hex);
+            svg.Append(Hexagon(cx, cy, Fill(terrain)));
 
-            if (hex.TerrainType == TerrainType.Sea)
+            if (terrain == TerrainType.Sea)
                 continue;
 
-            var token = numbers.At(hex.Id);
+            var token = numbers.At(hex);
             if (token.HasValue)
                 svg.Append(Token(cx, cy, token.Value));
         }

@@ -5,16 +5,16 @@ namespace Catan.Game.UseCases;
 
 public class ProduceResourcesUseCase
 {
-    private readonly HexGrid _grid;
-    private readonly NumberTokenLayout _numbers;
+    private readonly BoardService _grid;
+    private readonly NumberTokenService _numbers;
     private readonly SettlementRegistry _settlements;
     private readonly CityRegistry _cities;
     private readonly ResourceRegistry _resources;
     private readonly Robber _robber;
 
     public ProduceResourcesUseCase(
-        HexGrid grid,
-        NumberTokenLayout numbers,
+        BoardService grid,
+        NumberTokenService numbers,
         SettlementRegistry settlements,
         CityRegistry cities,
         ResourceRegistry resources,
@@ -30,17 +30,16 @@ public class ProduceResourcesUseCase
 
     public void Execute(int roll)
     {
-        foreach (var hexId in _numbers.HexesWith(roll))
+        foreach (var hex in _numbers.HexesWith(roll))
         {
-            if (hexId == _robber.Hex)
+            if (hex == _robber.Hex)
                 continue;
 
-            var hex = _grid.GetHex(hexId);
-            var yield = TerrainYields.For(hex.TerrainType);
+            var yield = TerrainYields.For(_grid.TerrainAt(hex));
             if (yield.Type != YieldType.Resource)
                 continue;
 
-            foreach (var vertex in hex.Vertices)
+            foreach (var vertex in _grid.VerticesOf(hex))
             {
                 var settlement = _settlements.At(vertex);
                 if (settlement is not null)

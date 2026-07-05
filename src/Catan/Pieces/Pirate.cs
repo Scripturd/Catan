@@ -2,14 +2,14 @@
 
 public class Pirate
 {
-    public HexId Hex { get; private set; }
+    public HexCoordinate Hex { get; private set; }
 
-    public Pirate(HexId hex)
+    public Pirate(HexCoordinate hex)
     {
         Hex = hex;
     }
 
-    public void MoveTo(HexId hex)
+    public void MoveTo(HexCoordinate hex)
     {
         Hex = hex;
     }

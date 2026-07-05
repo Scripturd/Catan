@@ -5,12 +5,12 @@ namespace Catan.Game.UseCases;
 
 public class GrantStartingResourcesUseCase
 {
-    private readonly HexGrid _grid;
+    private readonly BoardService _grid;
     private readonly SettlementRegistry _settlements;
     private readonly ResourceRegistry _resources;
 
     public GrantStartingResourcesUseCase(
-        HexGrid grid,
+        BoardService grid,
         SettlementRegistry settlements,
         ResourceRegistry resources)
     {
@@ -19,14 +19,14 @@ public class GrantStartingResourcesUseCase
         _resources = resources;
     }
 
-    public void Execute(PlayerId playerId, VertexId vertex)
+    public void Execute(PlayerId playerId, VertexCoordinate vertex)
     {
         if (_settlements.At(vertex)?.Owner != playerId)
             return;
 
-        foreach (var hexId in _grid.GetVertex(vertex).Hexes)
+        foreach (var hex in _grid.HexesAround(vertex))
         {
-            var yield = TerrainYields.For(_grid.GetHex(hexId).TerrainType);
+            var yield = TerrainYields.For(_grid.TerrainAt(hex));
             if (yield.Type != YieldType.Resource)
                 continue;
 

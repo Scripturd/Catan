@@ -2,14 +2,14 @@
 
 public class Robber
 {
-    public HexId Hex { get; private set; }
+    public HexCoordinate Hex { get; private set; }
 
-    public Robber(HexId hex)
+    public Robber(HexCoordinate hex)
     {
         Hex = hex;
     }
 
-    public void MoveTo(HexId hex)
+    public void MoveTo(HexCoordinate hex)
     {
         Hex = hex;
     }

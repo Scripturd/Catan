@@ -8,14 +8,14 @@ public sealed class PlacementRules
     private readonly CityRegistry _cities;
     private readonly RoadRegistry _roads;
     private readonly ShipRegistry _ships;
-    private readonly HexGrid _grid;
+    private readonly BoardService _grid;
 
     public PlacementRules(
         SettlementRegistry settlements,
         CityRegistry cities,
         RoadRegistry roads,
         ShipRegistry ships,
-        HexGrid grid)
+        BoardService grid)
     {
         _settlements = settlements;
         _cities = cities;
@@ -24,33 +24,33 @@ public sealed class PlacementRules
         _grid = grid;
     }
 
-    public bool VertexIsVacant(VertexId vertex) =>
+    public bool VertexIsVacant(VertexCoordinate vertex) =>
         !_settlements.ExistsAt(vertex) && !_cities.ExistsAt(vertex);
 
-    public bool SatisfiesDistanceRule(VertexId vertex) =>
+    public bool SatisfiesDistanceRule(VertexCoordinate vertex) =>
         VertexIsVacant(vertex) && _grid.AdjacentVertices(vertex).All(VertexIsVacant);
 
-    public bool TouchesOwnRoad(PlayerId player, VertexId vertex) =>
-        _grid.EdgesOf(vertex).Any(e => _roads.At(e)?.Owner == player);
+    public bool TouchesOwnRoad(PlayerId player, VertexCoordinate vertex) =>
+        _grid.EdgesAround(vertex).Any(e => _roads.At(e)?.Owner == player);
 
-    public bool EdgeIsVacant(EdgeId edge) =>
+    public bool EdgeIsVacant(EdgeCoordinate edge) =>
         !_roads.ExistsAt(edge) && !_ships.ExistsAt(edge);
 
-    public bool TouchesOwnBuilding(PlayerId player, EdgeId edge)
+    public bool TouchesOwnBuilding(PlayerId player, EdgeCoordinate edge)
     {
-        var ends = _grid.GetEdge(edge);
-        return OwnsBuildingAt(player, ends.A) || OwnsBuildingAt(player, ends.B);
+        var (a, b) = _grid.EndpointsOf(edge);
+        return OwnsBuildingAt(player, a) || OwnsBuildingAt(player, b);
     }
 
-    public bool ConnectsToNetwork(PlayerId player, EdgeId edge)
+    public bool ConnectsToNetwork(PlayerId player, EdgeCoordinate edge)
     {
-        var ends = _grid.GetEdge(edge);
-        return HasPresence(player, ends.A) || HasPresence(player, ends.B);
+        var (a, b) = _grid.EndpointsOf(edge);
+        return HasPresence(player, a) || HasPresence(player, b);
     }
 
-    private bool OwnsBuildingAt(PlayerId player, VertexId vertex) =>
+    private bool OwnsBuildingAt(PlayerId player, VertexCoordinate vertex) =>
         _settlements.At(vertex)?.Owner == player || _cities.At(vertex)?.Owner == player;
 
-    private bool HasPresence(PlayerId player, VertexId vertex) =>
+    private bool HasPresence(PlayerId player, VertexCoordinate vertex) =>
         OwnsBuildingAt(player, vertex) || TouchesOwnRoad(player, vertex);
 }

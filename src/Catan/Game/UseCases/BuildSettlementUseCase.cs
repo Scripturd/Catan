@@ -19,7 +19,7 @@ public class BuildSettlementUseCase
         _resourceRegistry = resourceRegistry;
     }
 
-    public void Execute(PlayerId playerId, VertexId vertex)
+    public void Execute(PlayerId playerId, VertexCoordinate vertex)
     {
         if (!_rules.SatisfiesDistanceRule(vertex))
             return;

@@ -1,4 +1,4 @@
-namespace Catan.Map;
+namespace Catan.Board;
 
 public readonly record struct NumberToken
 {

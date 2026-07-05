@@ -13,12 +13,16 @@ internal static class Program
 
         var playerCount = UI.AskUserForInt("How many players?", min: 3, max: 4);
 
-        HexGrid grid;
-        NumberTokenLayout numberTokens;
+        CompositionRoot compositionRoot = new();
+
+        BoardService grid;
+        NumberTokenService numberTokens;
         if (expansion == 0)
-            (grid, numberTokens) = StandardBoard.Create();
+            (grid, numberTokens) = compositionRoot.StandardBoardGenerator.Create();
         else
-            (grid, numberTokens) = SeafarersScenario1.Create(playerCount);
+            (grid, numberTokens) = playerCount == 3
+                ? compositionRoot.SeafarersScenario1ThreePlayer.Create()
+                : compositionRoot.SeafarersScenario1FourPlayer.Create();
 
         var html = HtmlBoardRenderer.ToHtml(grid, numberTokens);
         var path = Path.Combine(Path.GetTempPath(), "catan-board.html");

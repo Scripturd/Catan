@@ -19,7 +19,7 @@ public class BuildShipUseCase
         _resourceRegistry = resourceRegistry;
     }
 
-    public void Execute(PlayerId playerId, EdgeId edge)
+    public void Execute(PlayerId playerId, EdgeCoordinate edge)
     {
         if (_roadRegistry.ExistsAt(edge) || _shipRegistry.ExistsAt(edge))
             return;

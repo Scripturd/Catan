@@ -2,7 +2,7 @@ namespace Catan.Cli;
 
 internal static class BoardRenderer
 {
-    public static string ToText(HexGrid grid, NumberTokenLayout numbers)
+    public static string ToText(BoardService grid, NumberTokenService numbers)
     {
         int minRow = grid.Hexes.Min(h => h.R);
         int minSlot = grid.Hexes.Min(h => h.Q * 2 + h.R);
@@ -21,7 +21,7 @@ internal static class BoardRenderer
                 lines[line] = chars;
             }
 
-            var label = Label(hex, numbers);
+            var label = Label(hex, grid, numbers);
             for (int i = 0; i < label.Length && col + i < width; i++)
                 chars[col + i] = label[i];
         }
@@ -29,13 +29,14 @@ internal static class BoardRenderer
         return string.Join("\n", lines.OrderBy(l => l.Key).Select(l => new string(l.Value).TrimEnd()));
     }
 
-    private static string Label(Hex hex, NumberTokenLayout numbers)
+    private static string Label(HexCoordinate hex, BoardService grid, NumberTokenService numbers)
     {
-        if (hex.TerrainType == TerrainType.Sea)
+        var terrain = grid.TerrainAt(hex);
+        if (terrain == TerrainType.Sea)
             return "~";
 
-        var token = numbers.At(hex.Id);
-        return Abbrev(hex.TerrainType) + (token.HasValue ? token.Value.Number.ToString() : "");
+        var token = numbers.At(hex);
+        return Abbrev(terrain) + (token.HasValue ? token.Value.Number.ToString() : "");
     }
 
     private static string Abbrev(TerrainType terrain) => terrain switch

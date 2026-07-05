@@ -1,4 +1,4 @@
-namespace Catan.Map;
+namespace Catan.Board;
 
 public enum TerrainType
 {

@@ -3,7 +3,7 @@ using Catan.Game;
 using Catan.GameModes;
 using Catan.Geometry;
 using Catan.Players;
-using Catan.SeafarersScenario1;
+using Catan.Scenario1;
 using Catan.Standard;
 
 namespace Catan.Tests;
@@ -108,7 +108,7 @@ public sealed class GameSessionTests
     public void The_builtin_seafarers_mode_plays_through_setup()
     {
         var session = new GameSession(
-            (board, tokens, harbours, robber, pirate, shuffler) => new SeafarersScenario1Game(board, tokens, harbours, robber, pirate, shuffler),
+            (board, tokens, harbours, robber, pirate, shuffler) => new Scenario1Game(board, tokens, harbours, robber, pirate, shuffler),
             Players, new Random(1));
 
         PlayFullSetup(session);

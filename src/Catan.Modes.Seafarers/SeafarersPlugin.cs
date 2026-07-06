@@ -1,6 +1,6 @@
 using Catan.Game;
 
-namespace Catan.SeafarersScenario1;
+namespace Catan.Scenario1;
 
 public sealed class SeafarersPlugin : IGameModePlugin
 {
@@ -8,6 +8,6 @@ public sealed class SeafarersPlugin : IGameModePlugin
     [
         new GameModeRegistration("Seafarers: Heading for New Shores", 3, 4,
             (board, tokens, harbours, robber, pirate, shuffler) =>
-                new SeafarersScenario1Game(board, tokens, harbours, robber, pirate, shuffler))
+                new Scenario1Game(board, tokens, harbours, robber, pirate, shuffler))
     ];
 }

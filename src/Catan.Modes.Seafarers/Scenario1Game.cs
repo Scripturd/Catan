@@ -5,9 +5,9 @@ using Catan.Geometry;
 using Catan.Pieces;
 using Catan.Players;
 
-namespace Catan.SeafarersScenario1;
+namespace Catan.Scenario1;
 
-public class SeafarersScenario1Game : IGameMode
+public class Scenario1Game : IGameMode
 {
     private readonly BoardService _boardService;
     private readonly NumberTokenService _numberTokenService;
@@ -19,7 +19,7 @@ public class SeafarersScenario1Game : IGameMode
     public int MinPlayerCount { get; } = 3;
     public int MaxPlayerCount { get; } = 4;
 
-    public SeafarersScenario1Game(
+    public Scenario1Game(
         BoardService boardService,
         NumberTokenService numberTokenService,
         HarbourService harbourService,
@@ -37,9 +37,9 @@ public class SeafarersScenario1Game : IGameMode
 
     public void Start(IReadOnlyList<PlayerId> players)
     {
-        ISeafarersScenario1Setup setup = players.Count == 3
-                ? new SeafarersScenario1ThreePlayerSetup()
-                : new SeafarersScenario1FourPlayerSetup();
+        IScenario1Setup setup = players.Count == 3
+                ? new Scenario1ThreePlayerSetup()
+                : new Scenario1FourPlayerSetup();
 
         AddLandHexes(setup.MainHexes, setup.MainTerrainTypes, setup.MainTokens);
         AddLandHexes(setup.SmallHexes, setup.SmallTerrainTypes, setup.SmallTokens);
@@ -77,7 +77,7 @@ public class SeafarersScenario1Game : IGameMode
             _boardService.AddHex(hex, TerrainType.Sea);
     }
 
-    private void PlaceHarbours(ISeafarersScenario1Setup setup)
+    private void PlaceHarbours(IScenario1Setup setup)
     {
         var shuffledEdges = _shuffler.Shuffle(setup.HarbourEdges);
         var edges = SelectNonAdjacentEdges(shuffledEdges, setup.Harbours.Count);
@@ -115,7 +115,7 @@ public class SeafarersScenario1Game : IGameMode
         _robber.Place(desert ?? _numberTokenService.HexesWith(12).First());
     }
 
-    private void MovePirate(ISeafarersScenario1Setup setup)
+    private void MovePirate(IScenario1Setup setup)
     {
         _pirate.Place(setup.PirateHex);
     }

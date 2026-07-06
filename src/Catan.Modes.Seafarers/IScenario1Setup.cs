@@ -1,9 +1,9 @@
 using Catan.Board;
 using Catan.Geometry;
 
-namespace Catan.SeafarersScenario1;
+namespace Catan.Scenario1;
 
-public interface ISeafarersScenario1Setup
+public interface IScenario1Setup
 {
     public IReadOnlyList<Hex> MainHexes { get; }
     public IReadOnlyList<TerrainType> MainTerrainTypes { get; }

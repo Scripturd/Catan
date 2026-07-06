@@ -88,8 +88,6 @@ public sealed class BoardDefinitionLoader
 
         if (definition.Robber is { } robber && !seen.Contains((robber.Q, robber.R)))
             errors.Add($"'robber' at ({robber.Q}, {robber.R}) is not a defined hex.");
-        if (definition.Pirate is { } pirate && !seen.Contains((pirate.Q, pirate.R)))
-            errors.Add($"'pirate' at ({pirate.Q}, {pirate.R}) is not a defined hex.");
 
         if (errors.Count > 0)
             throw new BoardDefinitionException(

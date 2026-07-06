@@ -7,5 +7,5 @@ public sealed record GameServices(
     NumberTokenService Tokens,
     HarbourService Harbours,
     Robber Robber,
-    Pirate Pirate,
+    MarkerRegistry Markers,
     Shuffler Shuffler);

@@ -85,7 +85,7 @@ public sealed class DataDrivenGameModeTests
             new NumberTokenService(board),
             new HarbourService(board),
             new Robber(),
-            new Pirate(),
+            new MarkerRegistry(),
             new Shuffler(new Random(1)));
         return (new DataDrivenGameMode(definition), services);
     }

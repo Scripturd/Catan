@@ -19,7 +19,7 @@ public sealed class CompositionRoot
     public ShipRegistry Ships { get; }
     public ResourceRegistry Resources { get; }
     public Robber Robber { get; }
-    public Pirate Pirate { get; }
+    public MarkerRegistry Markers { get; }
     public PlacementRules PlacementRules { get; }
 
     public ProduceResourcesUseCase ProduceResources { get; }
@@ -41,7 +41,7 @@ public sealed class CompositionRoot
         Ships = new ShipRegistry();
         Resources = new ResourceRegistry();
         Robber = new Robber();
-        Pirate = new Pirate();
+        Markers = new MarkerRegistry();
 
         Shuffler = new Shuffler(Random);
 

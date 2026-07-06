@@ -10,7 +10,6 @@ public sealed class BoardDefinition
     public IReadOnlyList<HexDefinition> Hexes { get; init; } = [];
     public IReadOnlyList<HarbourDefinition> Harbours { get; init; } = [];
     public HexCoord? Robber { get; init; }
-    public HexCoord? Pirate { get; init; }
     public bool RandomizeTerrain { get; init; }
     public bool RandomizeTokens { get; init; }
 }

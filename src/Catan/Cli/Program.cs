@@ -42,11 +42,11 @@ internal static class Program
             compositionRoot.NumberTokenService,
             compositionRoot.HarbourService,
             compositionRoot.Robber,
-            compositionRoot.Pirate,
+            compositionRoot.Markers,
             compositionRoot.Shuffler);
         gameMode.Start(services, players);
 
-        var html = HtmlBoardRenderer.ToHtml(compositionRoot.BoardService, compositionRoot.NumberTokenService, compositionRoot.HarbourService, compositionRoot.Robber, compositionRoot.Pirate);
+        var html = HtmlBoardRenderer.ToHtml(compositionRoot.BoardService, compositionRoot.NumberTokenService, compositionRoot.HarbourService, compositionRoot.Robber, compositionRoot.Markers);
         var path = Path.Combine(Path.GetTempPath(), "catan-board.html");
         File.WriteAllText(path, html);
 

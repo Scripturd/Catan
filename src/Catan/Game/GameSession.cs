@@ -11,7 +11,7 @@ public sealed class GameSession
     public NumberTokenService Tokens { get; }
     public HarbourService Harbours { get; }
     public Robber Robber { get; }
-    public Pirate Pirate { get; }
+    public MarkerRegistry Markers { get; }
     public SettlementRegistry Settlements { get; }
     public CityRegistry Cities { get; }
     public RoadRegistry Roads { get; }
@@ -34,7 +34,7 @@ public sealed class GameSession
         Tokens = new NumberTokenService(Board);
         Harbours = new HarbourService(Board);
         Robber = new Robber();
-        Pirate = new Pirate();
+        Markers = new MarkerRegistry();
         Settlements = new SettlementRegistry();
         Cities = new CityRegistry();
         Roads = new RoadRegistry();
@@ -42,7 +42,7 @@ public sealed class GameSession
         Resources = new ResourceRegistry();
 
         var shuffler = new Shuffler(random);
-        mode.Start(new GameServices(Board, Tokens, Harbours, Robber, Pirate, shuffler), players);
+        mode.Start(new GameServices(Board, Tokens, Harbours, Robber, Markers, shuffler), players);
 
         _rules = new PlacementRules(Settlements, Cities, Roads, Ships, Board);
         _setup = new SetupPhase(

@@ -23,7 +23,6 @@ public sealed class DataDrivenGameMode : IGameMode
         PlaceTokens(services, landHexes);
         PlaceHarbours(services);
         PlaceRobber(services);
-        PlacePirate(services);
     }
 
     private IReadOnlyList<Hex> PlaceHexes(GameServices services)
@@ -91,11 +90,5 @@ public sealed class DataDrivenGameMode : IGameMode
         var desert = services.Board.HexesOf(TerrainType.Desert).Cast<Hex?>().FirstOrDefault();
         if (desert is { } hex)
             services.Robber.Place(hex);
-    }
-
-    private void PlacePirate(GameServices services)
-    {
-        if (_definition.Pirate is { } pirate)
-            services.Pirate.Place(new Hex(pirate.Q, pirate.R));
     }
 }

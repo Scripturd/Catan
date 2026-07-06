@@ -1,4 +1,5 @@
 using Catan.Economy;
+using Catan.Game;
 using Catan.Pieces;
 using System.Globalization;
 using System.Text;
@@ -10,7 +11,7 @@ internal static class HtmlBoardRenderer
     private const double Size = 60;
     private const double Margin = 70;
 
-    public static string ToHtml(BoardService grid, NumberTokenService numbers, HarbourService harbours, Robber robber, Pirate pirate)
+    public static string ToHtml(BoardService grid, NumberTokenService numbers, HarbourService harbours, Robber robber, MarkerRegistry markers)
     {
         var centres = grid.Hexes.ToDictionary(h => h, HexCentre);
 
@@ -46,8 +47,9 @@ internal static class HtmlBoardRenderer
         if (robber.IsPlaced && centres.TryGetValue(robber.Hex, out var robberCentre))
             svg.Append(RobberPawn(robberCentre.X, robberCentre.Y));
 
-        if (pirate.IsPlaced && centres.TryGetValue(pirate.Hex, out var pirateCentre))
-            svg.Append(PirateShip(pirateCentre.X, pirateCentre.Y));
+        foreach (var marker in markers.All)
+            if (centres.TryGetValue(marker.Hex, out var markerCentre))
+                svg.Append(MarkerGlyph(markerCentre.X, markerCentre.Y, marker.Color, marker.Glyph));
 
         svg.Append("</svg>");
 
@@ -111,25 +113,10 @@ internal static class HtmlBoardRenderer
                 cx, cy - 20);
     }
 
-    private static string PirateShip(double cx, double cy)
-    {
-        string hull = F(
-            "<path d=\"M {0},{2} Q {6},{3} {1},{2} L {4},{5} Q {6},{7} {8},{5} Z\"" +
-            " fill=\"#2b2b2b\" stroke=\"#f1e3c0\" stroke-width=\"1.5\"/>",
-            cx - 20, cx + 20, cy + 2, cy + 4,
-            cx + 13, cy + 16, cx, cy + 20, cx - 13);
-
-        string mast = F(
-            "<line x1=\"{0}\" y1=\"{1}\" x2=\"{0}\" y2=\"{2}\" stroke=\"#f1e3c0\" stroke-width=\"2\"/>",
-            cx, cy + 2, cy - 26);
-
-        string sail = F(
-            "<path d=\"M {0},{1} L {0},{2} Q {3},{4} {0},{1} Z\"" +
-            " fill=\"#2b2b2b\" stroke=\"#f1e3c0\" stroke-width=\"1.5\"/>",
-            cx + 1, cy - 24, cy - 3, cx + 18, cy - 13);
-
-        return mast + sail + hull;
-    }
+    private static string MarkerGlyph(double cx, double cy, string color, string glyph) => F(
+        "<circle cx=\"{0}\" cy=\"{1}\" r=\"14\" fill=\"{2}\" stroke=\"#f1e3c0\" stroke-width=\"2\"/>" +
+        "<text x=\"{0}\" y=\"{3}\" text-anchor=\"middle\" font-size=\"16\" fill=\"#f1e3c0\">{4}</text>",
+        cx, cy, color, cy + 5, glyph);
 
     private static string Fill(TerrainType terrain) => terrain.Color;
 

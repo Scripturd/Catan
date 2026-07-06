@@ -2,6 +2,7 @@ using Catan.Board;
 using Catan.Economy;
 using Catan.Game;
 using Catan.Geometry;
+using Catan.Pieces;
 using Catan.Players;
 
 namespace Catan.Seafarers.Scenario1;
@@ -25,7 +26,7 @@ public class Scenario1Game : IGameMode
         PlaceHarbours(services, setup);
 
         MoveRobber(services);
-        services.Pirate.Place(setup.PirateHex);
+        services.Markers.Place(new Marker("pirate", setup.PirateHex, "#2b2b2b", "☠"));
     }
 
     private static void AddLandHexes(

@@ -33,7 +33,7 @@ public sealed class ServerGameTests
 
         var fifth = game.AddPlayer("c4", "e");
 
-        Assert.False(fifth.Ok);
+        Assert.False(fifth.Success);
         Assert.Equal("The game is full.", fifth.Error);
     }
 
@@ -46,7 +46,7 @@ public sealed class ServerGameTests
 
         var result = game.Start();
 
-        Assert.False(result.Ok);
+        Assert.False(result.Success);
         Assert.Null(game.Session);
         Assert.Equal("Lobby", game.Snapshot().Phase);
     }
@@ -56,7 +56,7 @@ public sealed class ServerGameTests
     {
         var game = ThreePlayerGame();
 
-        Assert.True(game.Start().Ok);
+        Assert.True(game.Start().Success);
 
         var snapshot = game.Snapshot();
         Assert.Equal("Setup", snapshot.Phase);
@@ -77,7 +77,7 @@ public sealed class ServerGameTests
 
         var result = game.PlaceStarting("c1", settlement, road);
 
-        Assert.False(result.Ok);
+        Assert.False(result.Success);
         Assert.Equal(0, game.Snapshot().CurrentPlayerId);
     }
 
@@ -88,7 +88,7 @@ public sealed class ServerGameTests
         game.Start();
         var (settlement, road) = FirstLegalMove(game.Session!);
 
-        Assert.True(game.PlaceStarting("c0", settlement, road).Ok);
+        Assert.True(game.PlaceStarting("c0", settlement, road).Success);
 
         var snapshot = game.Snapshot();
         Assert.Equal(1, snapshot.CurrentPlayerId);

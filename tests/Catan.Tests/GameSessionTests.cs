@@ -34,7 +34,7 @@ public sealed class GameSessionTests
 
         var result = session.PlaceStartingSettlementAndRoad(Players[1], settlement, road);
 
-        Assert.False(result.Ok);
+        Assert.False(result.Success);
         Assert.Equal(Players[0], session.CurrentPlayer);
         Assert.False(session.Settlements.ExistsAt(settlement));
     }
@@ -47,7 +47,7 @@ public sealed class GameSessionTests
 
         var result = session.PlaceStartingSettlementAndRoad(Players[0], settlement, road);
 
-        Assert.True(result.Ok);
+        Assert.True(result.Success);
         Assert.Equal(Players[0], session.Settlements.At(settlement)!.Owner);
         Assert.Equal(Players[0], session.Roads.At(road)!.Owner);
         Assert.Equal(Players[1], session.CurrentPlayer);
@@ -65,7 +65,7 @@ public sealed class GameSessionTests
 
         var result = session.PlaceStartingSettlementAndRoad(Players[1], neighbour, touchingRoad);
 
-        Assert.False(result.Ok);
+        Assert.False(result.Success);
         Assert.Contains("next to", result.Error);
     }
 
@@ -78,7 +78,7 @@ public sealed class GameSessionTests
         {
             var player = session.CurrentPlayer!.Value;
             var (settlement, road) = FirstLegalMove(session);
-            Assert.True(session.PlaceStartingSettlementAndRoad(player, settlement, road).Ok);
+            Assert.True(session.PlaceStartingSettlementAndRoad(player, settlement, road).Success);
         }
 
         Assert.Null(session.CurrentPlayer);

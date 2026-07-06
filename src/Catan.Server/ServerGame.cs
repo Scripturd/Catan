@@ -24,7 +24,7 @@ public sealed class ServerGame
         HostConnectionId = hostConnectionId;
     }
 
-    public (bool Ok, string? Error, int PlayerId) AddPlayer(string connectionId, string name)
+    public (bool Success, string? Error, int PlayerId) AddPlayer(string connectionId, string name)
     {
         lock (_gate)
         {

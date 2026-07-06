@@ -2,12 +2,12 @@ namespace Catan.Game;
 
 public sealed record MoveResult
 {
-    public bool Ok { get; }
+    public bool Success { get; }
     public string? Error { get; }
 
-    private MoveResult(bool ok, string? error)
+    private MoveResult(bool success, string? error)
     {
-        Ok = ok;
+        Success = success;
         Error = error;
     }
 

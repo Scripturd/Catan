@@ -1,7 +1,8 @@
-using Catan.Pieces;
+using Catan.Game;
+using Catan.Geometry;
 using Catan.Players;
 
-namespace Catan.Game.UseCases;
+namespace Catan.Seafarers;
 
 public class BuildShipUseCase
 {

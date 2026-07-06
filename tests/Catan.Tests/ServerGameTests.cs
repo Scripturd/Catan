@@ -117,7 +117,7 @@ public sealed class ServerGameTests
 
             foreach (var edge in session.Board.EdgesAround(vertex))
             {
-                if (session.Board.Edges.Contains(edge) && !session.Roads.ExistsAt(edge) && !session.Ships.ExistsAt(edge))
+                if (session.Board.Edges.Contains(edge) && !session.Roads.ExistsAt(edge))
                     return (vertex, edge);
             }
         }

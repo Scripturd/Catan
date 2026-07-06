@@ -7,20 +7,17 @@ public sealed class PlacementRules
     private readonly SettlementRegistry _settlements;
     private readonly CityRegistry _cities;
     private readonly RoadRegistry _roads;
-    private readonly ShipRegistry _ships;
     private readonly BoardService _grid;
 
     public PlacementRules(
         SettlementRegistry settlements,
         CityRegistry cities,
         RoadRegistry roads,
-        ShipRegistry ships,
         BoardService grid)
     {
         _settlements = settlements;
         _cities = cities;
         _roads = roads;
-        _ships = ships;
         _grid = grid;
     }
 
@@ -33,8 +30,7 @@ public sealed class PlacementRules
     public bool TouchesOwnRoad(PlayerId player, Vertex vertex) =>
         _grid.EdgesAround(vertex).Any(e => _roads.At(e)?.Owner == player);
 
-    public bool EdgeIsVacant(Edge edge) =>
-        !_roads.ExistsAt(edge) && !_ships.ExistsAt(edge);
+    public bool EdgeIsVacant(Edge edge) => !_roads.ExistsAt(edge);
 
     public bool TouchesOwnBuilding(PlayerId player, Edge edge)
     {

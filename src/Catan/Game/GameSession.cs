@@ -15,7 +15,6 @@ public sealed class GameSession
     public SettlementRegistry Settlements { get; }
     public CityRegistry Cities { get; }
     public RoadRegistry Roads { get; }
-    public ShipRegistry Ships { get; }
     public ResourceRegistry Resources { get; }
     public IReadOnlyList<PlayerId> Players { get; }
 
@@ -38,13 +37,12 @@ public sealed class GameSession
         Settlements = new SettlementRegistry();
         Cities = new CityRegistry();
         Roads = new RoadRegistry();
-        Ships = new ShipRegistry();
         Resources = new ResourceRegistry();
 
         var shuffler = new Shuffler(random);
         mode.Start(new GameServices(Board, Tokens, Harbours, Robber, Markers, shuffler), players);
 
-        _rules = new PlacementRules(Settlements, Cities, Roads, Ships, Board);
+        _rules = new PlacementRules(Settlements, Cities, Roads, Board);
         _setup = new SetupPhase(
             players,
             new PlaceStartingSettlementUseCase(_rules, Settlements),

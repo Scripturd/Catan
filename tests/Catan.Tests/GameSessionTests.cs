@@ -150,7 +150,7 @@ public sealed class GameSessionTests
             {
                 if (!session.Board.Edges.Contains(edge))
                     continue;
-                if (session.Roads.ExistsAt(edge) || session.Ships.ExistsAt(edge))
+                if (session.Roads.ExistsAt(edge))
                     continue;
 
                 return (vertex, edge);

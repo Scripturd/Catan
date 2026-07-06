@@ -1,7 +1,7 @@
-﻿using Catan.Economy;
+using Catan.Economy;
 using Catan.Players;
 
-namespace Catan.Pieces;
+namespace Catan.Seafarers;
 
 public class Ship
 {

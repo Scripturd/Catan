@@ -16,7 +16,6 @@ public sealed class CompositionRoot
     public SettlementRegistry Settlements { get; }
     public CityRegistry Cities { get; }
     public RoadRegistry Roads { get; }
-    public ShipRegistry Ships { get; }
     public ResourceRegistry Resources { get; }
     public Robber Robber { get; }
     public MarkerRegistry Markers { get; }
@@ -38,14 +37,13 @@ public sealed class CompositionRoot
         Settlements = new SettlementRegistry();
         Cities = new CityRegistry();
         Roads = new RoadRegistry();
-        Ships = new ShipRegistry();
         Resources = new ResourceRegistry();
         Robber = new Robber();
         Markers = new MarkerRegistry();
 
         Shuffler = new Shuffler(Random);
 
-        PlacementRules = new PlacementRules(Settlements, Cities, Roads, Ships, BoardService);
+        PlacementRules = new PlacementRules(Settlements, Cities, Roads, BoardService);
 
         ProduceResources = new ProduceResourcesUseCase(BoardService, NumberTokenService, Settlements, Cities, Resources, Robber);
         BuildSettlement = new BuildSettlementUseCase(PlacementRules, Settlements, Resources);

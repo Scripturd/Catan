@@ -1,6 +1,6 @@
-using Catan.Pieces;
+using Catan.Geometry;
 
-namespace Catan.Game;
+namespace Catan.Seafarers;
 
 public class ShipRegistry
 {

@@ -81,10 +81,10 @@ public class SeafarersScenario1BoardGenerator
     private void MoveRobber()
     {
         var desert = _boardService.HexesOf(TerrainType.Desert).Cast<Hex?>().FirstOrDefault();
-        _robber.MoveTo(desert ?? _numberTokenService.HexesWith(12).First());
+        _robber.Place(desert ?? _numberTokenService.HexesWith(12).First());
     }
     private void MovePirate(ISeafarersScenario1Setup setup)
     {
-        _pirate.MoveTo(setup.PirateHex);
+        _pirate.Place(setup.PirateHex);
     }
 }

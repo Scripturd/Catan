@@ -91,6 +91,6 @@ public class StandardBoardGenerator
     private void MoveRobber()
     {
         var desert = _boardService.HexesOf(TerrainType.Desert).First();
-        _robber.MoveTo(desert);
+        _robber.Place(desert);
     }
 }

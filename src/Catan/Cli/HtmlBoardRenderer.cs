@@ -10,7 +10,7 @@ internal static class HtmlBoardRenderer
     private const double Size = 60;
     private const double Margin = 70;
 
-    public static string ToHtml(BoardService grid, NumberTokenService numbers, HarbourService harbours, Robber robber, Pirate? pirate)
+    public static string ToHtml(BoardService grid, NumberTokenService numbers, HarbourService harbours, Robber robber, Pirate pirate)
     {
         var centres = grid.Hexes.ToDictionary(h => h, HexCentre);
 
@@ -43,10 +43,10 @@ internal static class HtmlBoardRenderer
         foreach (var (edge, harbour) in harbours.All)
             svg.Append(HarbourMarker(grid, edge, harbour));
 
-        if (centres.TryGetValue(robber.Hex, out var robberCentre))
+        if (robber.IsPlaced && centres.TryGetValue(robber.Hex, out var robberCentre))
             svg.Append(RobberPawn(robberCentre.X, robberCentre.Y));
 
-        if (pirate is not null && centres.TryGetValue(pirate.Hex, out var pirateCentre))
+        if (pirate.IsPlaced && centres.TryGetValue(pirate.Hex, out var pirateCentre))
             svg.Append(PirateShip(pirateCentre.X, pirateCentre.Y));
 
         svg.Append("</svg>");

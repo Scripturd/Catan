@@ -1,4 +1,3 @@
-using Catan.Pieces;
 using Catan.SeafarersScenario1;
 using System.Diagnostics;
 
@@ -17,7 +16,6 @@ internal static class Program
 
         CompositionRoot compositionRoot = new();
 
-        Pirate? pirate = null;
         if (expansion == 0)
             compositionRoot.StandardBoardGenerator.Create();
         else
@@ -28,10 +26,9 @@ internal static class Program
                 : new SeafarersScenario1FourPlayerSetup();
 
             compositionRoot.SeafarersScenario1BoardGenerator.Create(setup);
-            pirate = compositionRoot.Pirate;
         }
 
-        var html = HtmlBoardRenderer.ToHtml(compositionRoot.BoardService, compositionRoot.NumberTokenService, compositionRoot.HarbourService, compositionRoot.Robber, pirate);
+        var html = HtmlBoardRenderer.ToHtml(compositionRoot.BoardService, compositionRoot.NumberTokenService, compositionRoot.HarbourService, compositionRoot.Robber, compositionRoot.Pirate);
         var path = Path.Combine(Path.GetTempPath(), "catan-board.html");
         File.WriteAllText(path, html);
 

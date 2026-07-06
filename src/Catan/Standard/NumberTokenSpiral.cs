@@ -1,6 +1,6 @@
 using Catan.Economy;
 
-namespace Catan.StandardBoard;
+namespace Catan.Standard;
 
 public class NumberTokenSpiral
 {

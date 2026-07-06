@@ -3,7 +3,7 @@ using Catan.Pieces;
 
 namespace Catan.SeafarersScenario1;
 
-public class SeafarersScenario1BoardGenerator
+public class SeafarersScenario1Board
 {
     private readonly BoardService _boardService;
     private readonly NumberTokenService _numberTokenService;
@@ -12,7 +12,7 @@ public class SeafarersScenario1BoardGenerator
     private readonly Pirate _pirate;
     private readonly Shuffler _shuffler;
 
-    public SeafarersScenario1BoardGenerator(
+    public SeafarersScenario1Board(
         BoardService boardService, 
         NumberTokenService numberTokenService,
         HarbourService harbourService,
@@ -30,10 +30,6 @@ public class SeafarersScenario1BoardGenerator
 
     public void Create(ISeafarersScenario1Setup setup)
     {
-        _boardService.Clear();
-        _numberTokenService.Clear();
-        _harbourService.Clear();
-
         AddLandHexes(setup.MainHexes, setup.MainTerrainTypes, setup.MainTokens);
         AddLandHexes(setup.SmallHexes, setup.SmallTerrainTypes, setup.SmallTokens);
         AddSeaHexes(setup.SeaHexes);
@@ -42,6 +38,14 @@ public class SeafarersScenario1BoardGenerator
 
         MoveRobber();
         MovePirate(setup);
+    }
+    public void Clear()
+    {
+        _boardService.Clear();
+        _numberTokenService.Clear();
+        _harbourService.Clear();
+        _robber.Remove();
+        _pirate.Remove();
     }
 
     private void AddLandHexes(

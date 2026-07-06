@@ -1,9 +1,9 @@
 using Catan.Economy;
 using Catan.Pieces;
 
-namespace Catan.StandardBoard;
+namespace Catan.Standard;
 
-public class StandardBoardGenerator
+public class StandardBoard
 {
     private readonly IReadOnlyList<Hex> _hexes =
     [
@@ -43,7 +43,7 @@ public class StandardBoardGenerator
     private readonly Shuffler _shuffler;
     private readonly NumberTokenSpiral _numberTokenSpiral;
 
-    public StandardBoardGenerator(
+    public StandardBoard(
         BoardService boardService, 
         NumberTokenService numberTokenService,
         HarbourService harbourService,
@@ -60,10 +60,6 @@ public class StandardBoardGenerator
 
     public void Create()
     {
-        _boardService.Clear();
-        _numberTokenService.Clear();
-        _harbourService.Clear();
-
         AddLandHexes(_hexes, _terrainTypes);
 
         _numberTokenSpiral.Place();
@@ -72,6 +68,13 @@ public class StandardBoardGenerator
             _harbourService.Place(harbour.Key, harbour.Value);
 
         MoveRobber();
+    }
+    public void Clear()
+    {
+        _boardService.Clear();
+        _numberTokenService.Clear();
+        _harbourService.Clear();
+        _robber.Remove();
     }
 
     private void AddLandHexes(

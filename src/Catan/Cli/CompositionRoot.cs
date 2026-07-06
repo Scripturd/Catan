@@ -3,7 +3,7 @@ using Catan.Game.UseCases;
 using Catan.Pieces;
 using Catan.Players;
 using Catan.SeafarersScenario1;
-using Catan.StandardBoard;
+using Catan.Standard;
 
 namespace Catan.Cli;
 
@@ -15,9 +15,9 @@ public sealed class CompositionRoot
     public HarbourService HarbourService { get; }
     public Shuffler Shuffler { get; }
 
-    public StandardBoardGenerator StandardBoardGenerator { get; }
+    public StandardBoard StandardBoardGenerator { get; }
 
-    public SeafarersScenario1BoardGenerator SeafarersScenario1BoardGenerator { get; }
+    public SeafarersScenario1Board SeafarersScenario1BoardGenerator { get; }
 
     public SettlementRegistry Settlements { get; }
     public CityRegistry Cities { get; }
@@ -51,9 +51,9 @@ public sealed class CompositionRoot
 
         Shuffler = new Shuffler(Random);
 
-        StandardBoardGenerator = new StandardBoardGenerator(BoardService, NumberTokenService, HarbourService, Robber, Shuffler);
+        StandardBoardGenerator = new StandardBoard(BoardService, NumberTokenService, HarbourService, Robber, Shuffler);
 
-        SeafarersScenario1BoardGenerator = new SeafarersScenario1BoardGenerator(BoardService, NumberTokenService, HarbourService, Robber, Pirate, Shuffler);
+        SeafarersScenario1BoardGenerator = new SeafarersScenario1Board(BoardService, NumberTokenService, HarbourService, Robber, Pirate, Shuffler);
 
         PlacementRules = new PlacementRules(Settlements, Cities, Roads, Ships, BoardService);
 

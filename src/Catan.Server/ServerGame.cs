@@ -1,6 +1,5 @@
 using Catan.Game;
 using Catan.Geometry;
-using Catan.Modding;
 using Catan.Players;
 
 namespace Catan.Server;
@@ -13,14 +12,14 @@ public sealed class ServerGame
     private readonly List<LobbyPlayer> _players = [];
 
     public string Id { get; }
-    public BoardDefinition Definition { get; }
+    public ModeDescriptor Mode { get; }
     public string HostConnectionId { get; }
     public GameSession? Session { get; private set; }
 
-    public ServerGame(string id, BoardDefinition definition, string hostConnectionId)
+    public ServerGame(string id, ModeDescriptor mode, string hostConnectionId)
     {
         Id = id;
-        Definition = definition;
+        Mode = mode;
         HostConnectionId = hostConnectionId;
     }
 
@@ -30,7 +29,7 @@ public sealed class ServerGame
         {
             if (Session is not null)
                 return (false, "The game has already started.", -1);
-            if (_players.Count >= Definition.MaxPlayers)
+            if (_players.Count >= Mode.MaxPlayers)
                 return (false, "The game is full.", -1);
 
             var existing = _players.FirstOrDefault(p => p.ConnectionId == connectionId);
@@ -50,11 +49,11 @@ public sealed class ServerGame
         {
             if (Session is not null)
                 return MoveResult.Rejected("The game has already started.");
-            if (_players.Count < Definition.MinPlayers)
-                return MoveResult.Rejected($"At least {Definition.MinPlayers} players are needed to start.");
+            if (_players.Count < Mode.MinPlayers)
+                return MoveResult.Rejected($"At least {Mode.MinPlayers} players are needed to start.");
 
             var ids = _players.Select(p => p.Id).ToList();
-            Session = new GameSession(Definition, ids, Random.Shared);
+            Session = new GameSession(Mode.Build, ids, Random.Shared);
             return MoveResult.Accepted();
         }
     }
@@ -77,6 +76,6 @@ public sealed class ServerGame
     public StateSnapshot Snapshot()
     {
         lock (_gate)
-            return SnapshotBuilder.Build(Id, Definition, _players, Session);
+            return SnapshotBuilder.Build(Id, Mode, _players, Session);
     }
 }

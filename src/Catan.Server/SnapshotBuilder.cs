@@ -1,12 +1,11 @@
 using Catan.Game;
 using Catan.Geometry;
-using Catan.Modding;
 
 namespace Catan.Server;
 
 public static class SnapshotBuilder
 {
-    public static StateSnapshot Build(string id, BoardDefinition definition, IReadOnlyList<LobbyPlayer> players, GameSession? session)
+    public static StateSnapshot Build(string id, ModeDescriptor mode, IReadOnlyList<LobbyPlayer> players, GameSession? session)
     {
         var phase = session is null ? "Lobby" : session.SetupComplete ? "Complete" : "Setup";
 
@@ -25,8 +24,8 @@ public static class SnapshotBuilder
             phase,
             playerViews,
             session?.CurrentPlayer?.Value,
-            definition.MinPlayers,
-            definition.MaxPlayers,
+            mode.MinPlayers,
+            mode.MaxPlayers,
             board);
     }
 

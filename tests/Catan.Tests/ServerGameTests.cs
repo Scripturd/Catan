@@ -7,10 +7,15 @@ namespace Catan.Tests;
 
 public sealed class ServerGameTests
 {
-    private static BoardDefinition StandardDefinition() =>
-        new BoardDefinitionLoader().Load(Path.Combine(AppContext.BaseDirectory, "modes", "standard.json"));
+    private static ModeDescriptor StandardMode()
+    {
+        var definition = new BoardDefinitionLoader().Load(Path.Combine(AppContext.BaseDirectory, "modes", "standard.json"));
+        return new ModeDescriptor(definition.Name, definition.MinPlayers, definition.MaxPlayers,
+            (board, tokens, harbours, robber, pirate, shuffler) =>
+                new DataDrivenGameMode(definition, board, tokens, harbours, robber, pirate, shuffler));
+    }
 
-    private static ServerGame NewGame() => new("ABCDE", StandardDefinition(), "c0");
+    private static ServerGame NewGame() => new("ABCDE", StandardMode(), "c0");
 
     [Fact]
     public void Adding_players_assigns_sequential_ids_and_a_duplicate_connection_is_idempotent()

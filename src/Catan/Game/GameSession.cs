@@ -23,6 +23,15 @@ public sealed class GameSession
     private readonly SetupPhase _setup;
 
     public GameSession(BoardDefinition definition, IReadOnlyList<PlayerId> players, Random random)
+        : this(
+            (board, tokens, harbours, robber, pirate, shuffler) =>
+                new DataDrivenGameMode(definition, board, tokens, harbours, robber, pirate, shuffler),
+            players,
+            random)
+    {
+    }
+
+    public GameSession(GameModeFactory createMode, IReadOnlyList<PlayerId> players, Random random)
     {
         Players = players;
         Board = new BoardService();
@@ -37,7 +46,7 @@ public sealed class GameSession
         Resources = new ResourceRegistry();
 
         var shuffler = new Shuffler(random);
-        var mode = new DataDrivenGameMode(definition, Board, Tokens, Harbours, Robber, Pirate, shuffler);
+        var mode = createMode(Board, Tokens, Harbours, Robber, Pirate, shuffler);
         mode.Start(players);
 
         _rules = new PlacementRules(Settlements, Cities, Roads, Ships, Board);

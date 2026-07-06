@@ -20,8 +20,8 @@ public sealed class GameHub : Hub
 
     public async Task<JoinInfo> CreateGame(string playerName, string? modeName)
     {
-        var definition = (modeName is null ? null : _catalog.ByName(modeName)) ?? _catalog.Default;
-        var game = _registry.Create(definition, Context.ConnectionId);
+        var mode = (modeName is null ? null : _catalog.ByName(modeName)) ?? _catalog.Default;
+        var game = _registry.Create(mode, Context.ConnectionId);
         var (_, _, playerId) = game.AddPlayer(Context.ConnectionId, playerName);
 
         await Groups.AddToGroupAsync(Context.ConnectionId, game.Id);

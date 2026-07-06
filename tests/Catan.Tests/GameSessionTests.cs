@@ -3,6 +3,8 @@ using Catan.Game;
 using Catan.Geometry;
 using Catan.Modding;
 using Catan.Players;
+using Catan.SeafarersScenario1;
+using Catan.Standard;
 
 namespace Catan.Tests;
 
@@ -87,6 +89,42 @@ public sealed class GameSessionTests
 
         int totalResources = Players.Sum(p => Total(session.Resources.Of(p)));
         Assert.True(totalResources > 0, "second-round placements should grant starting resources");
+    }
+
+    [Fact]
+    public void The_builtin_standard_mode_plays_through_setup()
+    {
+        var session = new GameSession(
+            (board, tokens, harbours, robber, _, shuffler) => new StandardGame(board, tokens, harbours, robber, shuffler),
+            Players, new Random(1));
+
+        PlayFullSetup(session);
+
+        Assert.True(session.SetupComplete);
+        Assert.Equal(Players.Length * 2, session.Settlements.All.Count);
+    }
+
+    [Fact]
+    public void The_builtin_seafarers_mode_plays_through_setup()
+    {
+        var session = new GameSession(
+            (board, tokens, harbours, robber, pirate, shuffler) => new SeafarersScenario1Game(board, tokens, harbours, robber, pirate, shuffler),
+            Players, new Random(1));
+
+        PlayFullSetup(session);
+
+        Assert.True(session.SetupComplete);
+        Assert.Equal(Players.Length * 2, session.Settlements.All.Count);
+    }
+
+    private static void PlayFullSetup(GameSession session)
+    {
+        while (!session.SetupComplete)
+        {
+            var player = session.CurrentPlayer!.Value;
+            var (settlement, road) = FirstLegalMove(session);
+            Assert.True(session.PlaceStartingSettlementAndRoad(player, settlement, road).Success);
+        }
     }
 
     private static (Vertex Settlement, Edge Road) FirstLegalMove(GameSession session)

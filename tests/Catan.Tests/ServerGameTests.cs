@@ -7,13 +7,8 @@ namespace Catan.Tests;
 
 public sealed class ServerGameTests
 {
-    private static GameModeRegistration StandardMode()
-    {
-        var definition = new BoardDefinitionLoader().Load(Path.Combine(AppContext.BaseDirectory, "modes", "standard.json"));
-        return new GameModeRegistration(definition.Name, definition.MinPlayers, definition.MaxPlayers,
-            (board, tokens, harbours, robber, pirate, shuffler) =>
-                new DataDrivenGameMode(definition, board, tokens, harbours, robber, pirate, shuffler));
-    }
+    private static IGameMode StandardMode() =>
+        new DataDrivenGameMode(new BoardDefinitionLoader().Load(Path.Combine(AppContext.BaseDirectory, "modes", "standard.json")));
 
     private static ServerGame NewGame() => new("ABCDE", StandardMode(), "c0");
 

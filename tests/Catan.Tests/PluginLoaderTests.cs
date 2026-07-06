@@ -6,7 +6,7 @@ namespace Catan.Tests;
 public sealed class PluginLoaderTests
 {
     [Fact]
-    public void Loads_game_mode_registrations_from_a_plugin_assembly()
+    public void Loads_game_modes_from_a_plugin_assembly()
     {
         var pluginDll = typeof(MiniPack).Assembly.Location;
         var dir = Path.Combine(Path.GetTempPath(), "catan-plugin-test-" + Guid.NewGuid().ToString("N"));
@@ -19,8 +19,8 @@ public sealed class PluginLoaderTests
 
             var mini = Assert.Single(modes);
             Assert.Equal("Mini Duel", mini.Name);
-            Assert.Equal(2, mini.MinPlayers);
-            Assert.Equal(2, mini.MaxPlayers);
+            Assert.Equal(2, mini.MinPlayerCount);
+            Assert.Equal(2, mini.MaxPlayerCount);
         }
         finally
         {

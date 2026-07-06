@@ -11,12 +11,12 @@ public sealed class PluginLoader
         _log = log;
     }
 
-    public IReadOnlyList<GameModeRegistration> Load(string directory)
+    public IReadOnlyList<IGameMode> Load(string directory)
     {
         if (!Directory.Exists(directory))
             return [];
 
-        var registrations = new List<GameModeRegistration>();
+        var modes = new List<IGameMode>();
         foreach (var path in Directory.EnumerateFiles(directory, "*.dll").OrderBy(p => p, StringComparer.OrdinalIgnoreCase))
         {
             try
@@ -29,7 +29,7 @@ public sealed class PluginLoader
                 {
                     if (Activator.CreateInstance(type) is not IExpansionPack pack)
                         continue;
-                    registrations.AddRange(pack.Modes);
+                    modes.AddRange(pack.Modes);
                     _log?.Invoke($"Loaded expansion pack '{type.FullName}' from {Path.GetFileName(path)}.");
                 }
             }
@@ -39,6 +39,6 @@ public sealed class PluginLoader
             }
         }
 
-        return registrations;
+        return modes;
     }
 }

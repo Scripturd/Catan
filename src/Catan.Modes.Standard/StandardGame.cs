@@ -2,7 +2,6 @@ using Catan.Board;
 using Catan.Economy;
 using Catan.Game;
 using Catan.Geometry;
-using Catan.Pieces;
 using Catan.Players;
 
 namespace Catan.Standard;
@@ -39,60 +38,29 @@ public class StandardGame : IGameMode
         {new(-1, 2, EdgeDirection.SouthEast), new(2, ResourceType.Lumber)},
     };
 
-    private readonly BoardService _boardService;
-    private readonly NumberTokenService _numberTokenService;
-    private readonly HarbourService _harbourService;
-    private readonly Robber _robber;
-    private readonly Shuffler _shuffler;
-    private readonly NumberTokenSpiral _numberTokenSpiral;
+    public string Name => "Standard Catan";
+    public int MinPlayerCount => 3;
+    public int MaxPlayerCount => 4;
 
-    public int MinPlayerCount { get; } = 3;
-    public int MaxPlayerCount { get; } = 4;
-
-    public StandardGame(
-        BoardService boardService,
-        NumberTokenService numberTokenService,
-        HarbourService harbourService,
-        Robber robber,
-        Shuffler shuffler)
+    public void Start(GameServices services, IReadOnlyList<PlayerId> players)
     {
-        _boardService = boardService;
-        _numberTokenService = numberTokenService;
-        _harbourService = harbourService;
-        _robber = robber;
-        _shuffler = shuffler;
-        _numberTokenSpiral = new(_boardService, _numberTokenService, _shuffler);
-    }
+        AddLandHexes(services, _hexes, _terrainTypes);
 
-    public void Start(IReadOnlyList<PlayerId> players)
-    {
-        AddLandHexes(_hexes, _terrainTypes);
-
-        _numberTokenSpiral.Place();
+        new NumberTokenSpiral(services.Board, services.Tokens, services.Shuffler).Place();
 
         foreach (var harbour in _harbours)
-            _harbourService.Place(harbour.Key, harbour.Value);
+            services.Harbours.Place(harbour.Key, harbour.Value);
 
-        MoveRobber();
+        var desert = services.Board.HexesOf(TerrainType.Desert).First();
+        services.Robber.Place(desert);
     }
 
-    private void AddLandHexes(
-        IReadOnlyList<Hex> hexes,
-        IReadOnlyList<TerrainType> terrainTypes)
+    private static void AddLandHexes(GameServices services, IReadOnlyList<Hex> hexes, IReadOnlyList<TerrainType> terrainTypes)
     {
-        var shuffledTerrainTypes = _shuffler.Shuffle(terrainTypes);
+        var shuffledTerrainTypes = services.Shuffler.Shuffle(terrainTypes);
 
         int terrainIndex = 0;
         foreach (var hex in hexes)
-        {
-            var terrainType = shuffledTerrainTypes[terrainIndex++];
-            _boardService.AddHex(hex, terrainType);
-        }
-    }
-
-    private void MoveRobber()
-    {
-        var desert = _boardService.HexesOf(TerrainType.Desert).First();
-        _robber.Place(desert);
+            services.Board.AddHex(hex, shuffledTerrainTypes[terrainIndex++]);
     }
 }

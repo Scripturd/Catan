@@ -1,10 +1,11 @@
-﻿using Catan.Players;
+using Catan.Players;
 
 namespace Catan.Game;
 
 public interface IGameMode
 {
-    public int MinPlayerCount { get; }
-    public int MaxPlayerCount { get; }
-    public void Start(IReadOnlyList<PlayerId> players);
+    string Name { get; }
+    int MinPlayerCount { get; }
+    int MaxPlayerCount { get; }
+    void Start(GameServices services, IReadOnlyList<PlayerId> players);
 }

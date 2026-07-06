@@ -12,11 +12,11 @@ public sealed class ServerGame
     private readonly List<LobbyPlayer> _players = [];
 
     public string Id { get; }
-    public GameModeRegistration Mode { get; }
+    public IGameMode Mode { get; }
     public string HostConnectionId { get; }
     public GameSession? Session { get; private set; }
 
-    public ServerGame(string id, GameModeRegistration mode, string hostConnectionId)
+    public ServerGame(string id, IGameMode mode, string hostConnectionId)
     {
         Id = id;
         Mode = mode;
@@ -29,7 +29,7 @@ public sealed class ServerGame
         {
             if (Session is not null)
                 return (false, "The game has already started.", -1);
-            if (_players.Count >= Mode.MaxPlayers)
+            if (_players.Count >= Mode.MaxPlayerCount)
                 return (false, "The game is full.", -1);
 
             var existing = _players.FirstOrDefault(p => p.ConnectionId == connectionId);
@@ -49,11 +49,11 @@ public sealed class ServerGame
         {
             if (Session is not null)
                 return MoveResult.Rejected("The game has already started.");
-            if (_players.Count < Mode.MinPlayers)
-                return MoveResult.Rejected($"At least {Mode.MinPlayers} players are needed to start.");
+            if (_players.Count < Mode.MinPlayerCount)
+                return MoveResult.Rejected($"At least {Mode.MinPlayerCount} players are needed to start.");
 
             var ids = _players.Select(p => p.Id).ToList();
-            Session = new GameSession(Mode.Build, ids, Random.Shared);
+            Session = new GameSession(Mode, ids, Random.Shared);
             return MoveResult.Accepted();
         }
     }

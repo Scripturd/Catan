@@ -5,7 +5,7 @@ namespace Catan.Server;
 
 public static class SnapshotBuilder
 {
-    public static StateSnapshot Build(string id, GameModeRegistration mode, IReadOnlyList<LobbyPlayer> players, GameSession? session)
+    public static StateSnapshot Build(string id, IGameMode mode, IReadOnlyList<LobbyPlayer> players, GameSession? session)
     {
         var phase = session is null ? "Lobby" : session.SetupComplete ? "Complete" : "Setup";
 
@@ -24,8 +24,8 @@ public static class SnapshotBuilder
             phase,
             playerViews,
             session?.CurrentPlayer?.Value,
-            mode.MinPlayers,
-            mode.MaxPlayers,
+            mode.MinPlayerCount,
+            mode.MaxPlayerCount,
             board);
     }
 

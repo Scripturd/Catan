@@ -94,9 +94,7 @@ public sealed class GameSessionTests
     [Fact]
     public void The_builtin_standard_mode_plays_through_setup()
     {
-        var session = new GameSession(
-            (board, tokens, harbours, robber, _, shuffler) => new StandardGame(board, tokens, harbours, robber, shuffler),
-            Players, new Random(1));
+        var session = new GameSession(new StandardGame(), Players, new Random(1));
 
         PlayFullSetup(session);
 
@@ -107,9 +105,7 @@ public sealed class GameSessionTests
     [Fact]
     public void The_builtin_seafarers_mode_plays_through_setup()
     {
-        var session = new GameSession(
-            (board, tokens, harbours, robber, pirate, shuffler) => new Scenario1Game(board, tokens, harbours, robber, pirate, shuffler),
-            Players, new Random(1));
+        var session = new GameSession(new Scenario1Game(), Players, new Random(1));
 
         PlayFullSetup(session);
 
@@ -121,9 +117,7 @@ public sealed class GameSessionTests
     public void A_plugin_mode_builds_its_custom_board_and_accepts_a_placement()
     {
         PlayerId[] two = [new(0), new(1)];
-        var session = new GameSession(
-            (board, tokens, harbours, robber, pirate, shuffler) => new Catan.Modes.Mini.MiniGame(board, tokens, robber),
-            two, new Random(1));
+        var session = new GameSession(new Catan.Modes.Mini.MiniGame(), two, new Random(1));
 
         Assert.Equal(7, session.Board.Hexes.Count);
         Assert.Equal(two[0], session.CurrentPlayer);

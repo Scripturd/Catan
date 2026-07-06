@@ -26,9 +26,9 @@ internal static class Program
         for (int i = 0; i < catalog.Modes.Count; i++)
             Console.WriteLine($"({i}) {catalog.Modes[i].Name}");
 
-        GameModeRegistration registration = catalog.Modes[UI.AskUserForInt(min: 0, max: catalog.Modes.Count - 1)];
+        IGameMode gameMode = catalog.Modes[UI.AskUserForInt(min: 0, max: catalog.Modes.Count - 1)];
 
-        var playerCount = UI.AskUserForInt("How many players?", min: registration.MinPlayers, max: registration.MaxPlayers);
+        var playerCount = UI.AskUserForInt("How many players?", min: gameMode.MinPlayerCount, max: gameMode.MaxPlayerCount);
 
         List<PlayerId> players = [];
         for (int i = 0; i < playerCount; i++)
@@ -37,14 +37,14 @@ internal static class Program
             players.Add(player);
         }
 
-        IGameMode gameMode = registration.Build(
+        var services = new GameServices(
             compositionRoot.BoardService,
             compositionRoot.NumberTokenService,
             compositionRoot.HarbourService,
             compositionRoot.Robber,
             compositionRoot.Pirate,
             compositionRoot.Shuffler);
-        gameMode.Start(players);
+        gameMode.Start(services, players);
 
         var html = HtmlBoardRenderer.ToHtml(compositionRoot.BoardService, compositionRoot.NumberTokenService, compositionRoot.HarbourService, compositionRoot.Robber, compositionRoot.Pirate);
         var path = Path.Combine(Path.GetTempPath(), "catan-board.html");

@@ -2,98 +2,76 @@ using Catan.Board;
 using Catan.Economy;
 using Catan.Game;
 using Catan.Geometry;
-using Catan.Pieces;
 using Catan.Players;
 
 namespace Catan.Seafarers.Scenario1;
 
 public class Scenario1Game : IGameMode
 {
-    private readonly BoardService _boardService;
-    private readonly NumberTokenService _numberTokenService;
-    private readonly HarbourService _harbourService;
-    private readonly Robber _robber;
-    private readonly Pirate _pirate;
-    private readonly Shuffler _shuffler;
+    public string Name => "Seafarers: Heading for New Shores";
+    public int MinPlayerCount => 3;
+    public int MaxPlayerCount => 4;
 
-    public int MinPlayerCount { get; } = 3;
-    public int MaxPlayerCount { get; } = 4;
-
-    public Scenario1Game(
-        BoardService boardService,
-        NumberTokenService numberTokenService,
-        HarbourService harbourService,
-        Robber robber,
-        Pirate pirate,
-        Shuffler shuffler)
-    {
-        _boardService = boardService;
-        _numberTokenService = numberTokenService;
-        _harbourService = harbourService;
-        _robber = robber;
-        _pirate = pirate;
-        _shuffler = shuffler;
-    }
-
-    public void Start(IReadOnlyList<PlayerId> players)
+    public void Start(GameServices services, IReadOnlyList<PlayerId> players)
     {
         IScenario1Setup setup = players.Count == 3
                 ? new Scenario1ThreePlayerSetup()
                 : new Scenario1FourPlayerSetup();
 
-        AddLandHexes(setup.MainHexes, setup.MainTerrainTypes, setup.MainTokens);
-        AddLandHexes(setup.SmallHexes, setup.SmallTerrainTypes, setup.SmallTokens);
-        AddSeaHexes(setup.SeaHexes);
+        AddLandHexes(services, setup.MainHexes, setup.MainTerrainTypes, setup.MainTokens);
+        AddLandHexes(services, setup.SmallHexes, setup.SmallTerrainTypes, setup.SmallTokens);
+        AddSeaHexes(services, setup.SeaHexes);
 
-        PlaceHarbours(setup);
+        PlaceHarbours(services, setup);
 
-        MoveRobber();
-        MovePirate(setup);
+        MoveRobber(services);
+        services.Pirate.Place(setup.PirateHex);
     }
 
-    private void AddLandHexes(
+    private static void AddLandHexes(
+        GameServices services,
         IReadOnlyList<Hex> hexes,
         IReadOnlyList<TerrainType> terrainTypes,
         IReadOnlyList<int> tokens)
     {
-        var shuffledTerrainTypes = _shuffler.Shuffle(terrainTypes);
-        var shuffledTokens = _shuffler.Shuffle(tokens);
+        var shuffledTerrainTypes = services.Shuffler.Shuffle(terrainTypes);
+        var shuffledTokens = services.Shuffler.Shuffle(tokens);
 
         int terrainIndex = 0;
         int tokenIndex = 0;
         foreach (var hex in hexes)
         {
             var terrainType = shuffledTerrainTypes[terrainIndex++];
-            _boardService.AddHex(hex, terrainType);
+            services.Board.AddHex(hex, terrainType);
 
             if (TerrainYields.For(terrainType) != Yield.Nothing)
-                _numberTokenService.Place(hex, new NumberToken(shuffledTokens[tokenIndex++]));
+                services.Tokens.Place(hex, new NumberToken(shuffledTokens[tokenIndex++]));
         }
     }
 
-    private void AddSeaHexes(IReadOnlyList<Hex> hexes)
+    private static void AddSeaHexes(GameServices services, IReadOnlyList<Hex> hexes)
     {
         foreach (var hex in hexes)
-            _boardService.AddHex(hex, TerrainType.Sea);
+            services.Board.AddHex(hex, TerrainType.Sea);
     }
 
-    private void PlaceHarbours(IScenario1Setup setup)
+    private static void PlaceHarbours(GameServices services, IScenario1Setup setup)
     {
-        var shuffledEdges = _shuffler.Shuffle(setup.HarbourEdges);
-        var edges = SelectNonAdjacentEdges(shuffledEdges, setup.Harbours.Count);
+        var shuffledEdges = services.Shuffler.Shuffle(setup.HarbourEdges);
+        var edges = SelectNonAdjacentEdges(services, shuffledEdges, setup.Harbours.Count);
 
         for (int i = 0; i < setup.Harbours.Count; i++)
-            _harbourService.Place(edges[i], setup.Harbours[i]);
+            services.Harbours.Place(edges[i], setup.Harbours[i]);
     }
 
-    private IReadOnlyList<Edge> SelectNonAdjacentEdges(IReadOnlyList<Edge> candidates, int count)
+    private static IReadOnlyList<Edge> SelectNonAdjacentEdges(GameServices services, IReadOnlyList<Edge> candidates, int count)
     {
         var selected = new List<Edge>();
         var takenVertices = new HashSet<Vertex>();
 
         foreach (var edge in candidates)
         {
-            var (a, b) = _boardService.EndpointsOf(edge);
+            var (a, b) = services.Board.EndpointsOf(edge);
             if (takenVertices.Contains(a) || takenVertices.Contains(b))
                 continue;
 
@@ -109,14 +87,9 @@ public class Scenario1Game : IGameMode
             $"Could not select {count} non-adjacent edges; only {selected.Count} of {candidates.Count} candidates are mutually non-adjacent.");
     }
 
-    private void MoveRobber()
+    private static void MoveRobber(GameServices services)
     {
-        var desert = _boardService.HexesOf(TerrainType.Desert).Cast<Hex?>().FirstOrDefault();
-        _robber.Place(desert ?? _numberTokenService.HexesWith(12).First());
-    }
-
-    private void MovePirate(IScenario1Setup setup)
-    {
-        _pirate.Place(setup.PirateHex);
+        var desert = services.Board.HexesOf(TerrainType.Desert).Cast<Hex?>().FirstOrDefault();
+        services.Robber.Place(desert ?? services.Tokens.HexesWith(12).First());
     }
 }

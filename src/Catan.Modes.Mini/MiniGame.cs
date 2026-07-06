@@ -1,7 +1,6 @@
 using Catan.Board;
 using Catan.Game;
 using Catan.Geometry;
-using Catan.Pieces;
 using Catan.Players;
 
 namespace Catan.Modes.Mini;
@@ -19,30 +18,20 @@ public sealed class MiniGame : IGameMode
         (new Hex(1, -1), TerrainType.Forest, 6),
     ];
 
-    private readonly BoardService _board;
-    private readonly NumberTokenService _tokens;
-    private readonly Robber _robber;
-
+    public string Name => "Mini Duel";
     public int MinPlayerCount => 2;
     public int MaxPlayerCount => 2;
 
-    public MiniGame(BoardService board, NumberTokenService tokens, Robber robber)
+    public void Start(GameServices services, IReadOnlyList<PlayerId> players)
     {
-        _board = board;
-        _tokens = tokens;
-        _robber = robber;
-    }
-
-    public void Start(IReadOnlyList<PlayerId> players)
-    {
-        _board.AddHex(Centre, TerrainType.Desert);
+        services.Board.AddHex(Centre, TerrainType.Desert);
 
         foreach (var (hex, terrain, token) in Ring)
         {
-            _board.AddHex(hex, terrain);
-            _tokens.Place(hex, new NumberToken(token));
+            services.Board.AddHex(hex, terrain);
+            services.Tokens.Place(hex, new NumberToken(token));
         }
 
-        _robber.Place(Centre);
+        services.Robber.Place(Centre);
     }
 }

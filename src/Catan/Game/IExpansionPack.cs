@@ -2,5 +2,5 @@ namespace Catan.Game;
 
 public interface IExpansionPack
 {
-    IEnumerable<GameModeRegistration> Modes { get; }
+    IEnumerable<IGameMode> Modes { get; }
 }

@@ -24,20 +24,31 @@ plugin DLL provides one or more expansion packs; the loader discovers them all.
 ```csharp
 public interface IExpansionPack
 {
-    IEnumerable<GameModeRegistration> Modes { get; }
+    IEnumerable<IGameMode> Modes { get; }
 }
-
-public sealed record GameModeRegistration(
-    string Name, int MinPlayers, int MaxPlayers, GameModeFactory Build);
 ```
 
-`GameModeFactory` receives the game's services and returns an `IGameMode`:
+Each mode is an `IGameMode`. It carries its own metadata (so the lobby can list
+it before a game exists) and lays out the board in `Start`, which receives the
+board services and the players:
 
 ```csharp
-public delegate IGameMode GameModeFactory(
-    BoardService board, NumberTokenService tokens, HarbourService harbours,
-    Robber robber, Pirate pirate, Shuffler shuffler);
+public interface IGameMode
+{
+    string Name { get; }
+    int MinPlayerCount { get; }
+    int MaxPlayerCount { get; }
+    void Start(GameServices services, IReadOnlyList<PlayerId> players);
+}
+
+public sealed record GameServices(
+    BoardService Board, NumberTokenService Tokens, HarbourService Harbours,
+    Robber Robber, Pirate Pirate, Shuffler Shuffler);
 ```
+
+Because services arrive through `Start` (not the constructor), a mode holds no
+per-game state and one instance is reused across games — keep `Start` writing
+only to the passed `services`.
 
 ## Writing one (worked example: `Catan.Modes.Mini`)
 

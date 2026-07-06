@@ -1,6 +1,9 @@
 using Catan.Game;
 using Catan.GameModes;
+using Catan.Modes.Mini;
 using Catan.Players;
+using Catan.Seafarers;
+using Catan.Standard;
 using System.Diagnostics;
 
 namespace Catan.Cli;
@@ -11,16 +14,11 @@ internal static class Program
     {
         CompositionRoot compositionRoot = new();
 
-        var catalog = new ModeCatalog(
-            Path.Combine(AppContext.BaseDirectory, "modes"),
-            Path.Combine(AppContext.BaseDirectory, "plugins"),
-            Console.WriteLine);
+        IEnumerable<IGameMode> builtIns =
+            new IExpansionPack[] { new StandardPack(), new SeafarersPack(), new MiniPack() }
+                .SelectMany(pack => pack.Modes);
 
-        if (catalog.Modes.Count == 0)
-        {
-            Console.WriteLine("No game modes found. Build the mode plugins into the 'plugins' folder (see PLUGINS.md).");
-            return;
-        }
+        var catalog = new ModeCatalog(Path.Combine(AppContext.BaseDirectory, "modes"), builtIns);
 
         Console.WriteLine("Pick a game mode:");
         for (int i = 0; i < catalog.Modes.Count; i++)

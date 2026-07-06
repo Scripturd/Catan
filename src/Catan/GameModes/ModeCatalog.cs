@@ -6,14 +6,14 @@ public sealed class ModeCatalog
 {
     public IReadOnlyList<IGameMode> Modes { get; }
 
-    public ModeCatalog(string modesDirectory, string pluginsDirectory, Action<string>? log = null)
+    public ModeCatalog(string modesDirectory, IEnumerable<IGameMode> builtIns)
     {
         var modes = new List<IGameMode>();
 
         foreach (var definition in new BoardDefinitionLoader().LoadDirectory(modesDirectory))
             modes.Add(new DataDrivenGameMode(definition));
 
-        modes.AddRange(new PluginLoader(log).Load(pluginsDirectory));
+        modes.AddRange(builtIns);
 
         Modes = modes;
     }

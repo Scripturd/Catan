@@ -26,6 +26,7 @@ public sealed class BoardService
 
     public IReadOnlyList<Vertex> VerticesOf(Hex hex) => HexGeometry.VerticesOf(hex);
     public (Vertex A, Vertex B) EndpointsOf(Edge edge) => HexGeometry.EndpointsOf(edge);
+    public IReadOnlyList<Hex> HexesOf(Edge edge) => HexGeometry.HexesOf(edge);
     public IReadOnlyList<Hex> HexesAround(Vertex vertex) => _topology.HexesAround(vertex);
     public IReadOnlyList<Edge> EdgesAround(Vertex vertex) => _topology.EdgesAround(vertex);
     public IReadOnlyList<Vertex> AdjacentVertices(Vertex vertex) => _topology.AdjacentVertices(vertex);

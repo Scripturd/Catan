@@ -1,5 +1,15 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/Catan/Catan.csproj" />
+    <Project Path="src/Catan.Cli/Catan.Cli.csproj" />
+    <Project Path="src/Catan.Server/Catan.Server.csproj" />
+  </Folder>
+  <Folder Name="/src/Modes/">
+    <Project Path="src/Catan.Modes.Standard/Catan.Modes.Standard.csproj" />
+    <Project Path="src/Catan.Modes.Seafarers/Catan.Modes.Seafarers.csproj" />
+    <Project Path="src/Catan.Modes.Mini/Catan.Modes.Mini.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Catan.Tests/Catan.Tests.csproj" />
   </Folder>
 </Solution>

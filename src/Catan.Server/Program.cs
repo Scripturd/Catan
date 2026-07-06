@@ -1,6 +1,10 @@
 using System.Text.Json;
+using Catan.Game;
 using Catan.GameModes;
+using Catan.Modes.Mini;
+using Catan.Seafarers;
 using Catan.Server;
+using Catan.Standard;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,13 +22,12 @@ builder.Services
     .AddJsonProtocol(options => options.PayloadSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase);
 
 builder.Services.AddSingleton<GameRegistry>();
-builder.Services.AddSingleton(sp =>
+builder.Services.AddSingleton(_ =>
 {
-    var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger("Plugins");
-    return new ModeCatalog(
-        Path.Combine(AppContext.BaseDirectory, "modes"),
-        Path.Combine(AppContext.BaseDirectory, "plugins"),
-        message => logger.LogInformation("{Message}", message));
+    IEnumerable<IGameMode> builtIns =
+        new IExpansionPack[] { new StandardPack(), new SeafarersPack(), new MiniPack() }
+            .SelectMany(pack => pack.Modes);
+    return new ModeCatalog(Path.Combine(AppContext.BaseDirectory, "modes"), builtIns);
 });
 
 var app = builder.Build();

@@ -128,7 +128,7 @@ internal static class HtmlBoardRenderer
         double mx = (ax + bx) / 2;
         double my = (ay + by) / 2;
 
-        var landHex = HexGeometry.HexesOf(edge).First(h => grid.Hexes.Contains(h) && grid.TerrainAt(h) != TerrainType.Sea);
+        var landHex = grid.HexesOf(edge).First(h => grid.Hexes.Contains(h) && grid.TerrainAt(h) != TerrainType.Sea);
         var (lx, ly) = HexCentre(landHex);
         double dx = mx - lx;
         double dy = my - ly;

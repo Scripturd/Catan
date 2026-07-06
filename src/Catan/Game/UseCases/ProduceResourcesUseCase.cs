@@ -35,7 +35,7 @@ public class ProduceResourcesUseCase
             if (hex == _robber.Hex)
                 continue;
 
-            var yield = TerrainYields.For(_boardService.TerrainAt(hex));
+            var yield = _boardService.TerrainAt(hex).Yield;
             if (yield.Type != YieldType.Resource)
                 continue;
 

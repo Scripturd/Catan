@@ -11,7 +11,7 @@ public sealed class BoardDefinitionLoader
         PropertyNameCaseInsensitive = true,
         ReadCommentHandling = JsonCommentHandling.Skip,
         AllowTrailingCommas = true,
-        Converters = { new JsonStringEnumConverter(), new ResourceTypeJsonConverter() }
+        Converters = { new JsonStringEnumConverter(), new ResourceTypeJsonConverter(), new TerrainTypeJsonConverter() }
     };
 
     public IReadOnlyList<BoardDefinition> LoadDirectory(string directory)
@@ -75,8 +75,7 @@ public sealed class BoardDefinitionLoader
                 errors.Add($"hex at ({hex.Q}, {hex.R}) has invalid token {token} (must be 2-12 and not 7).");
         }
 
-        int productiveCount = definition.Hexes.Count(h =>
-            h.Terrain != TerrainType.Sea && TerrainYields.For(h.Terrain) != Yield.Nothing);
+        int productiveCount = definition.Hexes.Count(h => h.Terrain.Yield != Yield.Nothing);
         int tokenCount = definition.Hexes.Count(h => h.Token.HasValue);
         if (tokenCount != productiveCount)
             errors.Add($"expected {productiveCount} number tokens (one per productive land hex) but found {tokenCount}.");

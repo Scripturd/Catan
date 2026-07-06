@@ -44,7 +44,7 @@ public class NumberTokenSpiral
         {
             var terrainType = _boardService.TerrainAt(hex);
 
-            if (TerrainYields.For(terrainType) != Yield.Nothing)
+            if (terrainType.Yield != Yield.Nothing)
                 _numberTokenService.Place(hex, new NumberToken(_numberTokenSequence[tokenIndex++]));
         }
     }

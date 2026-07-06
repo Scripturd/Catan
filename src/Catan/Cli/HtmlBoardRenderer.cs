@@ -131,18 +131,7 @@ internal static class HtmlBoardRenderer
         return mast + sail + hull;
     }
 
-    private static string Fill(TerrainType terrain) => terrain switch
-    {
-        TerrainType.Forest => "#2f6b3a",
-        TerrainType.Pasture => "#8fc25a",
-        TerrainType.Fields => "#e8c455",
-        TerrainType.Hills => "#c2693a",
-        TerrainType.Mountains => "#8a8d92",
-        TerrainType.Desert => "#dcc99a",
-        TerrainType.Gold => "#f4d03f",
-        TerrainType.Sea => "#2a6f97",
-        _ => "#888888"
-    };
+    private static string Fill(TerrainType terrain) => terrain.Color;
 
     private static string HarbourMarker(BoardService grid, Edge edge, Harbour harbour)
     {

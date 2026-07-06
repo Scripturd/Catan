@@ -46,7 +46,8 @@ public static class SnapshotBuilder
             .Select(h =>
             {
                 var (x, y) = centres[h];
-                return new HexView(h.Q, h.R, session.Board.TerrainAt(h).ToString(), session.Tokens.At(h)?.Number, x, y);
+                var terrain = session.Board.TerrainAt(h);
+                return new HexView(h.Q, h.R, terrain.Name, terrain.Color, session.Tokens.At(h)?.Number, x, y);
             })
             .ToList();
 

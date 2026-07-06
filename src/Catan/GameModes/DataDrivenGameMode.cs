@@ -59,7 +59,7 @@ public sealed class DataDrivenGameMode : IGameMode
             tokens = services.Shuffler.Shuffle(tokens);
 
         var productiveHexes = landHexes
-            .Where(hex => TerrainYields.For(services.Board.TerrainAt(hex)) != Yield.Nothing)
+            .Where(hex => services.Board.TerrainAt(hex).Yield != Yield.Nothing)
             .ToList();
 
         for (int i = 0; i < productiveHexes.Count; i++)

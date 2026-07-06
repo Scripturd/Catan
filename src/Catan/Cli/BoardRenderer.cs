@@ -39,16 +39,6 @@ internal static class BoardRenderer
         return Abbrev(terrain) + (token.HasValue ? token.Value.Number.ToString() : "");
     }
 
-    private static string Abbrev(TerrainType terrain) => terrain switch
-    {
-        TerrainType.Forest => "Fo",
-        TerrainType.Pasture => "Pa",
-        TerrainType.Fields => "Fi",
-        TerrainType.Hills => "Hi",
-        TerrainType.Mountains => "Mo",
-        TerrainType.Desert => "De",
-        TerrainType.Gold => "Go",
-        TerrainType.Sea => "~",
-        _ => "?"
-    };
+    private static string Abbrev(TerrainType terrain) =>
+        terrain.Name.Length >= 2 ? terrain.Name[..2] : terrain.Name;
 }

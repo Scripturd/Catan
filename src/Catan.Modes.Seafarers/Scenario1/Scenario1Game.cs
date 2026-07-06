@@ -44,7 +44,7 @@ public class Scenario1Game : IGameMode
             var terrainType = shuffledTerrainTypes[terrainIndex++];
             services.Board.AddHex(hex, terrainType);
 
-            if (TerrainYields.For(terrainType) != Yield.Nothing)
+            if (terrainType.Yield != Yield.Nothing)
                 services.Tokens.Place(hex, new NumberToken(shuffledTokens[tokenIndex++]));
         }
     }

@@ -15,7 +15,7 @@ public sealed class NumberTokenService
     public void Place(Hex hex, NumberToken token)
     {
         var terrain = _board.TerrainAt(hex);
-        if (TerrainYields.For(terrain) == Yield.Nothing)
+        if (terrain.Yield == Yield.Nothing)
             throw new InvalidOperationException($"Hex of type {terrain} is unproductive and cannot have a number token.");
 
         _tokens.Add(hex, token);

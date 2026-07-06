@@ -26,7 +26,7 @@ public class GrantStartingResourcesUseCase
 
         foreach (var hex in _grid.HexesAround(vertex))
         {
-            var yield = TerrainYields.For(_grid.TerrainAt(hex));
+            var yield = _grid.TerrainAt(hex).Yield;
             if (yield.Type != YieldType.Resource)
                 continue;
 

@@ -32,5 +32,5 @@ public sealed class BoardService
 
     public bool IsCoastal(Edge edge) => HexGeometry.HexesOf(edge).Count(IsLand) == 1;
 
-    private bool IsLand(Hex hex) => _terrainByHex.TryGetValue(hex, out var terrain) && terrain != TerrainType.Sea;
+    private bool IsLand(Hex hex) => _terrainByHex.TryGetValue(hex, out var terrain) && terrain.IsLand;
 }

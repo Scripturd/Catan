@@ -1,10 +1,6 @@
 const SIZE = 60;
 const SVGNS = "http://www.w3.org/2000/svg";
 
-const TERRAIN_FILL = {
-  Forest: "#2f6b3a", Pasture: "#8fc25a", Fields: "#e8c455", Hills: "#c2693a",
-  Mountains: "#8a8d92", Desert: "#dcc99a", Gold: "#f4d03f", Sea: "#2a6f97"
-};
 
 let connection;
 let gameId = null;
@@ -158,7 +154,7 @@ function drawBoard(interactive) {
   svg.innerHTML = "";
 
   for (const h of b.hexes) {
-    svg.appendChild(el("polygon", { points: hexPoints(h.x, h.y), fill: TERRAIN_FILL[h.terrain] || "#888", stroke: "#0d2c40", "stroke-width": 2 }));
+    svg.appendChild(el("polygon", { points: hexPoints(h.x, h.y), fill: h.color, stroke: "#0d2c40", "stroke-width": 2 }));
     if (h.token != null) drawToken(svg, h);
   }
   for (const hb of b.harbours) drawHarbour(svg, hb);

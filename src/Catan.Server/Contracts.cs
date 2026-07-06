@@ -25,7 +25,7 @@ public sealed record BoardView(
     IReadOnlyList<BuildingView> Settlements,
     IReadOnlyList<RoadView> Roads);
 
-public sealed record HexView(int Q, int R, string Terrain, int? Token, double X, double Y);
+public sealed record HexView(int Q, int R, string Terrain, string Color, int? Token, double X, double Y);
 
 public sealed record HarbourView(int Ratio, string? Resource, string Color, double X, double Y);
 

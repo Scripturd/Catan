@@ -24,5 +24,7 @@ public sealed class ResourceType
 
     public override bool Equals(object? obj) => obj is ResourceType other && Name == other.Name;
     public override int GetHashCode() => Name.GetHashCode();
+    public static bool operator ==(ResourceType? a, ResourceType? b) => Equals(a, b);
+    public static bool operator !=(ResourceType? a, ResourceType? b) => !Equals(a, b);
     public override string ToString() => Name;
 }

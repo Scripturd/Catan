@@ -2,7 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Catan.Economy;
 
-namespace Catan.Modding;
+namespace Catan.GameModes;
 
 public sealed class BoardDefinitionLoader
 {

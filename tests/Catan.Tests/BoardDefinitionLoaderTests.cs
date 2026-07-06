@@ -1,4 +1,4 @@
-using Catan.Modding;
+using Catan.GameModes;
 
 namespace Catan.Tests;
 

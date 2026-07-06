@@ -1,4 +1,4 @@
-namespace Catan.Modding;
+namespace Catan.GameModes;
 
 public sealed class BoardDefinitionException : Exception
 {

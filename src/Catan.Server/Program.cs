@@ -1,5 +1,5 @@
 using System.Text.Json;
-using Catan.Modding;
+using Catan.GameModes;
 using Catan.Server;
 
 var builder = WebApplication.CreateBuilder(args);

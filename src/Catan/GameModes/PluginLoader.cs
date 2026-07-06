@@ -1,6 +1,6 @@
 using Catan.Game;
 
-namespace Catan.Modding;
+namespace Catan.GameModes;
 
 public sealed class PluginLoader
 {

@@ -1,7 +1,7 @@
 using Catan.Board;
 using Catan.Economy;
 using Catan.Geometry;
-using Catan.Modding;
+using Catan.GameModes;
 using Catan.Pieces;
 using Catan.Players;
 

@@ -1,5 +1,5 @@
 using Catan.Game.UseCases;
-using Catan.Modding;
+using Catan.GameModes;
 using Catan.Pieces;
 using Catan.Players;
 

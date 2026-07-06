@@ -1,6 +1,6 @@
 using Catan.Economy;
 
-namespace Catan.Modding;
+namespace Catan.GameModes;
 
 public sealed class BoardDefinition
 {

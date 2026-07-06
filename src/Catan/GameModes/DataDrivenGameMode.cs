@@ -3,7 +3,7 @@ using Catan.Game;
 using Catan.Pieces;
 using Catan.Players;
 
-namespace Catan.Modding;
+namespace Catan.GameModes;
 
 public sealed class DataDrivenGameMode : IGameMode
 {

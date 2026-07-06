@@ -1,6 +1,6 @@
 using Catan.Game;
 using Catan.Geometry;
-using Catan.Modding;
+using Catan.GameModes;
 using Catan.Server;
 
 namespace Catan.Tests;

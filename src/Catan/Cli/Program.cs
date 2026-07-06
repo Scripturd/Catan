@@ -1,5 +1,5 @@
 using Catan.Game;
-using Catan.Modding;
+using Catan.GameModes;
 using Catan.Players;
 using System.Diagnostics;
 
@@ -26,7 +26,7 @@ internal static class Program
         for (int i = 0; i < catalog.Modes.Count; i++)
             Console.WriteLine($"({i}) {catalog.Modes[i].Name}");
 
-        var registration = catalog.Modes[UI.AskUserForInt(min: 0, max: catalog.Modes.Count - 1)];
+        GameModeRegistration registration = catalog.Modes[UI.AskUserForInt(min: 0, max: catalog.Modes.Count - 1)];
 
         var playerCount = UI.AskUserForInt("How many players?", min: registration.MinPlayers, max: registration.MaxPlayers);
 
@@ -37,7 +37,7 @@ internal static class Program
             players.Add(player);
         }
 
-        var gameMode = registration.Build(
+        IGameMode gameMode = registration.Build(
             compositionRoot.BoardService,
             compositionRoot.NumberTokenService,
             compositionRoot.HarbourService,

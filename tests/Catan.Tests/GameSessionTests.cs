@@ -1,7 +1,7 @@
 using Catan.Economy;
 using Catan.Game;
 using Catan.Geometry;
-using Catan.Modding;
+using Catan.GameModes;
 using Catan.Players;
 using Catan.SeafarersScenario1;
 using Catan.Standard;

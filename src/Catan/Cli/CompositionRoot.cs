@@ -39,11 +39,6 @@ public sealed class CompositionRoot
         BoardService = new();
         NumberTokenService = new(BoardService);
         HarbourService = new(BoardService);
-        Shuffler = new Shuffler(Random);
-
-        StandardBoardGenerator = new StandardBoardGenerator(BoardService, NumberTokenService, HarbourService, Shuffler);
-
-        SeafarersScenario1BoardGenerator = new SeafarersScenario1BoardGenerator(BoardService, NumberTokenService, HarbourService, Shuffler);
 
         Settlements = new SettlementRegistry();
         Cities = new CityRegistry();
@@ -51,6 +46,13 @@ public sealed class CompositionRoot
         Ships = new ShipRegistry();
         Resources = new ResourceRegistry();
         Robber = new Robber();
+
+        Shuffler = new Shuffler(Random);
+
+        StandardBoardGenerator = new StandardBoardGenerator(BoardService, NumberTokenService, HarbourService, Robber, Shuffler);
+
+        SeafarersScenario1BoardGenerator = new SeafarersScenario1BoardGenerator(BoardService, NumberTokenService, HarbourService, Robber, Shuffler);
+
         PlacementRules = new PlacementRules(Settlements, Cities, Roads, Ships, BoardService);
 
         ProduceResources = new ProduceResourcesUseCase(BoardService, NumberTokenService, Settlements, Cities, Resources, Robber);

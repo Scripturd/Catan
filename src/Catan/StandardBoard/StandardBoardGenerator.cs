@@ -1,4 +1,5 @@
 using Catan.Economy;
+using Catan.Pieces;
 
 namespace Catan.StandardBoard;
 
@@ -38,6 +39,7 @@ public class StandardBoardGenerator
     private readonly BoardService _boardService;
     private readonly NumberTokenService _numberTokenService;
     private readonly HarbourService _harbourService;
+    private readonly Robber _robber;
     private readonly Shuffler _shuffler;
     private readonly NumberTokenSpiral _numberTokenSpiral;
 
@@ -45,11 +47,13 @@ public class StandardBoardGenerator
         BoardService boardService, 
         NumberTokenService numberTokenService,
         HarbourService harbourService,
+        Robber robber,
         Shuffler shuffler)
     {
         _boardService = boardService;
         _numberTokenService = numberTokenService;
         _harbourService = harbourService;
+        _robber = robber;
         _shuffler = shuffler;
         _numberTokenSpiral = new(_boardService, _numberTokenService, _shuffler);
     }
@@ -66,6 +70,8 @@ public class StandardBoardGenerator
 
         foreach (var harbour in _harbours)
             _harbourService.Place(harbour.Key, harbour.Value);
+
+        MoveRobber();
     }
 
     private void AddLandHexes(
@@ -80,5 +86,11 @@ public class StandardBoardGenerator
             var terrainType = shuffledTerrainTypes[terrainIndex++];
             _boardService.AddHex(hex, terrainType);
         }
+    }
+
+    private void MoveRobber()
+    {
+        var desert = _boardService.HexesOf(TerrainType.Desert).First();
+        _robber.MoveTo(desert);
     }
 }

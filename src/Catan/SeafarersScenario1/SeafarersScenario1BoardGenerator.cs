@@ -1,4 +1,5 @@
 using Catan.Economy;
+using Catan.Pieces;
 
 namespace Catan.SeafarersScenario1;
 
@@ -7,17 +8,20 @@ public class SeafarersScenario1BoardGenerator
     private readonly BoardService _boardService;
     private readonly NumberTokenService _numberTokenService;
     private readonly HarbourService _harbourService;
+    private readonly Robber _robber;
     private readonly Shuffler _shuffler;
 
     public SeafarersScenario1BoardGenerator(
         BoardService boardService, 
         NumberTokenService numberTokenService,
         HarbourService harbourService,
+        Robber robber,
         Shuffler shuffler)
     {
         _boardService = boardService;
         _numberTokenService = numberTokenService;
         _harbourService = harbourService;
+        _robber = robber;
         _shuffler = shuffler;
     }
 
@@ -32,6 +36,8 @@ public class SeafarersScenario1BoardGenerator
         AddSeaHexes(setup.SeaHexes);
 
         PlaceHarbours(setup);
+
+        MoveRobber();
     }
 
     private void AddLandHexes(
@@ -66,5 +72,11 @@ public class SeafarersScenario1BoardGenerator
 
         for (int i = 0; i < setup.Harbours.Count; i++)
             _harbourService.Place(edges[i], setup.Harbours[i]);
+    }
+
+    private void MoveRobber()
+    {
+        var desert = _boardService.HexesOf(TerrainType.Desert).Cast<Hex?>().FirstOrDefault();
+        _robber.MoveTo(desert ?? _numberTokenService.HexesWith(12).First());
     }
 }

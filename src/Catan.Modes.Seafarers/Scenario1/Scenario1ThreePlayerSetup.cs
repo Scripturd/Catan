@@ -2,7 +2,7 @@ using Catan.Board;
 using Catan.Economy;
 using Catan.Geometry;
 
-namespace Catan.Scenario1;
+namespace Catan.Seafarers.Scenario1;
 
 public class Scenario1ThreePlayerSetup : IScenario1Setup
 {

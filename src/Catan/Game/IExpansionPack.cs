@@ -1,6 +1,6 @@
 namespace Catan.Game;
 
-public interface IGameModePlugin
+public interface IExpansionPack
 {
     IEnumerable<GameModeRegistration> Modes { get; }
 }

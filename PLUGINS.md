@@ -17,11 +17,12 @@ to add a mode — see the trust warning.)
 
 ## The contract
 
-A plugin is any public class with a parameterless constructor that implements
-`Catan.Game.IGameModePlugin`:
+An expansion pack is any public class with a parameterless constructor that
+implements `Catan.Game.IExpansionPack` and exposes one or more game modes. A
+plugin DLL provides one or more expansion packs; the loader discovers them all.
 
 ```csharp
-public interface IGameModePlugin
+public interface IExpansionPack
 {
     IEnumerable<GameModeRegistration> Modes { get; }
 }
@@ -43,15 +44,15 @@ public delegate IGameMode GameModeFactory(
 1. Create a class library targeting the same framework as the server.
 2. Reference the core `Catan` project **with `Private="false"`** so the plugin
    does **not** ship its own copy of `Catan.dll` — the host provides it, and
-   that shared identity is what lets the cast to `IGameModePlugin` succeed:
+   that shared identity is what lets the cast to `IExpansionPack` succeed:
 
    ```xml
    <ProjectReference Include="..\Catan\Catan.csproj" Private="false" />
    ```
 
 3. Implement your `IGameMode` (see [MiniGame.cs](src/Catan.Modes.Mini/MiniGame.cs))
-   and an `IGameModePlugin` that registers it (see
-   [MiniPlugin.cs](src/Catan.Modes.Mini/MiniPlugin.cs)).
+   and an `IExpansionPack` that registers it (see
+   [MiniPack.cs](src/Catan.Modes.Mini/MiniPack.cs)).
 
 ## Installing
 
@@ -75,6 +76,6 @@ fails to load is logged and skipped rather than crashing the app.
 `PluginLoader` loads each DLL through a `PluginLoadContext` (a custom
 `AssemblyLoadContext`) that resolves the shared `Catan` assembly from the host
 instead of the plugin folder, so the plugin's types and the host's contract
-types have the same identity. It then finds `IGameModePlugin` implementations,
+types have the same identity. It then finds `IExpansionPack` implementations,
 instantiates them, and collects their registrations into the `ModeCatalog`
 alongside the JSON board definitions.

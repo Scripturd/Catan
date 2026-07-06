@@ -8,7 +8,7 @@ public sealed class PluginLoaderTests
     [Fact]
     public void Loads_game_mode_registrations_from_a_plugin_assembly()
     {
-        var pluginDll = typeof(MiniPlugin).Assembly.Location;
+        var pluginDll = typeof(MiniPack).Assembly.Location;
         var dir = Path.Combine(Path.GetTempPath(), "catan-plugin-test-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(dir);
         try

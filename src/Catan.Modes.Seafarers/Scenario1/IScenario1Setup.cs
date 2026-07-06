@@ -1,7 +1,7 @@
 using Catan.Board;
 using Catan.Geometry;
 
-namespace Catan.Scenario1;
+namespace Catan.Seafarers.Scenario1;
 
 public interface IScenario1Setup
 {

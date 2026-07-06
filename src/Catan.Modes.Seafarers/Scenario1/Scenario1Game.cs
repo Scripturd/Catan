@@ -5,7 +5,7 @@ using Catan.Geometry;
 using Catan.Pieces;
 using Catan.Players;
 
-namespace Catan.Scenario1;
+namespace Catan.Seafarers.Scenario1;
 
 public class Scenario1Game : IGameMode
 {

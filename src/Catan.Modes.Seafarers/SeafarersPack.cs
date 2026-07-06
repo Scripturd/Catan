@@ -1,8 +1,9 @@
 using Catan.Game;
+using Catan.Seafarers.Scenario1;
 
-namespace Catan.Scenario1;
+namespace Catan.Seafarers;
 
-public sealed class SeafarersPlugin : IGameModePlugin
+public sealed class SeafarersPack : IExpansionPack
 {
     public IEnumerable<GameModeRegistration> Modes =>
     [

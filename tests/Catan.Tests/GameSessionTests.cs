@@ -3,7 +3,7 @@ using Catan.Game;
 using Catan.GameModes;
 using Catan.Geometry;
 using Catan.Players;
-using Catan.Scenario1;
+using Catan.Seafarers.Scenario1;
 using Catan.Standard;
 
 namespace Catan.Tests;

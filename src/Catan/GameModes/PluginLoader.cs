@@ -22,15 +22,15 @@ public sealed class PluginLoader
             try
             {
                 var assembly = new PluginLoadContext(path).LoadFromAssemblyPath(path);
-                var pluginTypes = assembly.GetTypes()
-                    .Where(t => typeof(IGameModePlugin).IsAssignableFrom(t) && t is { IsAbstract: false, IsInterface: false });
+                var packTypes = assembly.GetTypes()
+                    .Where(t => typeof(IExpansionPack).IsAssignableFrom(t) && t is { IsAbstract: false, IsInterface: false });
 
-                foreach (var type in pluginTypes)
+                foreach (var type in packTypes)
                 {
-                    if (Activator.CreateInstance(type) is not IGameModePlugin plugin)
+                    if (Activator.CreateInstance(type) is not IExpansionPack pack)
                         continue;
-                    registrations.AddRange(plugin.Modes);
-                    _log?.Invoke($"Loaded plugin '{type.FullName}' from {Path.GetFileName(path)}.");
+                    registrations.AddRange(pack.Modes);
+                    _log?.Invoke($"Loaded expansion pack '{type.FullName}' from {Path.GetFileName(path)}.");
                 }
             }
             catch (Exception ex)

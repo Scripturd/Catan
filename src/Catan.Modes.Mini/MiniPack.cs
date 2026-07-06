@@ -2,7 +2,7 @@ using Catan.Game;
 
 namespace Catan.Modes.Mini;
 
-public sealed class MiniPlugin : IGameModePlugin
+public sealed class MiniPack : IExpansionPack
 {
     public IEnumerable<GameModeRegistration> Modes =>
     [

@@ -2,7 +2,7 @@ using Catan.Game;
 
 namespace Catan.Standard;
 
-public sealed class StandardPlugin : IGameModePlugin
+public sealed class StandardPack : IExpansionPack
 {
     public IEnumerable<GameModeRegistration> Modes =>
     [

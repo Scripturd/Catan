@@ -1,4 +1,5 @@
 using Catan.Geometry;
+using Catan.Modding;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Catan.Server;

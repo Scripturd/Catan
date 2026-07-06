@@ -1,5 +1,5 @@
+using Catan.Modding;
 using Catan.Modes.Mini;
-using Catan.Server;
 
 namespace Catan.Tests;
 

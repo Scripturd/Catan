@@ -1,15 +1,14 @@
 using Catan.Game;
-using Catan.Modding;
 using Catan.SeafarersScenario1;
 using Catan.Standard;
 
-namespace Catan.Server;
+namespace Catan.Modding;
 
 public sealed class ModeCatalog
 {
     public IReadOnlyList<GameModeRegistration> Modes { get; }
 
-    public ModeCatalog(string modesDirectory, IEnumerable<GameModeRegistration>? pluginModes = null)
+    public ModeCatalog(string modesDirectory, string pluginsDirectory, Action<string>? log = null)
     {
         var modes = new List<GameModeRegistration>
         {
@@ -26,8 +25,7 @@ public sealed class ModeCatalog
                 (board, tokens, harbours, robber, pirate, shuffler) =>
                     new DataDrivenGameMode(definition, board, tokens, harbours, robber, pirate, shuffler)));
 
-        if (pluginModes is not null)
-            modes.AddRange(pluginModes);
+        modes.AddRange(new PluginLoader(log).Load(pluginsDirectory));
 
         Modes = modes;
     }

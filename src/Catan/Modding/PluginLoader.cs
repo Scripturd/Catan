@@ -1,7 +1,6 @@
-using System.Reflection;
 using Catan.Game;
 
-namespace Catan.Server;
+namespace Catan.Modding;
 
 public sealed class PluginLoader
 {

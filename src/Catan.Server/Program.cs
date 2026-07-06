@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Catan.Modding;
 using Catan.Server;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,9 +21,10 @@ builder.Services.AddSingleton<GameRegistry>();
 builder.Services.AddSingleton(sp =>
 {
     var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger("Plugins");
-    var pluginModes = new PluginLoader(message => logger.LogInformation("{Message}", message))
-        .Load(Path.Combine(AppContext.BaseDirectory, "plugins"));
-    return new ModeCatalog(Path.Combine(AppContext.BaseDirectory, "modes"), pluginModes);
+    return new ModeCatalog(
+        Path.Combine(AppContext.BaseDirectory, "modes"),
+        Path.Combine(AppContext.BaseDirectory, "plugins"),
+        message => logger.LogInformation("{Message}", message));
 });
 
 var app = builder.Build();

@@ -1,7 +1,7 @@
 using System.Reflection;
 using System.Runtime.Loader;
 
-namespace Catan.Server;
+namespace Catan.Modding;
 
 internal sealed class PluginLoadContext : AssemblyLoadContext
 {

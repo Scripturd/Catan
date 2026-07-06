@@ -4,17 +4,17 @@ namespace Catan.Standard;
 
 public class NumberTokenSpiral
 {
-    private readonly int[] NumberTokenSequence =
+    private readonly int[] _numberTokenSequence =
     {
         5, 2, 6, 3, 8, 10, 9, 12, 11, 4, 8, 10, 9, 4, 5, 6, 3, 11
     };
 
-    private readonly IReadOnlyList<Hex> Corners =
+    private readonly IReadOnlyList<Hex> _corners =
     [
         new(2, 0), new(2, -2), new(0, -2), new(-2, 0), new(-2, 2), new(0, 2)
     ];
 
-    private static readonly Hex[] AnticlockwiseDirections =
+    private static readonly Hex[] _anticlockwiseDirections =
     [
         new(1, 0), new(1, -1), new(0, -1), new(-1, 0), new(-1, 1), new(0, 1)
     ];
@@ -35,7 +35,7 @@ public class NumberTokenSpiral
 
     public void Place()
     {
-        Hex randomCorner = _shuffler.Shuffle(Corners).First();
+        Hex randomCorner = _shuffler.Shuffle(_corners).First();
 
         int tokenIndex = 0;
         foreach (var hex in SpiralAnticlockwiseFromHex(randomCorner))
@@ -43,14 +43,14 @@ public class NumberTokenSpiral
             var terrainType = _boardService.TerrainAt(hex);
 
             if (TerrainYields.For(terrainType) != Yield.Nothing)
-                _numberTokenService.Place(hex, new NumberToken(NumberTokenSequence[tokenIndex++]));
+                _numberTokenService.Place(hex, new NumberToken(_numberTokenSequence[tokenIndex++]));
         }
     }
 
     private static IEnumerable<Hex> SpiralAnticlockwiseFromHex(Hex outerCorner)
     {
         int outerRadius = HexGeometry.HexDistance(outerCorner);
-        int startSide = Array.FindIndex(AnticlockwiseDirections, direction => direction * outerRadius == outerCorner);
+        int startSide = Array.FindIndex(_anticlockwiseDirections, direction => direction * outerRadius == outerCorner);
 
         return Enumerable
             .Range(1, outerRadius)
@@ -61,13 +61,13 @@ public class NumberTokenSpiral
 
     private static IEnumerable<Hex> RingAnticlockwiseFromSide(int radius, int startSide) =>
         Enumerable
-            .Range(0, AnticlockwiseDirections.Length)
-            .SelectMany(sideOffset => Side(radius, (startSide + sideOffset) % AnticlockwiseDirections.Length));
+            .Range(0, _anticlockwiseDirections.Length)
+            .SelectMany(sideOffset => Side(radius, (startSide + sideOffset) % _anticlockwiseDirections.Length));
 
     private static IEnumerable<Hex> Side(int radius, int cornerIndex)
     {
-        Hex corner = AnticlockwiseDirections[cornerIndex] * radius;
-        Hex stepAlongSide = AnticlockwiseDirections[(cornerIndex + 2) % AnticlockwiseDirections.Length];
+        Hex corner = _anticlockwiseDirections[cornerIndex] * radius;
+        Hex stepAlongSide = _anticlockwiseDirections[(cornerIndex + 2) % _anticlockwiseDirections.Length];
 
         return Enumerable
             .Range(0, radius)

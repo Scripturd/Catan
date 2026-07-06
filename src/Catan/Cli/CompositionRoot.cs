@@ -15,9 +15,9 @@ public sealed class CompositionRoot
     public HarbourService HarbourService { get; }
     public Shuffler Shuffler { get; }
 
-    public StandardBoard StandardBoardGenerator { get; }
+    public StandardGame StandardBoard { get; }
 
-    public SeafarersScenario1Board SeafarersScenario1BoardGenerator { get; }
+    public SeafarersScenario1Game SeafarersScenario1Board { get; }
 
     public SettlementRegistry Settlements { get; }
     public CityRegistry Cities { get; }
@@ -51,9 +51,9 @@ public sealed class CompositionRoot
 
         Shuffler = new Shuffler(Random);
 
-        StandardBoardGenerator = new StandardBoard(BoardService, NumberTokenService, HarbourService, Robber, Shuffler);
+        StandardBoard = new StandardGame(BoardService, NumberTokenService, HarbourService, Robber, Shuffler);
 
-        SeafarersScenario1BoardGenerator = new SeafarersScenario1Board(BoardService, NumberTokenService, HarbourService, Robber, Pirate, Shuffler);
+        SeafarersScenario1Board = new SeafarersScenario1Game(BoardService, NumberTokenService, HarbourService, Robber, Pirate, Shuffler);
 
         PlacementRules = new PlacementRules(Settlements, Cities, Roads, Ships, BoardService);
 

@@ -1,4 +1,5 @@
-using Catan.SeafarersScenario1;
+using Catan.Game;
+using Catan.Players;
 using System.Diagnostics;
 
 namespace Catan.Cli;
@@ -7,26 +8,26 @@ internal static class Program
 {
     private static void Main()
     {
-        Console.WriteLine("Pick an expansion pack:");
-        Console.WriteLine("(0) Base Catan");
-        Console.WriteLine("(1) Seafarers");
-        var expansion = UI.AskUserForInt(min: 0, max: 1);
-
-        var playerCount = UI.AskUserForInt("How many players?", min: 3, max: 4);
-
         CompositionRoot compositionRoot = new();
 
-        if (expansion == 0)
-            compositionRoot.StandardBoardGenerator.Create();
-        else
+        List<IGameMode> gameModes = [compositionRoot.StandardBoard, compositionRoot.SeafarersScenario1Board];
+
+        Console.WriteLine("Pick a game mode:");
+        for (int i = 0; i < gameModes.Count; i++)
+            Console.WriteLine($"({i}) {gameModes[i]}");
+
+        IGameMode gameMode = gameModes[UI.AskUserForInt(min: 0, max: 1)];
+
+        var playerCount = UI.AskUserForInt("How many players?", min: gameMode.MinPlayerCount, max: gameMode.MaxPlayerCount);
+
+        List<PlayerId> players = [];
+        for (int i = 0; i < playerCount; i++)
         {
-
-            ISeafarersScenario1Setup setup = playerCount == 3
-                ? new SeafarersScenario1ThreePlayerSetup()
-                : new SeafarersScenario1FourPlayerSetup();
-
-            compositionRoot.SeafarersScenario1BoardGenerator.Create(setup);
+            var player = new PlayerId(i);
+            players.Add(player);
         }
+
+        gameMode.Start(players);
 
         var html = HtmlBoardRenderer.ToHtml(compositionRoot.BoardService, compositionRoot.NumberTokenService, compositionRoot.HarbourService, compositionRoot.Robber, compositionRoot.Pirate);
         var path = Path.Combine(Path.GetTempPath(), "catan-board.html");

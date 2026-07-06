@@ -1,9 +1,11 @@
 using Catan.Economy;
+using Catan.Game;
 using Catan.Pieces;
+using Catan.Players;
 
 namespace Catan.Standard;
 
-public class StandardBoard
+public class StandardGame : IGameMode
 {
     private readonly IReadOnlyList<Hex> _hexes =
     [
@@ -35,7 +37,6 @@ public class StandardBoard
         {new(-1, 2, EdgeDirection.SouthEast), new(2, ResourceType.Lumber)},
     };
 
-
     private readonly BoardService _boardService;
     private readonly NumberTokenService _numberTokenService;
     private readonly HarbourService _harbourService;
@@ -43,7 +44,10 @@ public class StandardBoard
     private readonly Shuffler _shuffler;
     private readonly NumberTokenSpiral _numberTokenSpiral;
 
-    public StandardBoard(
+    public int MinPlayerCount { get; } = 3;
+    public int MaxPlayerCount { get; } = 4;
+
+    public StandardGame(
         BoardService boardService, 
         NumberTokenService numberTokenService,
         HarbourService harbourService,
@@ -58,7 +62,7 @@ public class StandardBoard
         _numberTokenSpiral = new(_boardService, _numberTokenService, _shuffler);
     }
 
-    public void Create()
+    public void Start(IReadOnlyList<PlayerId> players)
     {
         AddLandHexes(_hexes, _terrainTypes);
 
@@ -69,7 +73,7 @@ public class StandardBoard
 
         MoveRobber();
     }
-    public void Clear()
+    private void Cleanup()
     {
         _boardService.Clear();
         _numberTokenService.Clear();

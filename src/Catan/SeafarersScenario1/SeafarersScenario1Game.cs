@@ -1,9 +1,11 @@
 using Catan.Economy;
+using Catan.Game;
 using Catan.Pieces;
+using Catan.Players;
 
 namespace Catan.SeafarersScenario1;
 
-public class SeafarersScenario1Board
+public class SeafarersScenario1Game : IGameMode
 {
     private readonly BoardService _boardService;
     private readonly NumberTokenService _numberTokenService;
@@ -12,7 +14,10 @@ public class SeafarersScenario1Board
     private readonly Pirate _pirate;
     private readonly Shuffler _shuffler;
 
-    public SeafarersScenario1Board(
+    public int MinPlayerCount { get; } = 3;
+    public int MaxPlayerCount { get; } = 4;
+
+    public SeafarersScenario1Game(
         BoardService boardService, 
         NumberTokenService numberTokenService,
         HarbourService harbourService,
@@ -28,8 +33,12 @@ public class SeafarersScenario1Board
         _shuffler = shuffler;
     }
 
-    public void Create(ISeafarersScenario1Setup setup)
+    public void Start(IReadOnlyList<PlayerId> players)
     {
+        ISeafarersScenario1Setup setup = players.Count == 3
+                ? new SeafarersScenario1ThreePlayerSetup()
+                : new SeafarersScenario1FourPlayerSetup();
+
         AddLandHexes(setup.MainHexes, setup.MainTerrainTypes, setup.MainTokens);
         AddLandHexes(setup.SmallHexes, setup.SmallTerrainTypes, setup.SmallTokens);
         AddSeaHexes(setup.SeaHexes);
@@ -39,7 +48,7 @@ public class SeafarersScenario1Board
         MoveRobber();
         MovePirate(setup);
     }
-    public void Clear()
+    private void Cleanup()
     {
         _boardService.Clear();
         _numberTokenService.Clear();

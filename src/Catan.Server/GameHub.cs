@@ -1,5 +1,5 @@
-using Catan.Geometry;
 using Catan.GameModes;
+using Catan.Geometry;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Catan.Server;

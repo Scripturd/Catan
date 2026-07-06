@@ -3,6 +3,12 @@ using Catan.Server;
 
 var builder = WebApplication.CreateBuilder(args);
 
+if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ASPNETCORE_URLS")))
+{
+    var port = builder.Configuration["port"] ?? "5200";
+    builder.WebHost.UseUrls($"http://localhost:{port}");
+}
+
 builder.Services
     .AddSignalR()
     .AddJsonProtocol(options => options.PayloadSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase);

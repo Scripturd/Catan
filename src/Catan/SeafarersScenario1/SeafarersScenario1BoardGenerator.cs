@@ -1,3 +1,5 @@
+using Catan.Economy;
+
 namespace Catan.SeafarersScenario1;
 
 public class SeafarersScenario1BoardGenerator
@@ -6,14 +8,10 @@ public class SeafarersScenario1BoardGenerator
     private readonly NumberTokenService _numberTokenService;
     private readonly Shuffler _shuffler;
 
-    private enum Region
-    {
-        Main,
-        Small,
-        Sea
-    }
-
-    public SeafarersScenario1BoardGenerator(BoardService boardService, NumberTokenService numberTokenService, Shuffler shuffler)
+    public SeafarersScenario1BoardGenerator(
+        BoardService boardService, 
+        NumberTokenService numberTokenService, 
+        Shuffler shuffler)
     {
         _boardService = boardService;
         _numberTokenService = numberTokenService;
@@ -25,58 +23,33 @@ public class SeafarersScenario1BoardGenerator
         _boardService.Clear();
         _numberTokenService.Clear();
 
-        var mainTerrain = _shuffler.Shuffle(setup.MainTerrain);
-        var smallTerrain = _shuffler.Shuffle(setup.SmallTerrain);
-
-        var coords = new List<HexCoordinate>();
-        var terrains = new List<TerrainType>();
-        var regions = new List<Region>();
-
-        for (int i = 0; i < setup.MainCoords.Count; i++)
-        {
-            coords.Add(setup.MainCoords[i]);
-            terrains.Add(mainTerrain[i]);
-            regions.Add(Region.Main);
-        }
-
-        for (int i = 0; i < setup.SmallCoords.Count; i++)
-        {
-            coords.Add(setup.SmallCoords[i]);
-            terrains.Add(smallTerrain[i]);
-            regions.Add(Region.Small);
-        }
-
-        for (int i = 0; i < setup.SeaCoords.Count; i++)
-        {
-            coords.Add(setup.SeaCoords[i]);
-            terrains.Add(TerrainType.Sea);
-            regions.Add(Region.Sea);
-        }
-
-        for (int i = 0; i < coords.Count; i++)
-            _boardService.AddHex(coords[i], terrains[i]);
-
-        PlaceTokens(coords, terrains, regions, _shuffler.Shuffle(setup.MainTokens), _shuffler.Shuffle(setup.SmallTokens));
+        AddLandHexes(setup.MainHexes, setup.MainTerrainTypes, setup.MainTokens);
+        AddLandHexes(setup.SmallHexes, setup.SmallTerrainTypes, setup.SmallTokens);
+        AddSeaHexes(setup.SeaHexes);
     }
 
-    private void PlaceTokens(
-    List<HexCoordinate> coords,
-    List<TerrainType> terrains,
-    List<Region> regions,
-    List<int> mainTokens,
-    List<int> smallTokens)
+    private void AddLandHexes(
+        IReadOnlyList<Hex> hexes, 
+        IReadOnlyList<TerrainType> terrainTypes, 
+        IReadOnlyList<int> tokens)
     {
-        int mainIndex = 0;
-        int smallIndex = 0;
-        for (int h = 0; h < coords.Count; h++)
-        {
-            if (terrains[h] == TerrainType.Sea || terrains[h] == TerrainType.Desert)
-                continue;
+        var shuffledTerrainTypes = _shuffler.Shuffle(terrainTypes);
+        var shuffledTokens = _shuffler.Shuffle(tokens);
 
-            if (regions[h] == Region.Main)
-                _numberTokenService.Place(coords[h], new NumberToken(mainTokens[mainIndex++]));
-            else if (regions[h] == Region.Small)
-                _numberTokenService.Place(coords[h], new NumberToken(smallTokens[smallIndex++]));
+        int terrainIndex = 0;
+        int tokenIndex = 0;
+        foreach (var hex in hexes)
+        {
+            var terrainType = shuffledTerrainTypes[terrainIndex++];
+            _boardService.AddHex(hex, terrainType);
+
+            if (TerrainYields.For(terrainType) != Yield.Nothing)
+                _numberTokenService.Place(hex, new NumberToken(shuffledTokens[tokenIndex++]));
         }
+    }
+    private void AddSeaHexes(IReadOnlyList<Hex> hexes)
+    {
+        foreach (var hex in hexes)
+            _boardService.AddHex(hex, TerrainType.Sea);
     }
 }

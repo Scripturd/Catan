@@ -5,14 +5,14 @@ namespace Catan.Board;
 public sealed class NumberTokenService
 {
     private readonly BoardService _board;
-    private readonly Dictionary<HexCoordinate, NumberToken> _tokens = [];
+    private readonly Dictionary<Hex, NumberToken> _tokens = [];
 
     public NumberTokenService(BoardService board)
     {
         _board = board;
     }
 
-    public void Place(HexCoordinate hex, NumberToken token)
+    public void Place(Hex hex, NumberToken token)
     {
         var terrain = _board.TerrainAt(hex);
         if (TerrainYields.For(terrain) == Yield.Nothing)
@@ -23,7 +23,7 @@ public sealed class NumberTokenService
 
     public void Clear() => _tokens.Clear();
 
-    public NumberToken? At(HexCoordinate hex) => _tokens.TryGetValue(hex, out var token) ? token : null;
+    public NumberToken? At(Hex hex) => _tokens.TryGetValue(hex, out var token) ? token : null;
 
-    public IEnumerable<HexCoordinate> HexesWith(int roll) => _tokens.Where(t => t.Value.Number == roll).Select(t => t.Key);
+    public IEnumerable<Hex> HexesWith(int roll) => _tokens.Where(t => t.Value.Number == roll).Select(t => t.Key);
 }

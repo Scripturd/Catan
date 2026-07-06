@@ -2,50 +2,69 @@ namespace Catan.Geometry;
 
 internal static class HexGeometry
 {
-    public static VertexCoordinate[] VerticesOf(HexCoordinate hex)
+    public static bool IsOrigin(Hex hex)
+        => hex.Q == 0 && hex.R == 0;
+
+    public static int HexDistance(Hex hex)
+        => Math.Max(Math.Max(Math.Abs(hex.Q), Math.Abs(hex.R)), Math.Abs(hex.S));
+
+    public static Vertex[] VerticesOf(Hex hex)
     {
         int q = hex.Q;
         int r = hex.R;
         return
         [
-            Vertex(q + 1, r - 1, VertexCorner.Top),
-            Vertex(q, r + 1, VertexCorner.Bottom),
-            Vertex(q, r, VertexCorner.Top),
-            Vertex(q - 1, r + 1, VertexCorner.Bottom),
-            Vertex(q, r - 1, VertexCorner.Top),
-            Vertex(q, r, VertexCorner.Bottom)
+            new Vertex(q + 1, r - 1, VertexCorner.Top),
+            new Vertex(q, r + 1, VertexCorner.Bottom),
+            new Vertex(q, r, VertexCorner.Top),
+            new Vertex(q - 1, r + 1, VertexCorner.Bottom),
+            new Vertex(q, r - 1, VertexCorner.Top),
+            new Vertex(q, r, VertexCorner.Bottom)
         ];
     }
 
-    public static EdgeCoordinate[] EdgesOf(HexCoordinate hex)
+    public static Edge[] EdgesOf(Hex hex)
     {
         int q = hex.Q;
         int r = hex.R;
         return
         [
-            Edge(q, r, EdgeDirection.East),
-            Edge(q, r, EdgeDirection.NorthEast),
-            Edge(q, r, EdgeDirection.NorthWest),
-            Edge(q - 1, r, EdgeDirection.East),
-            Edge(q, r - 1, EdgeDirection.NorthEast),
-            Edge(q + 1, r - 1, EdgeDirection.NorthWest)
+            new Edge(q, r, EdgeDirection.East),
+            new Edge(q, r, EdgeDirection.SouthEast),
+            new Edge(q, r, EdgeDirection.SouthWest),
+            new Edge(q - 1, r, EdgeDirection.East),
+            new Edge(q, r - 1, EdgeDirection.SouthEast),
+            new Edge(q + 1, r - 1, EdgeDirection.SouthWest)
         ];
     }
 
-    public static (VertexCoordinate A, VertexCoordinate B) EndpointsOf(EdgeCoordinate edge)
+    public static (Vertex A, Vertex B) EndpointsOf(Edge edge)
     {
         int q = edge.Q;
         int r = edge.R;
         return edge.Direction switch
         {
-            EdgeDirection.East => (Vertex(q + 1, r - 1, VertexCorner.Top), Vertex(q, r + 1, VertexCorner.Bottom)),
-            EdgeDirection.NorthEast => (Vertex(q, r + 1, VertexCorner.Bottom), Vertex(q, r, VertexCorner.Top)),
-            EdgeDirection.NorthWest => (Vertex(q, r, VertexCorner.Top), Vertex(q - 1, r + 1, VertexCorner.Bottom)),
+            EdgeDirection.East => (new Vertex(q + 1, r - 1, VertexCorner.Top), new Vertex(q, r + 1, VertexCorner.Bottom)),
+            EdgeDirection.SouthEast => (new Vertex(q, r + 1, VertexCorner.Bottom), new Vertex(q, r, VertexCorner.Top)),
+            EdgeDirection.SouthWest => (new Vertex(q, r, VertexCorner.Top), new Vertex(q - 1, r + 1, VertexCorner.Bottom)),
             _ => throw new ArgumentOutOfRangeException(nameof(edge))
         };
     }
 
-    public static HexCoordinate[] HexesAround(VertexCoordinate vertex)
+    public static Hex[] HexesOf(Edge edge)
+    {
+        int q = edge.Q;
+        int r = edge.R;
+        return edge.Direction switch
+        {
+            EdgeDirection.East => [new Hex(q, r), new Hex(q + 1, r)],
+            EdgeDirection.SouthEast => [new Hex(q, r), new Hex(q, r + 1)],
+            EdgeDirection.SouthWest => [new Hex(q, r), new Hex(q - 1, r + 1)],
+            _ => throw new ArgumentOutOfRangeException(nameof(edge))
+        };
+    }
+
+    public static Hex[] HexesAround(Vertex vertex)
     {
         int q = vertex.Q;
         int r = vertex.R;
@@ -53,21 +72,21 @@ internal static class HexGeometry
         {
             VertexCorner.Top =>
             [
-                Hex(q, r),
-                Hex(q - 1, r + 1),
-                Hex(q, r + 1)
+                new Hex(q, r),
+                new Hex(q - 1, r + 1),
+                new Hex(q, r + 1)
             ],
             VertexCorner.Bottom =>
             [
-                Hex(q, r),
-                Hex(q, r - 1),
-                Hex(q + 1, r - 1)
+                new Hex(q, r),
+                new Hex(q, r - 1),
+                new Hex(q + 1, r - 1)
             ],
             _ => throw new ArgumentOutOfRangeException(nameof(vertex))
         };
     }
 
-    public static EdgeCoordinate[] EdgesAround(VertexCoordinate vertex)
+    public static Edge[] EdgesAround(Vertex vertex)
     {
         int q = vertex.Q;
         int r = vertex.R;
@@ -75,21 +94,21 @@ internal static class HexGeometry
         {
             VertexCorner.Top =>
             [
-                Edge(q - 1, r + 1, EdgeDirection.East),
-                Edge(q, r, EdgeDirection.NorthEast),
-                Edge(q, r, EdgeDirection.NorthWest)
+                new Edge(q - 1, r + 1, EdgeDirection.East),
+                new Edge(q, r, EdgeDirection.SouthEast),
+                new Edge(q, r, EdgeDirection.SouthWest)
             ],
             VertexCorner.Bottom =>
             [
-                Edge(q, r - 1, EdgeDirection.East),
-                Edge(q, r - 1, EdgeDirection.NorthEast),
-                Edge(q + 1, r - 1, EdgeDirection.NorthWest)
+                new Edge(q, r - 1, EdgeDirection.East),
+                new Edge(q, r - 1, EdgeDirection.SouthEast),
+                new Edge(q + 1, r - 1, EdgeDirection.SouthWest)
             ],
             _ => throw new ArgumentOutOfRangeException(nameof(vertex))
         };
     }
 
-    public static VertexCoordinate Opposite(EdgeCoordinate edge, VertexCoordinate vertex)
+    public static Vertex Opposite(Edge edge, Vertex vertex)
     {
         var (a, b) = EndpointsOf(edge);
         if (vertex == a)
@@ -99,10 +118,4 @@ internal static class HexGeometry
 
         throw new ArgumentException($"Vertex {vertex} is not an endpoint of edge {edge}.", nameof(vertex));
     }
-
-    private static HexCoordinate Hex(int q, int r) => new(q, r);
-
-    private static VertexCoordinate Vertex(int q, int r, VertexCorner corner) => new(q, r, corner);
-
-    private static EdgeCoordinate Edge(int q, int r, EdgeDirection direction) => new(q, r, direction);
 }

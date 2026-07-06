@@ -1,3 +1,4 @@
+using Catan.Economy;
 using System.Globalization;
 using System.Text;
 
@@ -6,9 +7,9 @@ namespace Catan.Cli;
 internal static class HtmlBoardRenderer
 {
     private const double Size = 60;
-    private const double Margin = 40;
+    private const double Margin = 70;
 
-    public static string ToHtml(BoardService grid, NumberTokenService numbers)
+    public static string ToHtml(BoardService grid, NumberTokenService numbers, HarbourService harbours)
     {
         var centres = grid.Hexes.ToDictionary(
             h => h,
@@ -39,6 +40,9 @@ internal static class HtmlBoardRenderer
             if (token.HasValue)
                 svg.Append(Token(cx, cy, token.Value));
         }
+
+        foreach (var (edge, harbour) in harbours.All)
+            svg.Append(HarbourMarker(grid, edge, harbour));
 
         svg.Append("</svg>");
 
@@ -89,6 +93,54 @@ internal static class HtmlBoardRenderer
         TerrainType.Desert => "#dcc99a",
         TerrainType.Gold => "#f4d03f",
         TerrainType.Sea => "#2a6f97",
+        _ => "#888888"
+    };
+
+    private static string HarbourMarker(BoardService grid, Edge edge, Harbour harbour)
+    {
+        var (a, b) = grid.EndpointsOf(edge);
+        var (ax, ay) = VertexPixel(a);
+        var (bx, by) = VertexPixel(b);
+        double mx = (ax + bx) / 2;
+        double my = (ay + by) / 2;
+
+        double nx = -(by - ay);
+        double ny = bx - ax;
+        double length = Math.Sqrt(nx * nx + ny * ny);
+        nx /= length;
+        ny /= length;
+        if (nx * mx + ny * my < 0)
+        {
+            nx = -nx;
+            ny = -ny;
+        }
+
+        double hx = mx + nx * Size * 0.55;
+        double hy = my + ny * Size * 0.55;
+
+        return F(
+            "<line x1=\"{0}\" y1=\"{1}\" x2=\"{4}\" y2=\"{5}\" stroke=\"#7a5230\" stroke-width=\"3\"/>" +
+            "<line x1=\"{2}\" y1=\"{3}\" x2=\"{4}\" y2=\"{5}\" stroke=\"#7a5230\" stroke-width=\"3\"/>" +
+            "<circle cx=\"{4}\" cy=\"{5}\" r=\"16\" fill=\"{6}\" stroke=\"#0d2c40\" stroke-width=\"1.5\"/>" +
+            "<text x=\"{4}\" y=\"{7}\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"700\" fill=\"#1a1a1a\">{8}:1</text>",
+            ax, ay, bx, by, hx, hy, HarbourFill(harbour), hy + 4, harbour.Ratio);
+    }
+
+    private static (double X, double Y) VertexPixel(Vertex vertex)
+    {
+        double cx = Size * Math.Sqrt(3) * (vertex.Q + vertex.R / 2.0);
+        double cy = Size * 1.5 * vertex.R;
+        return (cx, cy + (vertex.Corner == VertexCorner.Top ? Size : -Size));
+    }
+
+    private static string HarbourFill(Harbour harbour) => harbour.Resource switch
+    {
+        null => "#e8dcc0",
+        ResourceType.Brick => "#c2693a",
+        ResourceType.Lumber => "#2f6b3a",
+        ResourceType.Wool => "#8fc25a",
+        ResourceType.Grain => "#e8c455",
+        ResourceType.Ore => "#8a8d92",
         _ => "#888888"
     };
 

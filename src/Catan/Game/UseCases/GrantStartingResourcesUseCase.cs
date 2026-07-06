@@ -19,7 +19,7 @@ public class GrantStartingResourcesUseCase
         _resources = resources;
     }
 
-    public void Execute(PlayerId playerId, VertexCoordinate vertex)
+    public void Execute(PlayerId playerId, Vertex vertex)
     {
         if (_settlements.At(vertex)?.Owner != playerId)
             return;

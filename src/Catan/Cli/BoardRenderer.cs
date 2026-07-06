@@ -29,7 +29,7 @@ internal static class BoardRenderer
         return string.Join("\n", lines.OrderBy(l => l.Key).Select(l => new string(l.Value).TrimEnd()));
     }
 
-    private static string Label(HexCoordinate hex, BoardService grid, NumberTokenService numbers)
+    private static string Label(Hex hex, BoardService grid, NumberTokenService numbers)
     {
         var terrain = grid.TerrainAt(hex);
         if (terrain == TerrainType.Sea)

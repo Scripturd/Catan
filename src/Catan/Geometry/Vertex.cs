@@ -1,12 +1,12 @@
 namespace Catan.Geometry;
 
-public readonly record struct VertexCoordinate
+public readonly record struct Vertex
 {
     public int Q { get; }
     public int R { get; }
     public VertexCorner Corner { get; }
 
-    public VertexCoordinate(int q, int r, VertexCorner corner)
+    public Vertex(int q, int r, VertexCorner corner)
     {
         Q = q;
         R = r;

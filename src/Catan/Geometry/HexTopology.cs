@@ -2,15 +2,15 @@ namespace Catan.Geometry;
 
 internal sealed class HexTopology
 {
-    private readonly HashSet<HexCoordinate> _hexes = [];
-    private readonly HashSet<VertexCoordinate> _vertices = [];
-    private readonly HashSet<EdgeCoordinate> _edges = [];
+    private readonly HashSet<Hex> _hexes = [];
+    private readonly HashSet<Vertex> _vertices = [];
+    private readonly HashSet<Edge> _edges = [];
 
-    public IReadOnlyList<HexCoordinate> Hexes => [.. _hexes];
-    public IReadOnlyList<VertexCoordinate> Vertices => [.. _vertices];
-    public IReadOnlyList<EdgeCoordinate> Edges => [.. _edges];
+    public IReadOnlyList<Hex> Hexes => [.. _hexes];
+    public IReadOnlyList<Vertex> Vertices => [.. _vertices];
+    public IReadOnlyList<Edge> Edges => [.. _edges];
 
-    public void AddHex(HexCoordinate hex)
+    public void AddHex(Hex hex)
     {
         _hexes.Add(hex);
 
@@ -28,16 +28,16 @@ internal sealed class HexTopology
         _edges.Clear();
     }
 
-    public bool HasHex(HexCoordinate hex) => _hexes.Contains(hex);
-    public bool HasVertex(VertexCoordinate vertex) => _vertices.Contains(vertex);
-    public bool HasEdge(EdgeCoordinate edge) => _edges.Contains(edge);
+    public bool HasHex(Hex hex) => _hexes.Contains(hex);
+    public bool HasVertex(Vertex vertex) => _vertices.Contains(vertex);
+    public bool HasEdge(Edge edge) => _edges.Contains(edge);
 
-    public IReadOnlyList<HexCoordinate> HexesAround(VertexCoordinate vertex) =>
+    public IReadOnlyList<Hex> HexesAround(Vertex vertex) =>
         [.. HexGeometry.HexesAround(vertex).Where(HasHex)];
 
-    public IReadOnlyList<EdgeCoordinate> EdgesAround(VertexCoordinate vertex) =>
+    public IReadOnlyList<Edge> EdgesAround(Vertex vertex) =>
         [.. HexGeometry.EdgesAround(vertex).Where(HasEdge)];
 
-    public IReadOnlyList<VertexCoordinate> AdjacentVertices(VertexCoordinate vertex) =>
+    public IReadOnlyList<Vertex> AdjacentVertices(Vertex vertex) =>
         [.. EdgesAround(vertex).Select(edge => HexGeometry.Opposite(edge, vertex))];
 }

@@ -19,7 +19,7 @@ public class BuildCityUseCase
         _resourceRegistry = resourceRegistry;
     }
 
-    public void Execute(PlayerId playerId, VertexCoordinate vertex)
+    public void Execute(PlayerId playerId, Vertex vertex)
     {
         var settlement = _settlementRegistry.At(vertex);
         if (settlement is null || settlement.Owner != playerId) return;

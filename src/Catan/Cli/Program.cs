@@ -1,3 +1,4 @@
+using Catan.SeafarersScenario1;
 using System.Diagnostics;
 
 namespace Catan.Cli;
@@ -15,16 +16,19 @@ internal static class Program
 
         CompositionRoot compositionRoot = new();
 
-        BoardService grid;
-        NumberTokenService numberTokens;
         if (expansion == 0)
-            (grid, numberTokens) = compositionRoot.StandardBoardGenerator.Create();
+            compositionRoot.StandardBoardGenerator.Create();
         else
-            (grid, numberTokens) = playerCount == 3
-                ? compositionRoot.SeafarersScenario1ThreePlayer.Create()
-                : compositionRoot.SeafarersScenario1FourPlayer.Create();
+        {
 
-        var html = HtmlBoardRenderer.ToHtml(grid, numberTokens);
+            ISeafarersScenario1Setup setup = playerCount == 3
+                ? new SeafarersScenario1ThreePlayerSetup()
+                : new SeafarersScenario1FourPlayerSetup();
+
+            compositionRoot.SeafarersScenario1BoardGenerator.Create(setup);
+        }
+
+        var html = HtmlBoardRenderer.ToHtml(compositionRoot.BoardService, compositionRoot.NumberTokenService, compositionRoot.HarbourService);
         var path = Path.Combine(Path.GetTempPath(), "catan-board.html");
         File.WriteAllText(path, html);
 

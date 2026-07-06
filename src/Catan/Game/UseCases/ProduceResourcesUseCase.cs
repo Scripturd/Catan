@@ -5,7 +5,7 @@ namespace Catan.Game.UseCases;
 
 public class ProduceResourcesUseCase
 {
-    private readonly BoardService _grid;
+    private readonly BoardService _boardService;
     private readonly NumberTokenService _numbers;
     private readonly SettlementRegistry _settlements;
     private readonly CityRegistry _cities;
@@ -13,14 +13,14 @@ public class ProduceResourcesUseCase
     private readonly Robber _robber;
 
     public ProduceResourcesUseCase(
-        BoardService grid,
+        BoardService boardService,
         NumberTokenService numbers,
         SettlementRegistry settlements,
         CityRegistry cities,
         ResourceRegistry resources,
         Robber robber)
     {
-        _grid = grid;
+        _boardService = boardService;
         _numbers = numbers;
         _settlements = settlements;
         _cities = cities;
@@ -35,11 +35,11 @@ public class ProduceResourcesUseCase
             if (hex == _robber.Hex)
                 continue;
 
-            var yield = TerrainYields.For(_grid.TerrainAt(hex));
+            var yield = TerrainYields.For(_boardService.TerrainAt(hex));
             if (yield.Type != YieldType.Resource)
                 continue;
 
-            foreach (var vertex in _grid.VerticesOf(hex))
+            foreach (var vertex in _boardService.VerticesOf(hex))
             {
                 var settlement = _settlements.At(vertex);
                 if (settlement is not null)

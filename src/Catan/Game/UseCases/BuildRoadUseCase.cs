@@ -19,7 +19,7 @@ public class BuildRoadUseCase
         _resourceRegistry = resourceRegistry;
     }
 
-    public void Execute(PlayerId playerId, EdgeCoordinate edge)
+    public void Execute(PlayerId playerId, Edge edge)
     {
         if (!_rules.EdgeIsVacant(edge))
             return;

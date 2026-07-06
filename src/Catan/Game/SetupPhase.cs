@@ -29,7 +29,7 @@ public sealed class SetupPhase
 
     private bool IsSecondPlacement => _turn >= _order.Count / 2;
 
-    public void PlaceFor(VertexCoordinate settlement, EdgeCoordinate road)
+    public void PlaceFor(Vertex settlement, Edge road)
     {
         if (IsComplete)
             return;

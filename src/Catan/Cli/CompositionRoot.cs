@@ -10,11 +10,11 @@ namespace Catan.Cli;
 public sealed class CompositionRoot
 {
     public Random Random = new();
-    public BoardService Grid { get; }
-    public NumberTokenService Numbers { get; }
+    public BoardService BoardService { get; }
+    public NumberTokenService NumberTokenService { get; }
+    public HarbourService HarbourService { get; }
     public Shuffler Shuffler { get; }
 
-    public NumberTokenSpiral NumberTokenSpiral { get; }
     public StandardBoardGenerator StandardBoardGenerator { get; }
 
     public SeafarersScenario1BoardGenerator SeafarersScenario1BoardGenerator { get; }
@@ -36,29 +36,29 @@ public sealed class CompositionRoot
 
     public CompositionRoot()
     {
-        Grid = ;
-        Numbers = ;
+        BoardService = new();
+        NumberTokenService = new(BoardService);
+        HarbourService = new(BoardService);
         Shuffler = new Shuffler(Random);
 
-        NumberTokenSpiral = new NumberTokenSpiral(Random);
-        StandardBoardGenerator = new StandardBoardGenerator(Shuffler, NumberTokenSpiral);
+        StandardBoardGenerator = new StandardBoardGenerator(BoardService, NumberTokenService, HarbourService, Shuffler);
 
-        SeafarersScenario1BoardGenerator = new SeafarersScenario1BoardGenerator(Shuffler);
+        SeafarersScenario1BoardGenerator = new SeafarersScenario1BoardGenerator(BoardService, NumberTokenService, Shuffler);
 
         Settlements = new SettlementRegistry();
         Cities = new CityRegistry();
         Roads = new RoadRegistry();
         Ships = new ShipRegistry();
         Resources = new ResourceRegistry();
-        Robber = new Robber(grid.HexesOf(TerrainType.Desert).First());
-        PlacementRules = new PlacementRules(Settlements, Cities, Roads, Ships, Grid);
+        Robber = new Robber();
+        PlacementRules = new PlacementRules(Settlements, Cities, Roads, Ships, BoardService);
 
-        ProduceResources = new ProduceResourcesUseCase(grid, numbers, Settlements, Cities, Resources, Robber);
+        ProduceResources = new ProduceResourcesUseCase(BoardService, NumberTokenService, Settlements, Cities, Resources, Robber);
         BuildSettlement = new BuildSettlementUseCase(PlacementRules, Settlements, Resources);
         BuildRoad = new BuildRoadUseCase(PlacementRules, Roads, Resources);
         PlaceStartingSettlement = new PlaceStartingSettlementUseCase(PlacementRules, Settlements);
         PlaceStartingRoad = new PlaceStartingRoadUseCase(PlacementRules, Roads);
-        GrantStartingResources = new GrantStartingResourcesUseCase(Grid, Settlements, Resources);
+        GrantStartingResources = new GrantStartingResourcesUseCase(BoardService, Settlements, Resources);
     }
 
     public SetupPhase NewSetupPhase(IReadOnlyList<PlayerId> players) =>

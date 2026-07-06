@@ -2,17 +2,13 @@
 
 public interface ISeafarersScenario1Setup
 {
-    public IReadOnlyList<HexCoordinate> MainCoords { get; }
-
-    public IReadOnlyList<HexCoordinate> SmallCoords { get; }
-
-    public IReadOnlyList<HexCoordinate> SeaCoords { get; }
-
-    public IReadOnlyList<TerrainType> MainTerrain { get; }
-
-    public IReadOnlyList<TerrainType> SmallTerrain { get; }
-
+    public IReadOnlyList<Hex> MainHexes { get; }
+    public IReadOnlyList<TerrainType> MainTerrainTypes { get; }
     public IReadOnlyList<int> MainTokens { get; }
 
+    public IReadOnlyList<Hex> SmallHexes { get; }
+    public IReadOnlyList<TerrainType> SmallTerrainTypes { get; }
     public IReadOnlyList<int> SmallTokens { get; }
+
+    public IReadOnlyList<Hex> SeaHexes { get; }
 }

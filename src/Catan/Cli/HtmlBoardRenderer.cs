@@ -1,4 +1,5 @@
 using Catan.Economy;
+using Catan.Pieces;
 using System.Globalization;
 using System.Text;
 
@@ -9,7 +10,7 @@ internal static class HtmlBoardRenderer
     private const double Size = 60;
     private const double Margin = 70;
 
-    public static string ToHtml(BoardService grid, NumberTokenService numbers, HarbourService harbours)
+    public static string ToHtml(BoardService grid, NumberTokenService numbers, HarbourService harbours, Robber robber)
     {
         var centres = grid.Hexes.ToDictionary(h => h, HexCentre);
 
@@ -41,6 +42,9 @@ internal static class HtmlBoardRenderer
 
         foreach (var (edge, harbour) in harbours.All)
             svg.Append(HarbourMarker(grid, edge, harbour));
+
+        if (centres.TryGetValue(robber.Hex, out var robberCentre))
+            svg.Append(RobberPawn(robberCentre.X, robberCentre.Y));
 
         svg.Append("</svg>");
 
@@ -79,6 +83,29 @@ internal static class HtmlBoardRenderer
             "<text x=\"{0}\" y=\"{2}\" text-anchor=\"middle\" font-size=\"22\" font-weight=\"700\" fill=\"{3}\">{4}</text>" +
             "<text x=\"{0}\" y=\"{5}\" text-anchor=\"middle\" font-size=\"11\" fill=\"{3}\">{6}</text>",
             cx, cy, cy + 4, colour, token.Number, cy + 18, pips);
+    }
+
+    private static string RobberPawn(double cx, double cy)
+    {
+        double neckY = cy - 10;
+        double shoulderY = cy - 4;
+        double waistY = cy + 2;
+        double hipY = cy + 8;
+        double baseY = cy + 16;
+
+        string body = F(
+            "<path d=\"M {0},{5} C {1},{6} {2},{7} {3},{8} L {4},{9} L {10},{9} L {11},{8} C {12},{7} {13},{6} {14},{5} Z\"" +
+            " fill=\"#2b2b2b\" stroke=\"#f1e3c0\" stroke-width=\"1.5\"/>",
+            cx - 5, cx - 9, cx - 8, cx - 11, cx - 14,
+            neckY, shoulderY, waistY, hipY, baseY,
+            cx + 14, cx + 11, cx + 8, cx + 9, cx + 5);
+
+        return F(
+            "<ellipse cx=\"{0}\" cy=\"{1}\" rx=\"15\" ry=\"4\" fill=\"#2b2b2b\" stroke=\"#f1e3c0\" stroke-width=\"1.5\"/>",
+            cx, baseY) +
+            body +
+            F("<circle cx=\"{0}\" cy=\"{1}\" r=\"8\" fill=\"#2b2b2b\" stroke=\"#f1e3c0\" stroke-width=\"1.5\"/>",
+                cx, cy - 20);
     }
 
     private static string Fill(TerrainType terrain) => terrain switch

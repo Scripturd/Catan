@@ -28,7 +28,7 @@ internal static class Program
             compositionRoot.SeafarersScenario1BoardGenerator.Create(setup);
         }
 
-        var html = HtmlBoardRenderer.ToHtml(compositionRoot.BoardService, compositionRoot.NumberTokenService, compositionRoot.HarbourService);
+        var html = HtmlBoardRenderer.ToHtml(compositionRoot.BoardService, compositionRoot.NumberTokenService, compositionRoot.HarbourService, compositionRoot.Robber);
         var path = Path.Combine(Path.GetTempPath(), "catan-board.html");
         File.WriteAllText(path, html);
 

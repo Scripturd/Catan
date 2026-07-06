@@ -43,7 +43,7 @@ public sealed class CompositionRoot
 
         StandardBoardGenerator = new StandardBoardGenerator(BoardService, NumberTokenService, HarbourService, Shuffler);
 
-        SeafarersScenario1BoardGenerator = new SeafarersScenario1BoardGenerator(BoardService, NumberTokenService, Shuffler);
+        SeafarersScenario1BoardGenerator = new SeafarersScenario1BoardGenerator(BoardService, NumberTokenService, HarbourService, Shuffler);
 
         Settlements = new SettlementRegistry();
         Cities = new CityRegistry();

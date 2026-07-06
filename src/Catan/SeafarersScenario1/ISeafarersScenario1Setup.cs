@@ -11,4 +11,7 @@ public interface ISeafarersScenario1Setup
     public IReadOnlyList<int> SmallTokens { get; }
 
     public IReadOnlyList<Hex> SeaHexes { get; }
+
+    public IReadOnlyList<Edge> HarbourEdges { get; }
+    public IReadOnlyList<Harbour> Harbours { get; }
 }

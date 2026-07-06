@@ -1,3 +1,5 @@
+using Catan.Economy;
+
 namespace Catan.SeafarersScenario1;
 
 public class SeafarersScenario1FourPlayerSetup : ISeafarersScenario1Setup
@@ -57,5 +59,47 @@ public class SeafarersScenario1FourPlayerSetup : ISeafarersScenario1Setup
         new(1, 1),
         new(0, 2),
         new(-1, 3),
+    ];
+
+    public IReadOnlyList<Edge> HarbourEdges { get; } = 
+    [
+        new(-2, -2, EdgeDirection.SouthEast),
+        new(-1, -2, EdgeDirection.SouthWest),
+        new(-1, -2, EdgeDirection.SouthEast),
+        new(0, -2, EdgeDirection.SouthWest),
+        new(0, -2, EdgeDirection.SouthEast),
+        new(1, -2, EdgeDirection.SouthWest),
+        new(-3, -1, EdgeDirection.East),
+        new(-3, -1, EdgeDirection.SouthEast),
+        new(0, -1, EdgeDirection.East),
+        new(1, -1, EdgeDirection.SouthWest),
+        new(-4, 0, EdgeDirection.East),
+        new(-4, 0, EdgeDirection.SouthEast),
+        new(0, 0, EdgeDirection.East),
+        new(-5, 1, EdgeDirection.East),
+        new(-4, 1, EdgeDirection.SouthWest),
+        new(0, 1, EdgeDirection.East),
+        new(0, 1, EdgeDirection.SouthEast),
+        new(-5, 2, EdgeDirection.East),
+        new(-4, 2, EdgeDirection.SouthWest),
+        new(-1, 2, EdgeDirection.East),
+        new(-1, 2, EdgeDirection.SouthEast),
+        new(-5, 3, EdgeDirection.East),
+        new(-2, 3, EdgeDirection.East),
+        new(-4, 3, EdgeDirection.SouthWest),
+        new(-4, 3, EdgeDirection.SouthEast),
+        new(-3, 3, EdgeDirection.SouthWest),
+        new(-3, 3, EdgeDirection.SouthEast),
+        new(-2, 3, EdgeDirection.SouthWest),
+        new(-2, 3, EdgeDirection.SouthEast),
+    ];
+    public IReadOnlyList<Harbour> Harbours { get; } =
+    [
+        new(3), new(3), new(3), new(3),
+        new(2, ResourceType.Brick),
+        new(2, ResourceType.Lumber),
+        new(2, ResourceType.Wool),
+        new(2, ResourceType.Grain),
+        new(2, ResourceType.Ore),
     ];
 }

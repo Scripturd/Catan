@@ -40,7 +40,6 @@ public class NumberTokenSpiral
         int tokenIndex = 0;
         foreach (var hex in SpiralAnticlockwiseFromHex(randomCorner))
         {
-            Console.WriteLine(hex);
             var terrainType = _boardService.TerrainAt(hex);
 
             if (TerrainYields.For(terrainType) != Yield.Nothing)

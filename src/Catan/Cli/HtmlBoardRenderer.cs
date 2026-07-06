@@ -11,9 +11,7 @@ internal static class HtmlBoardRenderer
 
     public static string ToHtml(BoardService grid, NumberTokenService numbers, HarbourService harbours)
     {
-        var centres = grid.Hexes.ToDictionary(
-            h => h,
-            h => (X: Size * Math.Sqrt(3) * (h.Q + h.R / 2.0), Y: Size * 1.5 * h.R));
+        var centres = grid.Hexes.ToDictionary(h => h, HexCentre);
 
         double minX = centres.Values.Min(c => c.X) - Size - Margin;
         double minY = centres.Values.Min(c => c.Y) - Size - Margin;
@@ -104,19 +102,14 @@ internal static class HtmlBoardRenderer
         double mx = (ax + bx) / 2;
         double my = (ay + by) / 2;
 
-        double nx = -(by - ay);
-        double ny = bx - ax;
-        double length = Math.Sqrt(nx * nx + ny * ny);
-        nx /= length;
-        ny /= length;
-        if (nx * mx + ny * my < 0)
-        {
-            nx = -nx;
-            ny = -ny;
-        }
+        var landHex = HexGeometry.HexesOf(edge).First(h => grid.Hexes.Contains(h) && grid.TerrainAt(h) != TerrainType.Sea);
+        var (lx, ly) = HexCentre(landHex);
+        double dx = mx - lx;
+        double dy = my - ly;
+        double length = Math.Sqrt(dx * dx + dy * dy);
 
-        double hx = mx + nx * Size * 0.55;
-        double hy = my + ny * Size * 0.55;
+        double hx = mx + dx / length * Size * 0.55;
+        double hy = my + dy / length * Size * 0.55;
 
         return F(
             "<line x1=\"{0}\" y1=\"{1}\" x2=\"{4}\" y2=\"{5}\" stroke=\"#7a5230\" stroke-width=\"3\"/>" +
@@ -128,10 +121,12 @@ internal static class HtmlBoardRenderer
 
     private static (double X, double Y) VertexPixel(Vertex vertex)
     {
-        double cx = Size * Math.Sqrt(3) * (vertex.Q + vertex.R / 2.0);
-        double cy = Size * 1.5 * vertex.R;
+        var (cx, cy) = HexCentre(new Hex(vertex.Q, vertex.R));
         return (cx, cy + (vertex.Corner == VertexCorner.Top ? Size : -Size));
     }
+
+    private static (double X, double Y) HexCentre(Hex hex) =>
+        (Size * Math.Sqrt(3) * (hex.Q + hex.R / 2.0), Size * 1.5 * hex.R);
 
     private static string HarbourFill(Harbour harbour) => harbour.Resource switch
     {

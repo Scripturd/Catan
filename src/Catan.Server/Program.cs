@@ -5,8 +5,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ASPNETCORE_URLS")))
 {
-    var port = builder.Configuration["port"] ?? "5200";
-    builder.WebHost.UseUrls($"http://localhost:{port}");
+    var cloudPort = Environment.GetEnvironmentVariable("PORT");
+    if (!string.IsNullOrEmpty(cloudPort))
+        builder.WebHost.UseUrls($"http://0.0.0.0:{cloudPort}");
+    else
+        builder.WebHost.UseUrls($"http://localhost:{builder.Configuration["port"] ?? "5200"}");
 }
 
 builder.Services

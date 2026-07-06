@@ -1,5 +1,4 @@
 using Catan.Game.UseCases;
-using Catan.GameModes;
 using Catan.Pieces;
 using Catan.Players;
 
@@ -20,11 +19,6 @@ public sealed class GameSession
 
     private readonly PlacementRules _rules;
     private readonly SetupPhase _setup;
-
-    public GameSession(BoardDefinition definition, IReadOnlyList<PlayerId> players, Random random)
-        : this(new DataDrivenGameMode(definition), players, random)
-    {
-    }
 
     public GameSession(IGameMode mode, IReadOnlyList<PlayerId> players, Random random)
     {

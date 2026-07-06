@@ -1,22 +1,18 @@
 # Game modes
 
-A game mode lays out the board and owns any custom rules. There are two ways to
-add one:
+A game mode lays out the board and owns any custom rules. Every mode is a C#
+class implementing `Catan.Game.IGameMode`, grouped into an `IExpansionPack`, and
+living in its own project. The three shipped modes work this way:
+`Catan.Modes.Standard`, `Catan.Modes.Seafarers`, and `Catan.Modes.Mini`. Each is
+an ordinary project referenced by the hosts (CLI + server) and registered
+explicitly.
 
-1. **A C# mode** — a class implementing `Catan.Game.IGameMode`, grouped into an
-   `IExpansionPack`, living in its own project. The three shipped modes work this
-   way: `Catan.Modes.Standard`, `Catan.Modes.Seafarers`, and `Catan.Modes.Mini`.
-   Each is an ordinary project referenced by the hosts (CLI + server) and
-   registered explicitly — **no runtime plugin loading**.
-2. **A JSON board definition** — inert data in `modes/`, loaded at runtime by
-   `DataDrivenGameMode`. Best for a new *board* that needs no custom C# rules.
-
-> **Note.** This project used to load modes as runtime plugin DLLs from a
-> `plugins/` folder (`AssemblyLoadContext`). That was removed in favour of plain
-> project references — the shipped modes are compiled in and appear in the mode
-> list with no separate build step. If you later want *third parties* to drop in
-> a compiled mode without rebuilding, the plugin loader can be reintroduced; for
-> untrusted authors, prefer JSON board definitions, which are data, not code.
+> **Note.** Earlier iterations supported two extra ways to add a mode: runtime
+> **plugin DLLs** (`AssemblyLoadContext` scanning a `plugins/` folder) and
+> **JSON board definitions** (`modes/*.json` loaded at runtime). Both were
+> removed — the game ships a fixed set of built-in C# modes, with no
+> user-supplied content. If a mode-authoring path is ever wanted again, this is
+> where it would be reintroduced.
 
 ## The contract
 
@@ -75,14 +71,13 @@ only to the passed `services`.
    IEnumerable<IGameMode> builtIns =
        new IExpansionPack[] { new StandardPack(), new SeafarersPack(), new MiniPack() }
            .SelectMany(pack => pack.Modes);
-   var catalog = new ModeCatalog(Path.Combine(AppContext.BaseDirectory, "modes"), builtIns);
+   var catalog = new ModeCatalog(builtIns);
    ```
 
 ## How it works
 
-`ModeCatalog` is built once per host from two sources: the JSON board
-definitions found in `modes/` (each wrapped in a `DataDrivenGameMode`) and the
-built-in modes handed to it by the composition root. The lobby lists everything
-in `catalog.Modes`; `ByName` resolves a chosen mode; `Default` is the first.
-Building any project builds everything it references, so `dotnet build
-Catan.slnx` (or running either host) is all that's needed.
+`ModeCatalog` is a thin container over the built-in modes handed to it by each
+host's composition root. The lobby lists everything in `catalog.Modes`; `ByName`
+resolves a chosen mode; `Default` is the first. Building any project builds
+everything it references, so `dotnet build Catan.slnx` (or running either host)
+is all that's needed.

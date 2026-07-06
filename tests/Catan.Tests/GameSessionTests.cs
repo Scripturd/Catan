@@ -1,6 +1,5 @@
 using Catan.Economy;
 using Catan.Game;
-using Catan.GameModes;
 using Catan.Geometry;
 using Catan.Players;
 using Catan.Seafarers.Scenario1;
@@ -12,11 +11,7 @@ public sealed class GameSessionTests
 {
     private static readonly PlayerId[] Players = [new(0), new(1), new(2)];
 
-    private static GameSession NewSession()
-    {
-        var definition = new BoardDefinitionLoader().Load(Path.Combine(AppContext.BaseDirectory, "modes", "standard.json"));
-        return new GameSession(definition, Players, new Random(1));
-    }
+    private static GameSession NewSession() => new(new StandardGame(), Players, new Random(1));
 
     [Fact]
     public void A_new_session_starts_at_the_first_player_and_is_not_complete()

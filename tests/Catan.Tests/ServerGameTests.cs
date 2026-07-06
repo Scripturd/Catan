@@ -1,16 +1,13 @@
 using Catan.Game;
-using Catan.GameModes;
 using Catan.Geometry;
 using Catan.Server;
+using Catan.Standard;
 
 namespace Catan.Tests;
 
 public sealed class ServerGameTests
 {
-    private static IGameMode StandardMode() =>
-        new DataDrivenGameMode(new BoardDefinitionLoader().Load(Path.Combine(AppContext.BaseDirectory, "modes", "standard.json")));
-
-    private static ServerGame NewGame() => new("ABCDE", StandardMode(), "c0");
+    private static ServerGame NewGame() => new("ABCDE", new StandardGame(), "c0");
 
     [Fact]
     public void Adding_players_assigns_sequential_ids_and_a_duplicate_connection_is_idempotent()

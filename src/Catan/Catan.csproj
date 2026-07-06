@@ -12,8 +12,4 @@
     <Folder Include="Game\Commands\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="modes\**\*.json" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-
 </Project>

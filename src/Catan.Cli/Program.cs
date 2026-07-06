@@ -18,7 +18,7 @@ internal static class Program
             new IExpansionPack[] { new StandardPack(), new SeafarersPack(), new MiniPack() }
                 .SelectMany(pack => pack.Modes);
 
-        var catalog = new ModeCatalog(Path.Combine(AppContext.BaseDirectory, "modes"), builtIns);
+        var catalog = new ModeCatalog(builtIns);
 
         Console.WriteLine("Pick a game mode:");
         for (int i = 0; i < catalog.Modes.Count; i++)

@@ -27,7 +27,7 @@ builder.Services.AddSingleton(_ =>
     IEnumerable<IGameMode> builtIns =
         new IExpansionPack[] { new StandardPack(), new SeafarersPack(), new MiniPack() }
             .SelectMany(pack => pack.Modes);
-    return new ModeCatalog(Path.Combine(AppContext.BaseDirectory, "modes"), builtIns);
+    return new ModeCatalog(builtIns);
 });
 
 var app = builder.Build();

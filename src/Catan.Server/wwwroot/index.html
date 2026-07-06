@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Catan</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Catan</h1>
+    <span id="conn-status" class="pill">connecting…</span>
+  </header>
+
+  <main>
+    <section id="connect-panel" class="panel hidden">
+      <h2>Join a game</h2>
+      <label>Your name <input id="name" maxlength="20" placeholder="Player"></label>
+      <div class="row">
+        <div class="col">
+          <h3>Create</h3>
+          <label>Mode <select id="mode"></select></label>
+          <button id="create-btn">Create game</button>
+        </div>
+        <div class="col">
+          <h3>Join</h3>
+          <label>Code <input id="code" maxlength="5" placeholder="ABCDE" style="text-transform:uppercase"></label>
+          <button id="join-btn">Join game</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="lobby-panel" class="panel hidden">
+      <h2>Lobby — code <span id="lobby-code" class="code"></span></h2>
+      <ul id="lobby-players" class="players"></ul>
+      <p id="lobby-hint" class="hint"></p>
+      <button id="start-btn">Start game</button>
+    </section>
+
+    <section id="game-panel" class="panel hidden">
+      <p id="status" class="status"></p>
+      <div id="board-wrap"><svg id="board" xmlns="http://www.w3.org/2000/svg"></svg></div>
+      <ul id="game-players" class="players"></ul>
+    </section>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="lib/signalr.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

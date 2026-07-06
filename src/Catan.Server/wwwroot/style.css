@@ -1,0 +1,87 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #12384f;
+  color: #eef4f8;
+  min-height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: #0d2c40;
+}
+header h1 { font-size: 20px; margin: 0; flex: 1; }
+.pill {
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #1d4e6f;
+}
+.pill.ok { background: #2f6b3a; }
+.pill.bad { background: #8a3a3a; }
+main { padding: 20px; display: grid; place-items: start center; }
+.panel {
+  width: 100%;
+  max-width: 960px;
+  background: #163f59;
+  border-radius: 12px;
+  padding: 20px;
+}
+.hidden { display: none !important; }
+h2 { margin-top: 0; }
+label { display: block; margin: 8px 0; }
+input, select, button {
+  font: inherit;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #2c5c7c;
+  background: #0d2c40;
+  color: #eef4f8;
+}
+button {
+  cursor: pointer;
+  background: #2f6b3a;
+  border-color: #2f6b3a;
+  font-weight: 600;
+}
+button:disabled { opacity: 0.45; cursor: not-allowed; }
+.row { display: flex; gap: 20px; flex-wrap: wrap; }
+.col { flex: 1; min-width: 220px; background: #0d2c40; border-radius: 10px; padding: 14px; }
+.code, .status .code { font-family: ui-monospace, monospace; letter-spacing: 2px; font-size: 1.2em; }
+.players { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.players li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #0d2c40;
+  border-radius: 8px;
+  padding: 6px 12px;
+}
+.players li.current { outline: 2px solid #f1e3c0; }
+.swatch { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
+.hand { font-size: 12px; opacity: 0.85; margin-left: 4px; }
+.hint { opacity: 0.8; }
+.status { font-size: 18px; font-weight: 600; min-height: 24px; }
+#board-wrap { background: #1d4e6f; border-radius: 12px; padding: 8px; }
+svg { width: 100%; height: auto; display: block; }
+.vertex { fill: #eef4f8; opacity: 0.35; cursor: default; }
+.vertex.placeable { opacity: 0.7; cursor: pointer; }
+.vertex.placeable:hover { opacity: 1; fill: #f1e3c0; }
+.vertex.selected { fill: #f1e3c0; opacity: 1; }
+.edge { stroke: #0d2c40; stroke-width: 4; opacity: 0.25; }
+.edge.placeable { stroke: #f1e3c0; opacity: 0.9; cursor: pointer; stroke-dasharray: 6 4; }
+.edge.placeable:hover { opacity: 1; stroke-width: 7; }
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #8a3a3a;
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}

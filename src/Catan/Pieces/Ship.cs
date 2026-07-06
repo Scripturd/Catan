@@ -5,7 +5,7 @@ namespace Catan.Pieces;
 
 public class Ship
 {
-    public static readonly ResourceBag Cost = new(lumber: 1, wool: 1);
+    public static readonly ResourceBag Cost = new((ResourceType.Lumber, 1), (ResourceType.Wool, 1));
 
     public PlayerId Owner { get; }
 

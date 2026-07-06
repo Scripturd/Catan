@@ -178,16 +178,7 @@ internal static class HtmlBoardRenderer
     private static (double X, double Y) HexCentre(Hex hex) =>
         (Size * Math.Sqrt(3) * (hex.Q + hex.R / 2.0), Size * 1.5 * hex.R);
 
-    private static string HarbourFill(Harbour harbour) => harbour.Resource switch
-    {
-        null => "#e8dcc0",
-        ResourceType.Brick => "#c2693a",
-        ResourceType.Lumber => "#2f6b3a",
-        ResourceType.Wool => "#8fc25a",
-        ResourceType.Grain => "#e8c455",
-        ResourceType.Ore => "#8a8d92",
-        _ => "#888888"
-    };
+    private static string HarbourFill(Harbour harbour) => harbour.Resource?.Color ?? "#e8dcc0";
 
     private static string F(string format, params object[] args) =>
         string.Format(CultureInfo.InvariantCulture, format, args);

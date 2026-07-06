@@ -11,7 +11,7 @@ public sealed class BoardDefinitionLoader
         PropertyNameCaseInsensitive = true,
         ReadCommentHandling = JsonCommentHandling.Skip,
         AllowTrailingCommas = true,
-        Converters = { new JsonStringEnumConverter() }
+        Converters = { new JsonStringEnumConverter(), new ResourceTypeJsonConverter() }
     };
 
     public IReadOnlyList<BoardDefinition> LoadDirectory(string directory)

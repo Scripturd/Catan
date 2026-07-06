@@ -30,7 +30,7 @@ public class GrantStartingResourcesUseCase
             if (yield.Type != YieldType.Resource)
                 continue;
 
-            _resources.Give(playerId, ResourceBag.Of(yield.Resource, 1));
+            _resources.Give(playerId, ResourceBag.Of(yield.Resource!, 1));
         }
     }
 }

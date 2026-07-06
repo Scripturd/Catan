@@ -9,9 +9,7 @@ public sealed record StateSnapshot(
     int MaxPlayers,
     BoardView? Board);
 
-public sealed record PlayerView(int Id, string Name, string Color, ResourceView? Hand);
-
-public sealed record ResourceView(int Brick, int Lumber, int Wool, int Grain, int Ore);
+public sealed record PlayerView(int Id, string Name, string Color, IReadOnlyDictionary<string, int>? Hand);
 
 public sealed record BoardView(
     double MinX,
@@ -29,7 +27,7 @@ public sealed record BoardView(
 
 public sealed record HexView(int Q, int R, string Terrain, int? Token, double X, double Y);
 
-public sealed record HarbourView(int Ratio, string? Resource, double X, double Y);
+public sealed record HarbourView(int Ratio, string? Resource, string Color, double X, double Y);
 
 public sealed record PointView(double X, double Y);
 

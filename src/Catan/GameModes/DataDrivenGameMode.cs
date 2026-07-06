@@ -76,8 +76,8 @@ public sealed class DataDrivenGameMode : IGameMode
     }
 
     private static Harbour ToHarbour(HarbourDefinition harbour) =>
-        harbour.Resource.HasValue
-            ? new Harbour(harbour.Ratio, harbour.Resource.Value)
+        harbour.Resource is not null
+            ? new Harbour(harbour.Ratio, harbour.Resource)
             : new Harbour(harbour.Ratio);
 
     private void PlaceRobber(GameServices services)

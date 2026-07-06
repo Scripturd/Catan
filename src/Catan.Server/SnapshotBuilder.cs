@@ -14,7 +14,7 @@ public static class SnapshotBuilder
                 p.Id.Value,
                 p.Name,
                 p.Color,
-                session is null ? null : ToResourceView(session.Resources.Of(p.Id))))
+                session is null ? null : ToHand(session.Resources.Of(p.Id))))
             .ToList();
 
         var board = session is null ? null : BuildBoard(session, players);
@@ -63,7 +63,7 @@ public static class SnapshotBuilder
                 double length = Math.Max(Math.Sqrt(dx * dx + dy * dy), 0.0001);
                 double hx = mx + dx / length * BoardLayout.Size * 0.4;
                 double hy = my + dy / length * BoardLayout.Size * 0.4;
-                return new HarbourView(entry.Value.Ratio, entry.Value.Resource?.ToString(), hx, hy);
+                return new HarbourView(entry.Value.Ratio, entry.Value.Resource?.Name, entry.Value.Resource?.Color ?? "#e8dcc0", hx, hy);
             })
             .ToList();
 
@@ -113,6 +113,6 @@ public static class SnapshotBuilder
 
     private static PointView ToPoint((double X, double Y) p) => new(p.X, p.Y);
 
-    private static ResourceView ToResourceView(Catan.Economy.ResourceBag bag) =>
-        new(bag.Brick, bag.Lumber, bag.Wool, bag.Grain, bag.Ore);
+    private static IReadOnlyDictionary<string, int> ToHand(Catan.Economy.ResourceBag bag) =>
+        bag.Amounts.ToDictionary(entry => entry.Key.Name, entry => entry.Value);
 }

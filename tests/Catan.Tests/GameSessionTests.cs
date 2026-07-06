@@ -160,5 +160,5 @@ public sealed class GameSessionTests
         throw new InvalidOperationException("No legal setup move available.");
     }
 
-    private static int Total(ResourceBag bag) => bag.Brick + bag.Lumber + bag.Wool + bag.Grain + bag.Ore;
+    private static int Total(ResourceBag bag) => bag.Total;
 }

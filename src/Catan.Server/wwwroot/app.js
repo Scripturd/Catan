@@ -5,9 +5,6 @@ const TERRAIN_FILL = {
   Forest: "#2f6b3a", Pasture: "#8fc25a", Fields: "#e8c455", Hills: "#c2693a",
   Mountains: "#8a8d92", Desert: "#dcc99a", Gold: "#f4d03f", Sea: "#2a6f97"
 };
-const HARBOUR_FILL = {
-  Brick: "#c2693a", Lumber: "#2f6b3a", Wool: "#8fc25a", Grain: "#e8c455", Ore: "#8a8d92"
-};
 
 let connection;
 let gameId = null;
@@ -130,7 +127,7 @@ function playerChip(p, markCurrent) {
   if (p.hand) {
     const h = document.createElement("span");
     h.className = "hand";
-    const total = p.hand.brick + p.hand.lumber + p.hand.wool + p.hand.grain + p.hand.ore;
+    const total = Object.values(p.hand).reduce((sum, n) => sum + n, 0);
     h.textContent = total > 0 ? `🂠 ${total}` : "";
     li.appendChild(h);
   }
@@ -213,7 +210,7 @@ function drawToken(svg, h) {
 }
 
 function drawHarbour(svg, hb) {
-  svg.appendChild(el("circle", { cx: hb.x, cy: hb.y, r: 14, fill: hb.resource ? HARBOUR_FILL[hb.resource] : "#e8dcc0", stroke: "#0d2c40", "stroke-width": 1.5 }));
+  svg.appendChild(el("circle", { cx: hb.x, cy: hb.y, r: 14, fill: hb.color, stroke: "#0d2c40", "stroke-width": 1.5 }));
   const t = el("text", { x: hb.x, y: hb.y + 4, "text-anchor": "middle", "font-size": 11, "font-weight": 700, fill: "#1a1a1a" });
   t.textContent = hb.ratio + ":1";
   svg.appendChild(t);

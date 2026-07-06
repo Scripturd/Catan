@@ -3,9 +3,9 @@ namespace Catan.Economy;
 public readonly record struct Yield
 {
     public YieldType Type { get; }
-    public ResourceType Resource { get; }
+    public ResourceType? Resource { get; }
 
-    public Yield(YieldType kind, ResourceType resource = default)
+    public Yield(YieldType kind, ResourceType? resource = null)
     {
         Type = kind;
         Resource = resource;

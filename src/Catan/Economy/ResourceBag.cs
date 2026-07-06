@@ -1,54 +1,54 @@
 namespace Catan.Economy;
 
-public readonly record struct ResourceBag
+public sealed class ResourceBag
 {
-    public int Brick { get; }
-    public int Lumber { get; }
-    public int Wool { get; }
-    public int Grain { get; }
-    public int Ore { get; }
+    public static readonly ResourceBag Empty = new();
 
-    public ResourceBag(int brick = 0, int lumber = 0, int wool = 0, int grain = 0, int ore = 0)
+    private readonly IReadOnlyDictionary<ResourceType, int> _amounts;
+
+    public ResourceBag(params (ResourceType Resource, int Amount)[] amounts)
     {
-        ArgumentOutOfRangeException.ThrowIfNegative(brick);
-        ArgumentOutOfRangeException.ThrowIfNegative(lumber);
-        ArgumentOutOfRangeException.ThrowIfNegative(wool);
-        ArgumentOutOfRangeException.ThrowIfNegative(grain);
-        ArgumentOutOfRangeException.ThrowIfNegative(ore);
-        Brick = brick;
-        Lumber = lumber;
-        Wool = wool;
-        Grain = grain;
-        Ore = ore;
+        var map = new Dictionary<ResourceType, int>();
+        foreach (var (resource, amount) in amounts)
+        {
+            ArgumentOutOfRangeException.ThrowIfNegative(amount);
+            if (amount > 0)
+                map[resource] = map.GetValueOrDefault(resource) + amount;
+        }
+        _amounts = map;
     }
 
-    public int this[ResourceType r] => r switch
+    private ResourceBag(IReadOnlyDictionary<ResourceType, int> amounts) => _amounts = amounts;
+
+    public static ResourceBag Of(ResourceType resource, int amount) => new((resource, amount));
+
+    public int this[ResourceType resource] => _amounts.GetValueOrDefault(resource);
+
+    public int Total => _amounts.Values.Sum();
+
+    public IReadOnlyDictionary<ResourceType, int> Amounts => _amounts;
+
+    public bool Covers(ResourceBag other) => other._amounts.All(entry => this[entry.Key] >= entry.Value);
+
+    public static ResourceBag operator +(ResourceBag a, ResourceBag b) => Combine(a, b, +1);
+    public static ResourceBag operator -(ResourceBag a, ResourceBag b) => Combine(a, b, -1);
+
+    private static ResourceBag Combine(ResourceBag a, ResourceBag b, int sign)
     {
-        ResourceType.Brick  => Brick,
-        ResourceType.Lumber => Lumber,
-        ResourceType.Wool   => Wool,
-        ResourceType.Grain  => Grain,
-        ResourceType.Ore    => Ore,
-        _ => throw new ArgumentOutOfRangeException(nameof(r), r, null)
-    };
+        var map = new Dictionary<ResourceType, int>(a._amounts);
+        foreach (var (resource, amount) in b._amounts)
+        {
+            var total = map.GetValueOrDefault(resource) + sign * amount;
+            if (total < 0)
+                throw new InvalidOperationException($"A bag cannot hold a negative amount of {resource.Name}.");
+            if (total == 0)
+                map.Remove(resource);
+            else
+                map[resource] = total;
+        }
+        return new ResourceBag(map);
+    }
 
-    public static ResourceBag Of(ResourceType resource, int amount) => resource switch
-    {
-        ResourceType.Brick  => new ResourceBag(brick: amount),
-        ResourceType.Lumber => new ResourceBag(lumber: amount),
-        ResourceType.Wool   => new ResourceBag(wool: amount),
-        ResourceType.Grain  => new ResourceBag(grain: amount),
-        ResourceType.Ore    => new ResourceBag(ore: amount),
-        _ => throw new ArgumentOutOfRangeException(nameof(resource), resource, null)
-    };
-
-    public bool Covers(ResourceBag other) =>
-        Brick >= other.Brick && Lumber >= other.Lumber && Wool >= other.Wool &&
-        Grain >= other.Grain && Ore >= other.Ore;
-
-    public static ResourceBag operator +(ResourceBag a, ResourceBag b) =>
-        new(a.Brick + b.Brick, a.Lumber + b.Lumber, a.Wool + b.Wool, a.Grain + b.Grain, a.Ore + b.Ore);
-
-    public static ResourceBag operator -(ResourceBag a, ResourceBag b) =>
-        new(a.Brick - b.Brick, a.Lumber - b.Lumber, a.Wool - b.Wool, a.Grain - b.Grain, a.Ore - b.Ore);
+    public override string ToString() =>
+        _amounts.Count == 0 ? "nothing" : string.Join(", ", _amounts.Select(entry => $"{entry.Value} {entry.Key.Name}"));
 }

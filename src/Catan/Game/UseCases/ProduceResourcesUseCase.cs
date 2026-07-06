@@ -43,11 +43,11 @@ public class ProduceResourcesUseCase
             {
                 var settlement = _settlements.At(vertex);
                 if (settlement is not null)
-                    _resources.Give(settlement.Owner, ResourceBag.Of(yield.Resource, 1));
+                    _resources.Give(settlement.Owner, ResourceBag.Of(yield.Resource!, 1));
 
                 var city = _cities.At(vertex);
                 if (city is not null)
-                    _resources.Give(city.Owner, ResourceBag.Of(yield.Resource, 2));
+                    _resources.Give(city.Owner, ResourceBag.Of(yield.Resource!, 2));
             }
         }
     }

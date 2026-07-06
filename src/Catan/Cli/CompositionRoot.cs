@@ -25,6 +25,7 @@ public sealed class CompositionRoot
     public ShipRegistry Ships { get; }
     public ResourceRegistry Resources { get; }
     public Robber Robber { get; }
+    public Pirate Pirate { get; }
     public PlacementRules PlacementRules { get; }
 
     public ProduceResourcesUseCase ProduceResources { get; }
@@ -46,12 +47,13 @@ public sealed class CompositionRoot
         Ships = new ShipRegistry();
         Resources = new ResourceRegistry();
         Robber = new Robber();
+        Pirate = new Pirate();
 
         Shuffler = new Shuffler(Random);
 
         StandardBoardGenerator = new StandardBoardGenerator(BoardService, NumberTokenService, HarbourService, Robber, Shuffler);
 
-        SeafarersScenario1BoardGenerator = new SeafarersScenario1BoardGenerator(BoardService, NumberTokenService, HarbourService, Robber, Shuffler);
+        SeafarersScenario1BoardGenerator = new SeafarersScenario1BoardGenerator(BoardService, NumberTokenService, HarbourService, Robber, Pirate, Shuffler);
 
         PlacementRules = new PlacementRules(Settlements, Cities, Roads, Ships, BoardService);
 

@@ -14,4 +14,6 @@ public interface ISeafarersScenario1Setup
 
     public IReadOnlyList<Edge> HarbourEdges { get; }
     public IReadOnlyList<Harbour> Harbours { get; }
+
+    public Hex PirateHex { get; }
 }

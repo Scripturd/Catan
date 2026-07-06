@@ -97,4 +97,6 @@ public class SeafarersScenario1ThreePlayerSetup : ISeafarersScenario1Setup
         new(2, ResourceType.Grain),
         new(2, ResourceType.Ore),
     ];
+
+    public Hex PirateHex { get; } = new(3, 0);
 }

@@ -9,6 +9,7 @@ public class SeafarersScenario1BoardGenerator
     private readonly NumberTokenService _numberTokenService;
     private readonly HarbourService _harbourService;
     private readonly Robber _robber;
+    private readonly Pirate _pirate;
     private readonly Shuffler _shuffler;
 
     public SeafarersScenario1BoardGenerator(
@@ -16,12 +17,14 @@ public class SeafarersScenario1BoardGenerator
         NumberTokenService numberTokenService,
         HarbourService harbourService,
         Robber robber,
+        Pirate pirate,
         Shuffler shuffler)
     {
         _boardService = boardService;
         _numberTokenService = numberTokenService;
         _harbourService = harbourService;
         _robber = robber;
+        _pirate = pirate;
         _shuffler = shuffler;
     }
 
@@ -38,6 +41,7 @@ public class SeafarersScenario1BoardGenerator
         PlaceHarbours(setup);
 
         MoveRobber();
+        MovePirate(setup);
     }
 
     private void AddLandHexes(
@@ -78,5 +82,9 @@ public class SeafarersScenario1BoardGenerator
     {
         var desert = _boardService.HexesOf(TerrainType.Desert).Cast<Hex?>().FirstOrDefault();
         _robber.MoveTo(desert ?? _numberTokenService.HexesWith(12).First());
+    }
+    private void MovePirate(ISeafarersScenario1Setup setup)
+    {
+        _pirate.MoveTo(setup.PirateHex);
     }
 }

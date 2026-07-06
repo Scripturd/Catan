@@ -2,15 +2,12 @@
 
 public class Pirate
 {
-    public Hex Hex { get; private set; }
+    private Hex _hex;
 
-    public Pirate(Hex hex)
-    {
-        Hex = hex;
-    }
+    public Hex Hex => _hex;
 
     public void MoveTo(Hex hex)
     {
-        Hex = hex;
+        _hex = hex;
     }
 }

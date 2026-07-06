@@ -1,10 +1,7 @@
 using Catan.Game;
 using Catan.Game.UseCases;
-using Catan.Modding;
 using Catan.Pieces;
 using Catan.Players;
-using Catan.SeafarersScenario1;
-using Catan.Standard;
 
 namespace Catan.Cli;
 
@@ -15,12 +12,6 @@ public sealed class CompositionRoot
     public NumberTokenService NumberTokenService { get; }
     public HarbourService HarbourService { get; }
     public Shuffler Shuffler { get; }
-
-    public StandardGame StandardBoard { get; }
-
-    public SeafarersScenario1Game SeafarersScenario1Board { get; }
-
-    public BoardDefinitionLoader BoardDefinitionLoader { get; } = new();
 
     public SettlementRegistry Settlements { get; }
     public CityRegistry Cities { get; }
@@ -54,10 +45,6 @@ public sealed class CompositionRoot
 
         Shuffler = new Shuffler(Random);
 
-        StandardBoard = new StandardGame(BoardService, NumberTokenService, HarbourService, Robber, Shuffler);
-
-        SeafarersScenario1Board = new SeafarersScenario1Game(BoardService, NumberTokenService, HarbourService, Robber, Pirate, Shuffler);
-
         PlacementRules = new PlacementRules(Settlements, Cities, Roads, Ships, BoardService);
 
         ProduceResources = new ProduceResourcesUseCase(BoardService, NumberTokenService, Settlements, Cities, Resources, Robber);
@@ -67,9 +54,6 @@ public sealed class CompositionRoot
         PlaceStartingRoad = new PlaceStartingRoadUseCase(PlacementRules, Roads);
         GrantStartingResources = new GrantStartingResourcesUseCase(BoardService, Settlements, Resources);
     }
-
-    public DataDrivenGameMode CreateMode(BoardDefinition definition) =>
-        new(definition, BoardService, NumberTokenService, HarbourService, Robber, Pirate, Shuffler);
 
     public SetupPhase NewSetupPhase(IReadOnlyList<PlayerId> players) =>
         new(players, PlaceStartingSettlement, PlaceStartingRoad, GrantStartingResources);

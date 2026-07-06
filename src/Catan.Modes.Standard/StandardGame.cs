@@ -1,5 +1,7 @@
+using Catan.Board;
 using Catan.Economy;
 using Catan.Game;
+using Catan.Geometry;
 using Catan.Pieces;
 using Catan.Players;
 
@@ -48,7 +50,7 @@ public class StandardGame : IGameMode
     public int MaxPlayerCount { get; } = 4;
 
     public StandardGame(
-        BoardService boardService, 
+        BoardService boardService,
         NumberTokenService numberTokenService,
         HarbourService harbourService,
         Robber robber,
@@ -72,13 +74,6 @@ public class StandardGame : IGameMode
             _harbourService.Place(harbour.Key, harbour.Value);
 
         MoveRobber();
-    }
-    private void Cleanup()
-    {
-        _boardService.Clear();
-        _numberTokenService.Clear();
-        _harbourService.Clear();
-        _robber.Remove();
     }
 
     private void AddLandHexes(

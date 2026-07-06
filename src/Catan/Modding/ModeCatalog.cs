@@ -1,6 +1,4 @@
 using Catan.Game;
-using Catan.SeafarersScenario1;
-using Catan.Standard;
 
 namespace Catan.Modding;
 
@@ -10,15 +8,7 @@ public sealed class ModeCatalog
 
     public ModeCatalog(string modesDirectory, string pluginsDirectory, Action<string>? log = null)
     {
-        var modes = new List<GameModeRegistration>
-        {
-            new("Standard Catan", 3, 4,
-                (board, tokens, harbours, robber, _, shuffler) =>
-                    new StandardGame(board, tokens, harbours, robber, shuffler)),
-            new("Seafarers: Heading for New Shores", 3, 4,
-                (board, tokens, harbours, robber, pirate, shuffler) =>
-                    new SeafarersScenario1Game(board, tokens, harbours, robber, pirate, shuffler)),
-        };
+        var modes = new List<GameModeRegistration>();
 
         foreach (var definition in new BoardDefinitionLoader().LoadDirectory(modesDirectory))
             modes.Add(new GameModeRegistration(definition.Name, definition.MinPlayers, definition.MaxPlayers,

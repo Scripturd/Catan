@@ -1,8 +1,12 @@
 # Game-mode plugins
 
-A game mode can live in its own assembly (DLL) and be loaded by the server at
-runtime — no rebuild required. Drop a plugin DLL in the server's `plugins`
-folder and its modes appear in the game's mode list next to the built-ins.
+A game mode lives in its own assembly (DLL) and is loaded by the server (and the
+CLI) at runtime — no rebuild required. Drop a plugin DLL in the `plugins` folder
+next to the app and its modes appear in the mode list. There are **no built-in
+modes compiled into core** — every C# mode is a plugin. The three shipped modes
+are each their own project: `Catan.Modes.Standard`, `Catan.Modes.Seafarers`, and
+`Catan.Modes.Mini`. (JSON board definitions in `modes/` are the other, safe way
+to add a mode — see the trust warning.)
 
 > ⚠️ **Trust warning.** A plugin is compiled C# that runs **with full trust in
 > the server process** — it can do anything the server can (read/write files,
@@ -51,15 +55,20 @@ public delegate IGameMode GameModeFactory(
 
 ## Installing
 
-```bash
-dotnet build src/Catan.Modes.Mini -c Release
-# copy the plugin DLL next to the running server, under a "plugins" folder:
-cp src/Catan.Modes.Mini/bin/Release/net9.0/Catan.Modes.Mini.dll <server-output>/plugins/
-```
+The app scans `<app-output>/plugins/*.dll` at startup, loads each in its own
+`AssemblyLoadContext`, and adds every `GameModeRegistration` it finds. A DLL that
+fails to load is logged and skipped rather than crashing the app.
 
-The server scans `<server-output>/plugins/*.dll` at startup, loads each in its
-own `AssemblyLoadContext`, and adds every `GameModeRegistration` it finds. A DLL
-that fails to load is logged and skipped rather than crashing the server.
+- **Server:** the shipped plugins are wired in via [build/Plugins.targets](build/Plugins.targets)
+  (referenced with `ReferenceOutputAssembly=false`, so they're built and copied
+  into the output `plugins/` folder without becoming a compile-time dependency).
+  `dotnet run --project src/Catan.Server` just works. The [Dockerfile](Dockerfile)
+  copies them into `/app/plugins` for deployment.
+- **CLI:** because the CLI lives in the core assembly (which the mode projects
+  reference), it can't build the plugins itself. Run **`./build.ps1`** to build
+  everything and assemble the `plugins/` folders for both the CLI and server.
+- **A new plugin:** `dotnet build src/<YourPlugin> -c Release`, then copy its DLL
+  into the app's `plugins/` folder (or add it to `build/Plugins.targets`).
 
 ## How it works
 
@@ -68,4 +77,4 @@ that fails to load is logged and skipped rather than crashing the server.
 instead of the plugin folder, so the plugin's types and the host's contract
 types have the same identity. It then finds `IGameModePlugin` implementations,
 instantiates them, and collects their registrations into the `ModeCatalog`
-alongside the built-in modes and the JSON board definitions.
+alongside the JSON board definitions.

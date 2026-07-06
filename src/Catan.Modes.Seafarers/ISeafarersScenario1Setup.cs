@@ -1,4 +1,7 @@
-﻿namespace Catan.SeafarersScenario1;
+using Catan.Board;
+using Catan.Geometry;
+
+namespace Catan.SeafarersScenario1;
 
 public interface ISeafarersScenario1Setup
 {

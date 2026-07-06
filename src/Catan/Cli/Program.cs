@@ -11,16 +11,24 @@ internal static class Program
     {
         CompositionRoot compositionRoot = new();
 
-        List<IGameMode> gameModes = [compositionRoot.StandardBoard, compositionRoot.SeafarersScenario1Board];
-        gameModes.AddRange(LoadFileModes(compositionRoot));
+        var catalog = new ModeCatalog(
+            Path.Combine(AppContext.BaseDirectory, "modes"),
+            Path.Combine(AppContext.BaseDirectory, "plugins"),
+            Console.WriteLine);
+
+        if (catalog.Modes.Count == 0)
+        {
+            Console.WriteLine("No game modes found. Build the mode plugins into the 'plugins' folder (see PLUGINS.md).");
+            return;
+        }
 
         Console.WriteLine("Pick a game mode:");
-        for (int i = 0; i < gameModes.Count; i++)
-            Console.WriteLine($"({i}) {gameModes[i]}");
+        for (int i = 0; i < catalog.Modes.Count; i++)
+            Console.WriteLine($"({i}) {catalog.Modes[i].Name}");
 
-        IGameMode gameMode = gameModes[UI.AskUserForInt(min: 0, max: gameModes.Count - 1)];
+        var registration = catalog.Modes[UI.AskUserForInt(min: 0, max: catalog.Modes.Count - 1)];
 
-        var playerCount = UI.AskUserForInt("How many players?", min: gameMode.MinPlayerCount, max: gameMode.MaxPlayerCount);
+        var playerCount = UI.AskUserForInt("How many players?", min: registration.MinPlayers, max: registration.MaxPlayers);
 
         List<PlayerId> players = [];
         for (int i = 0; i < playerCount; i++)
@@ -29,6 +37,13 @@ internal static class Program
             players.Add(player);
         }
 
+        var gameMode = registration.Build(
+            compositionRoot.BoardService,
+            compositionRoot.NumberTokenService,
+            compositionRoot.HarbourService,
+            compositionRoot.Robber,
+            compositionRoot.Pirate,
+            compositionRoot.Shuffler);
         gameMode.Start(players);
 
         var html = HtmlBoardRenderer.ToHtml(compositionRoot.BoardService, compositionRoot.NumberTokenService, compositionRoot.HarbourService, compositionRoot.Robber, compositionRoot.Pirate);
@@ -38,29 +53,6 @@ internal static class Program
         Console.WriteLine();
         Console.WriteLine($"Board written to {path} — opening in your browser...");
         OpenInBrowser(path);
-    }
-
-    private static IEnumerable<IGameMode> LoadFileModes(CompositionRoot compositionRoot)
-    {
-        var directory = Path.Combine(AppContext.BaseDirectory, "modes");
-        if (!Directory.Exists(directory))
-            yield break;
-
-        foreach (var path in Directory.EnumerateFiles(directory, "*.json").OrderBy(p => p, StringComparer.OrdinalIgnoreCase))
-        {
-            DataDrivenGameMode? mode = null;
-            try
-            {
-                mode = compositionRoot.CreateMode(compositionRoot.BoardDefinitionLoader.Load(path));
-            }
-            catch (BoardDefinitionException ex)
-            {
-                Console.WriteLine($"Skipping mode '{Path.GetFileName(path)}': {ex.Message}");
-            }
-
-            if (mode is not null)
-                yield return mode;
-        }
     }
 
     private static void OpenInBrowser(string path)

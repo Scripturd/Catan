@@ -15,4 +15,6 @@
     <None Include="..\Catan\modes\**\*.json" Link="modes\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <Import Project="..\..\build\Plugins.targets" />
+
 </Project>

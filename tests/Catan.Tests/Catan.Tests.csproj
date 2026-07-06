@@ -22,6 +22,8 @@
     <ProjectReference Include="..\..\src\Catan\Catan.csproj" />
     <ProjectReference Include="..\..\src\Catan.Server\Catan.Server.csproj" />
     <ProjectReference Include="..\..\src\Catan.Modes.Mini\Catan.Modes.Mini.csproj" />
+    <ProjectReference Include="..\..\src\Catan.Modes.Standard\Catan.Modes.Standard.csproj" />
+    <ProjectReference Include="..\..\src\Catan.Modes.Seafarers\Catan.Modes.Seafarers.csproj" />
   </ItemGroup>
 
   <ItemGroup>

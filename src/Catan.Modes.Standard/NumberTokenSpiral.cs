@@ -1,4 +1,6 @@
+using Catan.Board;
 using Catan.Economy;
+using Catan.Geometry;
 
 namespace Catan.Standard;
 
@@ -49,7 +51,7 @@ public class NumberTokenSpiral
 
     private static IEnumerable<Hex> SpiralAnticlockwiseFromHex(Hex outerCorner)
     {
-        int outerRadius = HexGeometry.HexDistance(outerCorner);
+        int outerRadius = Distance(outerCorner);
         int startSide = Array.FindIndex(_anticlockwiseDirections, direction => direction * outerRadius == outerCorner);
 
         return Enumerable
@@ -73,4 +75,7 @@ public class NumberTokenSpiral
             .Range(0, radius)
             .Select(stepsFromCorner => corner + stepAlongSide * stepsFromCorner);
     }
+
+    private static int Distance(Hex hex) =>
+        Math.Max(Math.Max(Math.Abs(hex.Q), Math.Abs(hex.R)), Math.Abs(hex.S));
 }

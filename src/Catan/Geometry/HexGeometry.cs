@@ -118,27 +118,4 @@ internal static class HexGeometry
 
         throw new ArgumentException($"Vertex {vertex} is not an endpoint of edge {edge}.", nameof(vertex));
     }
-
-    public static IReadOnlyList<Edge> SelectNonAdjacentEdges(IReadOnlyList<Edge> candidates, int count)
-    {
-        var selected = new List<Edge>();
-        var takenVertices = new HashSet<Vertex>();
-
-        foreach (var edge in candidates)
-        {
-            var (a, b) = EndpointsOf(edge);
-            if (takenVertices.Contains(a) || takenVertices.Contains(b))
-                continue;
-
-            selected.Add(edge);
-            takenVertices.Add(a);
-            takenVertices.Add(b);
-
-            if (selected.Count == count)
-                return selected;
-        }
-
-        throw new InvalidOperationException(
-            $"Could not select {count} non-adjacent edges; only {selected.Count} of {candidates.Count} candidates are mutually non-adjacent.");
-    }
 }

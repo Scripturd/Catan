@@ -1,5 +1,6 @@
 using Catan.Game;
 using Catan.Game.UseCases;
+using Catan.Modding;
 using Catan.Pieces;
 using Catan.Players;
 using Catan.SeafarersScenario1;
@@ -18,6 +19,8 @@ public sealed class CompositionRoot
     public StandardGame StandardBoard { get; }
 
     public SeafarersScenario1Game SeafarersScenario1Board { get; }
+
+    public BoardDefinitionLoader BoardDefinitionLoader { get; } = new();
 
     public SettlementRegistry Settlements { get; }
     public CityRegistry Cities { get; }
@@ -64,6 +67,9 @@ public sealed class CompositionRoot
         PlaceStartingRoad = new PlaceStartingRoadUseCase(PlacementRules, Roads);
         GrantStartingResources = new GrantStartingResourcesUseCase(BoardService, Settlements, Resources);
     }
+
+    public DataDrivenGameMode CreateMode(BoardDefinition definition) =>
+        new(definition, BoardService, NumberTokenService, HarbourService, Robber, Pirate, Shuffler);
 
     public SetupPhase NewSetupPhase(IReadOnlyList<PlayerId> players) =>
         new(players, PlaceStartingSettlement, PlaceStartingRoad, GrantStartingResources);

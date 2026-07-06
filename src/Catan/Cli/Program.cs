@@ -1,4 +1,5 @@
 using Catan.Game;
+using Catan.Modding;
 using Catan.Players;
 using System.Diagnostics;
 
@@ -11,12 +12,13 @@ internal static class Program
         CompositionRoot compositionRoot = new();
 
         List<IGameMode> gameModes = [compositionRoot.StandardBoard, compositionRoot.SeafarersScenario1Board];
+        gameModes.AddRange(LoadFileModes(compositionRoot));
 
         Console.WriteLine("Pick a game mode:");
         for (int i = 0; i < gameModes.Count; i++)
             Console.WriteLine($"({i}) {gameModes[i]}");
 
-        IGameMode gameMode = gameModes[UI.AskUserForInt(min: 0, max: 1)];
+        IGameMode gameMode = gameModes[UI.AskUserForInt(min: 0, max: gameModes.Count - 1)];
 
         var playerCount = UI.AskUserForInt("How many players?", min: gameMode.MinPlayerCount, max: gameMode.MaxPlayerCount);
 
@@ -36,6 +38,29 @@ internal static class Program
         Console.WriteLine();
         Console.WriteLine($"Board written to {path} — opening in your browser...");
         OpenInBrowser(path);
+    }
+
+    private static IEnumerable<IGameMode> LoadFileModes(CompositionRoot compositionRoot)
+    {
+        var directory = Path.Combine(AppContext.BaseDirectory, "modes");
+        if (!Directory.Exists(directory))
+            yield break;
+
+        foreach (var path in Directory.EnumerateFiles(directory, "*.json").OrderBy(p => p, StringComparer.OrdinalIgnoreCase))
+        {
+            DataDrivenGameMode? mode = null;
+            try
+            {
+                mode = compositionRoot.CreateMode(compositionRoot.BoardDefinitionLoader.Load(path));
+            }
+            catch (BoardDefinitionException ex)
+            {
+                Console.WriteLine($"Skipping mode '{Path.GetFileName(path)}': {ex.Message}");
+            }
+
+            if (mode is not null)
+                yield return mode;
+        }
     }
 
     private static void OpenInBrowser(string path)

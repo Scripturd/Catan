@@ -17,7 +17,13 @@ builder.Services
     .AddJsonProtocol(options => options.PayloadSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase);
 
 builder.Services.AddSingleton<GameRegistry>();
-builder.Services.AddSingleton(_ => new ModeCatalog(Path.Combine(AppContext.BaseDirectory, "modes")));
+builder.Services.AddSingleton(sp =>
+{
+    var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger("Plugins");
+    var pluginModes = new PluginLoader(message => logger.LogInformation("{Message}", message))
+        .Load(Path.Combine(AppContext.BaseDirectory, "plugins"));
+    return new ModeCatalog(Path.Combine(AppContext.BaseDirectory, "modes"), pluginModes);
+});
 
 var app = builder.Build();
 

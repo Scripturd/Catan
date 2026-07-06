@@ -12,11 +12,11 @@ public sealed class ServerGame
     private readonly List<LobbyPlayer> _players = [];
 
     public string Id { get; }
-    public ModeDescriptor Mode { get; }
+    public GameModeRegistration Mode { get; }
     public string HostConnectionId { get; }
     public GameSession? Session { get; private set; }
 
-    public ServerGame(string id, ModeDescriptor mode, string hostConnectionId)
+    public ServerGame(string id, GameModeRegistration mode, string hostConnectionId)
     {
         Id = id;
         Mode = mode;

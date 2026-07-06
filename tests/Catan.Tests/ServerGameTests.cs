@@ -7,10 +7,10 @@ namespace Catan.Tests;
 
 public sealed class ServerGameTests
 {
-    private static ModeDescriptor StandardMode()
+    private static GameModeRegistration StandardMode()
     {
         var definition = new BoardDefinitionLoader().Load(Path.Combine(AppContext.BaseDirectory, "modes", "standard.json"));
-        return new ModeDescriptor(definition.Name, definition.MinPlayers, definition.MaxPlayers,
+        return new GameModeRegistration(definition.Name, definition.MinPlayers, definition.MaxPlayers,
             (board, tokens, harbours, robber, pirate, shuffler) =>
                 new DataDrivenGameMode(definition, board, tokens, harbours, robber, pirate, shuffler));
     }

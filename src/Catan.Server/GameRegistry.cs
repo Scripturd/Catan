@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using Catan.Game;
 
 namespace Catan.Server;
 
@@ -6,7 +7,7 @@ public sealed class GameRegistry
 {
     private readonly ConcurrentDictionary<string, ServerGame> _games = new(StringComparer.OrdinalIgnoreCase);
 
-    public ServerGame Create(ModeDescriptor mode, string hostConnectionId)
+    public ServerGame Create(GameModeRegistration mode, string hostConnectionId)
     {
         var id = NewId();
         var game = new ServerGame(id, mode, hostConnectionId);

@@ -117,6 +117,22 @@ public sealed class GameSessionTests
         Assert.Equal(Players.Length * 2, session.Settlements.All.Count);
     }
 
+    [Fact]
+    public void A_plugin_mode_builds_its_custom_board_and_accepts_a_placement()
+    {
+        PlayerId[] two = [new(0), new(1)];
+        var session = new GameSession(
+            (board, tokens, harbours, robber, pirate, shuffler) => new Catan.Modes.Mini.MiniGame(board, tokens, robber),
+            two, new Random(1));
+
+        Assert.Equal(7, session.Board.Hexes.Count);
+        Assert.Equal(two[0], session.CurrentPlayer);
+
+        var (settlement, road) = FirstLegalMove(session);
+        Assert.True(session.PlaceStartingSettlementAndRoad(two[0], settlement, road).Success);
+        Assert.Equal(two[1], session.CurrentPlayer);
+    }
+
     private static void PlayFullSetup(GameSession session)
     {
         while (!session.SetupComplete)

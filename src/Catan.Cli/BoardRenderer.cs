@@ -1,44 +1,152 @@
+using Catan.Economy;
+using Catan.Game;
+using Catan.Pieces;
+using System.Globalization;
+using System.Text;
+
 namespace Catan.Cli;
 
-internal static class BoardRenderer
+internal abstract class BoardRenderer
 {
-    public static string ToText(BoardService grid, NumberTokenService numbers)
-    {
-        int minRow = grid.Hexes.Min(h => h.R);
-        int minSlot = grid.Hexes.Min(h => h.Q * 2 + h.R);
-        int maxSlot = grid.Hexes.Max(h => h.Q * 2 + h.R);
-        int width = (maxSlot - minSlot) * 3 + 6;
+    protected const double Size = 60;
+    protected const double Margin = 70;
 
-        var lines = new Dictionary<int, char[]>();
+    public string ToHtml(BoardService grid, NumberTokenService numbers, HarbourService harbours, Robber robber)
+    {
+        var centres = grid.Hexes.ToDictionary(h => h, HexCentre);
+
+        double minX = centres.Values.Min(c => c.X) - Size - Margin;
+        double minY = centres.Values.Min(c => c.Y) - Size - Margin;
+        double maxX = centres.Values.Max(c => c.X) + Size + Margin;
+        double maxY = centres.Values.Max(c => c.Y) + Size + Margin;
+        double width = maxX - minX;
+        double height = maxY - minY;
+
+        var svg = new StringBuilder();
+        svg.Append(F(
+            "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"{0} {1} {2} {3}\" width=\"{2}\" height=\"{3}\">",
+            minX, minY, width, height));
+
         foreach (var hex in grid.Hexes)
         {
-            int line = hex.R - minRow;
-            int col = (hex.Q * 2 + hex.R - minSlot) * 3;
-            if (!lines.TryGetValue(line, out var chars))
-            {
-                chars = new char[width];
-                Array.Fill(chars, ' ');
-                lines[line] = chars;
-            }
+            var (cx, cy) = centres[hex];
+            var terrain = grid.TerrainAt(hex);
+            svg.Append(Hexagon(cx, cy, Fill(terrain)));
 
-            var label = Label(hex, grid, numbers);
-            for (int i = 0; i < label.Length && col + i < width; i++)
-                chars[col + i] = label[i];
+            if (!terrain.IsLand)
+                continue;
+
+            var token = numbers.At(hex);
+            if (token.HasValue)
+                svg.Append(Token(cx, cy, token.Value));
         }
 
-        return string.Join("\n", lines.OrderBy(l => l.Key).Select(l => new string(l.Value).TrimEnd()));
+        foreach (var (edge, harbour) in harbours.All)
+            svg.Append(HarbourMarker(grid, edge, harbour));
+
+        if (robber.IsPlaced && centres.TryGetValue(robber.Hex, out var robberCentre))
+            svg.Append(RobberPawn(robberCentre.X, robberCentre.Y));
+
+        svg.Append("</svg>");
+
+        return "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n" +
+            "<title>Catan Board</title>\n<style>\n" +
+            "  body { margin: 0; background: #1d4e6f; display: grid; place-items: center;" +
+            " min-height: 100vh; font-family: system-ui, sans-serif; }\n" +
+            "  svg { max-width: 100%; height: auto; }\n</style>\n</head>\n<body>" +
+            svg + "</body>\n</html>";
     }
 
-    private static string Label(Hex hex, BoardService grid, NumberTokenService numbers)
+    protected virtual string Fill(TerrainType terrain) => terrain.Color;
+
+    protected virtual string Hexagon(double cx, double cy, string fill)
     {
-        var terrain = grid.TerrainAt(hex);
-        if (terrain == TerrainType.Sea)
-            return "~";
+        var points = new StringBuilder();
+        for (int i = 0; i < 6; i++)
+        {
+            double angle = Math.PI / 180.0 * (60 * i - 30);
+            double px = cx + Size * Math.Cos(angle);
+            double py = cy + Size * Math.Sin(angle);
+            if (i > 0)
+                points.Append(' ');
+            points.Append(F("{0},{1}", px, py));
+        }
 
-        var token = numbers.At(hex);
-        return Abbrev(terrain) + (token.HasValue ? token.Value.Number.ToString() : "");
+        return F(
+            "<polygon points=\"{0}\" fill=\"{1}\" stroke=\"#0d2c40\" stroke-width=\"2\"/>",
+            points.ToString(), fill);
     }
 
-    private static string Abbrev(TerrainType terrain) =>
-        terrain.Name.Length >= 2 ? terrain.Name[..2] : terrain.Name;
+    protected virtual string Token(double cx, double cy, NumberToken token)
+    {
+        string colour = token.Number is 6 or 8 ? "#b8312f" : "#1a1a1a";
+        var pips = new string('•', token.Pips);
+        return F(
+            "<circle cx=\"{0}\" cy=\"{1}\" r=\"22\" fill=\"#f1e3c0\" stroke=\"#0d2c40\" stroke-width=\"1.5\"/>" +
+            "<text x=\"{0}\" y=\"{2}\" text-anchor=\"middle\" font-size=\"22\" font-weight=\"700\" fill=\"{3}\">{4}</text>" +
+            "<text x=\"{0}\" y=\"{5}\" text-anchor=\"middle\" font-size=\"11\" fill=\"{3}\">{6}</text>",
+            cx, cy, cy + 4, colour, token.Number, cy + 18, pips);
+    }
+
+    protected virtual string RobberPawn(double cx, double cy)
+    {
+        double neckY = cy - 10;
+        double shoulderY = cy - 4;
+        double waistY = cy + 2;
+        double hipY = cy + 8;
+        double baseY = cy + 16;
+
+        string body = F(
+            "<path d=\"M {0},{5} C {1},{6} {2},{7} {3},{8} L {4},{9} L {10},{9} L {11},{8} C {12},{7} {13},{6} {14},{5} Z\"" +
+            " fill=\"#2b2b2b\" stroke=\"#f1e3c0\" stroke-width=\"1.5\"/>",
+            cx - 5, cx - 9, cx - 8, cx - 11, cx - 14,
+            neckY, shoulderY, waistY, hipY, baseY,
+            cx + 14, cx + 11, cx + 8, cx + 9, cx + 5);
+
+        return F(
+            "<ellipse cx=\"{0}\" cy=\"{1}\" rx=\"15\" ry=\"4\" fill=\"#2b2b2b\" stroke=\"#f1e3c0\" stroke-width=\"1.5\"/>",
+            cx, baseY) +
+            body +
+            F("<circle cx=\"{0}\" cy=\"{1}\" r=\"8\" fill=\"#2b2b2b\" stroke=\"#f1e3c0\" stroke-width=\"1.5\"/>",
+                cx, cy - 20);
+    }
+
+    protected virtual string HarbourMarker(BoardService grid, Edge edge, Harbour harbour)
+    {
+        var (a, b) = grid.EndpointsOf(edge);
+        var (ax, ay) = VertexPixel(a);
+        var (bx, by) = VertexPixel(b);
+        double mx = (ax + bx) / 2;
+        double my = (ay + by) / 2;
+
+        var landHex = grid.HexesOf(edge).First(h => grid.Hexes.Contains(h) && grid.TerrainAt(h).IsLand);
+        var (lx, ly) = HexCentre(landHex);
+        double dx = mx - lx;
+        double dy = my - ly;
+        double length = Math.Sqrt(dx * dx + dy * dy);
+
+        double hx = mx + dx / length * Size * 0.55;
+        double hy = my + dy / length * Size * 0.55;
+
+        return F(
+            "<line x1=\"{0}\" y1=\"{1}\" x2=\"{4}\" y2=\"{5}\" stroke=\"#7a5230\" stroke-width=\"3\"/>" +
+            "<line x1=\"{2}\" y1=\"{3}\" x2=\"{4}\" y2=\"{5}\" stroke=\"#7a5230\" stroke-width=\"3\"/>" +
+            "<circle cx=\"{4}\" cy=\"{5}\" r=\"16\" fill=\"{6}\" stroke=\"#0d2c40\" stroke-width=\"1.5\"/>" +
+            "<text x=\"{4}\" y=\"{7}\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"700\" fill=\"#1a1a1a\">{8}:1</text>",
+            ax, ay, bx, by, hx, hy, HarbourFill(harbour), hy + 4, harbour.Ratio);
+    }
+
+    protected static (double X, double Y) VertexPixel(Vertex vertex)
+    {
+        var (cx, cy) = HexCentre(new Hex(vertex.Q, vertex.R));
+        return (cx, cy + (vertex.Corner == VertexCorner.Top ? Size : -Size));
+    }
+
+    protected static (double X, double Y) HexCentre(Hex hex) =>
+        (Size * Math.Sqrt(3) * (hex.Q + hex.R / 2.0), Size * 1.5 * hex.R);
+
+    protected static string HarbourFill(Harbour harbour) => harbour.Resource?.Color ?? "#e8dcc0";
+
+    protected static string F(string format, params object[] args) =>
+        string.Format(CultureInfo.InvariantCulture, format, args);
 }

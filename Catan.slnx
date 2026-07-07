@@ -1,13 +1,19 @@
 <Solution>
   <Folder Name="/src/">
-    <Project Path="src/Catan/Catan.csproj" />
+    <Project Path="src/Catan.Core/Catan.Core.csproj" />
     <Project Path="src/Catan.Cli/Catan.Cli.csproj" />
     <Project Path="src/Catan.Server/Catan.Server.csproj" />
   </Folder>
-  <Folder Name="/src/Modes/">
-    <Project Path="src/Catan.Modes.Standard/Catan.Modes.Standard.csproj" />
-    <Project Path="src/Catan.Modes.Seafarers/Catan.Modes.Seafarers.csproj" />
-    <Project Path="src/Catan.Modes.Mini/Catan.Modes.Mini.csproj" />
+  <Folder Name="/src/Standard/">
+    <Project Path="src/Standard/Catan.Standard/Catan.Standard.csproj" />
+    <Project Path="src/Standard/Catan.Standard.Core/Catan.Standard.Core.csproj" />
+    <Project Path="src/Standard/Catan.Standard.Scenario1/Catan.Standard.Scenario1.csproj" />
+    <Project Path="src/Standard/Catan.Standard.Scenario2/Catan.Standard.Scenario2.csproj" />
+  </Folder>
+  <Folder Name="/src/Seafarers/">
+    <Project Path="src/Seafarers/Catan.Seafarers/Catan.Seafarers.csproj" />
+    <Project Path="src/Seafarers/Catan.Seafarers.Core/Catan.Seafarers.Core.csproj" />
+    <Project Path="src/Seafarers/Catan.Seafarers.Scenario1/Catan.Seafarers.Scenario1.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Catan.Tests/Catan.Tests.csproj" />

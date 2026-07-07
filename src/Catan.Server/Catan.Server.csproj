@@ -8,10 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Catan\Catan.csproj" />
-    <ProjectReference Include="..\Catan.Modes.Standard\Catan.Modes.Standard.csproj" />
-    <ProjectReference Include="..\Catan.Modes.Seafarers\Catan.Modes.Seafarers.csproj" />
-    <ProjectReference Include="..\Catan.Modes.Mini\Catan.Modes.Mini.csproj" />
+    <ProjectReference Include="..\Catan.Core\Catan.Core.csproj" />
+    <ProjectReference Include="..\Standard\Catan.Standard\Catan.Standard.csproj" />
+    <ProjectReference Include="..\Seafarers\Catan.Seafarers\Catan.Seafarers.csproj" />
   </ItemGroup>
 
 </Project>

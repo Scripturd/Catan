@@ -19,11 +19,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Catan\Catan.csproj" />
+    <ProjectReference Include="..\..\src\Catan.Core\Catan.Core.csproj" />
     <ProjectReference Include="..\..\src\Catan.Server\Catan.Server.csproj" />
-    <ProjectReference Include="..\..\src\Catan.Modes.Mini\Catan.Modes.Mini.csproj" />
-    <ProjectReference Include="..\..\src\Catan.Modes.Standard\Catan.Modes.Standard.csproj" />
-    <ProjectReference Include="..\..\src\Catan.Modes.Seafarers\Catan.Modes.Seafarers.csproj" />
+    <ProjectReference Include="..\..\src\Standard\Catan.Standard.Scenario2\Catan.Standard.Scenario2.csproj" />
+    <ProjectReference Include="..\..\src\Standard\Catan.Standard.Scenario1\Catan.Standard.Scenario1.csproj" />
+    <ProjectReference Include="..\..\src\Seafarers\Catan.Seafarers.Core\Catan.Seafarers.Core.csproj" />
+    <ProjectReference Include="..\..\src\Seafarers\Catan.Seafarers.Scenario1\Catan.Seafarers.Scenario1.csproj" />
   </ItemGroup>
 
 </Project>

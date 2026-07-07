@@ -1,13 +1,13 @@
 using Catan.Game;
 using Catan.Geometry;
 using Catan.Server;
-using Catan.Standard;
+using Catan.Standard.Scenario1;
 
 namespace Catan.Tests;
 
 public sealed class ServerGameTests
 {
-    private static ServerGame NewGame() => new("ABCDE", new StandardGame(), "c0");
+    private static ServerGame NewGame() => new("ABCDE", new Scenario1Game(), "c0");
 
     [Fact]
     public void Adding_players_assigns_sequential_ids_and_a_duplicate_connection_is_idempotent()

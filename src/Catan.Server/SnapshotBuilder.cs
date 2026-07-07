@@ -108,15 +108,7 @@ public static class SnapshotBuilder
 
         PointView? robber = session.Robber.IsPlaced ? ToPoint(BoardLayout.HexCentre(session.Robber.Hex)) : null;
 
-        var markers = session.Markers.All
-            .Select(m =>
-            {
-                var (x, y) = BoardLayout.HexCentre(m.Hex);
-                return new MarkerView(m.Kind, x, y, m.Color, m.Glyph);
-            })
-            .ToList();
-
-        return new BoardView(minX, minY, maxX - minX, maxY - minY, hexes, harbours, robber, markers, vertices, edges, settlements, roads);
+        return new BoardView(minX, minY, maxX - minX, maxY - minY, hexes, harbours, robber, vertices, edges, settlements, roads);
     }
 
     private static PointView ToPoint((double X, double Y) p) => new(p.X, p.Y);

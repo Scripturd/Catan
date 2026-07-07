@@ -3,7 +3,7 @@
 A game mode lays out the board and owns any custom rules. Every mode is a C#
 class implementing `Catan.Game.IGameMode`, grouped into an `IExpansionPack`, and
 living in its own project. The three shipped modes work this way:
-`Catan.Modes.Standard`, `Catan.Modes.Seafarers`, and `Catan.Modes.Mini`. Each is
+`Catan.Standard`, `Catan.Seafarers`, and `Catan.Mini`. Each is
 an ordinary project referenced by the hosts (CLI + server) and registered
 explicitly.
 
@@ -41,25 +41,25 @@ public interface IGameMode
 
 public sealed record GameServices(
     BoardService Board, NumberTokenService Tokens, HarbourService Harbours,
-    Robber Robber, MarkerRegistry Markers, Shuffler Shuffler);
+    Robber Robber, Shuffler Shuffler);
 ```
 
 Because services arrive through `Start` (not the constructor), a mode holds no
 per-game state and one instance is reused across games — keep `Start` writing
 only to the passed `services`.
 
-## Writing one (worked example: `Catan.Modes.Mini`)
+## Writing one (worked example: `Catan.Mini`)
 
 1. Create a class library targeting the same framework as the hosts and
-   reference the core `Catan` project:
+   reference the core `Catan.Core` project:
 
    ```xml
-   <ProjectReference Include="..\Catan\Catan.csproj" />
+   <ProjectReference Include="..\Catan.Core\Catan.Core.csproj" />
    ```
 
-2. Implement your `IGameMode` (see [MiniGame.cs](src/Catan.Modes.Mini/MiniGame.cs))
+2. Implement your `IGameMode` (see [MiniGame.cs](src/Catan.Mini/MiniGame.cs))
    and an `IExpansionPack` that exposes it (see
-   [MiniPack.cs](src/Catan.Modes.Mini/MiniPack.cs)).
+   [MiniPack.cs](src/Catan.Mini/MiniPack.cs)).
 
 3. Add the project to the solution ([Catan.slnx](Catan.slnx)), reference it from
    the hosts that should offer it — [Catan.Cli](src/Catan.Cli/Catan.Cli.csproj)

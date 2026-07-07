@@ -166,13 +166,6 @@ function drawBoard(interactive) {
 
   if (b.robber) svg.appendChild(el("circle", { cx: b.robber.x, cy: b.robber.y, r: 12, fill: "#2b2b2b", stroke: "#f1e3c0", "stroke-width": 2 }));
 
-  for (const m of b.markers) {
-    svg.appendChild(el("circle", { cx: m.x, cy: m.y, r: 13, fill: m.color, stroke: "#f1e3c0", "stroke-width": 2 }));
-    const g = el("text", { x: m.x, y: m.y + 5, "text-anchor": "middle", "font-size": 16, fill: "#f1e3c0" });
-    g.textContent = m.glyph;
-    svg.appendChild(g);
-  }
-
   const occupied = new Set(b.settlements.map((s) => key3(s.q, s.r, s.corner)));
 
   if (interactive && selectedVertex) {

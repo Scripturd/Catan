@@ -43,31 +43,31 @@ public sealed class ServerGame
         }
     }
 
-    public MoveResult Start()
+    public ValidationResult Start()
     {
         lock (_gate)
         {
             if (Session is not null)
-                return MoveResult.Rejected("The game has already started.");
+                return ValidationResult.Rejected("The game has already started.");
             if (_players.Count < Mode.MinPlayerCount)
-                return MoveResult.Rejected($"At least {Mode.MinPlayerCount} players are needed to start.");
+                return ValidationResult.Rejected($"At least {Mode.MinPlayerCount} players are needed to start.");
 
             var ids = _players.Select(p => p.Id).ToList();
             Session = new GameSession(Mode, ids, Random.Shared);
-            return MoveResult.Accepted();
+            return ValidationResult.Accepted();
         }
     }
 
-    public MoveResult PlaceStarting(string connectionId, Vertex settlement, Edge road)
+    public ValidationResult PlaceStarting(string connectionId, Vertex settlement, Edge road)
     {
         lock (_gate)
         {
             if (Session is null)
-                return MoveResult.Rejected("The game has not started yet.");
+                return ValidationResult.Rejected("The game has not started yet.");
 
             var player = _players.FirstOrDefault(p => p.ConnectionId == connectionId);
             if (player is null)
-                return MoveResult.Rejected("You are not a player in this game.");
+                return ValidationResult.Rejected("You are not a player in this game.");
 
             return Session.PlaceStartingSettlementAndRoad(player.Id, settlement, road);
         }

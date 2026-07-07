@@ -1,7 +1,9 @@
+using Catan;
 using Catan.Game;
 using Catan.Game.UseCases;
 using Catan.Pieces;
 using Catan.Players;
+using Catan.Seafarers;
 
 namespace Catan.Cli;
 
@@ -18,8 +20,8 @@ public sealed class CompositionRoot
     public RoadRegistry Roads { get; }
     public ResourceRegistry Resources { get; }
     public Robber Robber { get; }
-    public MarkerRegistry Markers { get; }
-    public PlacementRules PlacementRules { get; }
+    public IPlayerNotifier PlayerNotifier { get; }
+    public StandardPlacementRules PlacementRules { get; }
 
     public ProduceResourcesUseCase ProduceResources { get; }
     public BuildSettlementUseCase BuildSettlement { get; }
@@ -39,14 +41,14 @@ public sealed class CompositionRoot
         Roads = new RoadRegistry();
         Resources = new ResourceRegistry();
         Robber = new Robber();
-        Markers = new MarkerRegistry();
+        PlayerNotifier = new ConsolePlayerNotifier();
 
         Shuffler = new Shuffler(Random);
 
-        PlacementRules = new PlacementRules(Settlements, Cities, Roads, BoardService);
+        PlacementRules = new StandardPlacementRules(Settlements, Cities, Roads, BoardService);
 
         ProduceResources = new ProduceResourcesUseCase(BoardService, NumberTokenService, Settlements, Cities, Resources, Robber);
-        BuildSettlement = new BuildSettlementUseCase(PlacementRules, Settlements, Resources);
+        BuildSettlement = new BuildSettlementUseCase(PlacementRules, PlayerNotifier, Settlements, Resources);
         BuildRoad = new BuildRoadUseCase(PlacementRules, Roads, Resources);
         PlaceStartingSettlement = new PlaceStartingSettlementUseCase(PlacementRules, Settlements);
         PlaceStartingRoad = new PlaceStartingRoadUseCase(PlacementRules, Roads);

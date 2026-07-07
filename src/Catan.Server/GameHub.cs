@@ -47,7 +47,7 @@ public sealed class GameHub : Hub
         var game = Require(gameId);
         var result = game.Start();
         if (!result.Success)
-            throw new HubException(result.Error!);
+            throw new HubException(result.Reason!);
 
         await Broadcast(game);
     }
@@ -70,7 +70,7 @@ public sealed class GameHub : Hub
 
         var result = game.PlaceStarting(Context.ConnectionId, vertex, edge);
         if (!result.Success)
-            throw new HubException(result.Error!);
+            throw new HubException(result.Reason!);
 
         await Broadcast(game);
     }

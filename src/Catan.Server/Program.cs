@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Catan.Game;
 using Catan.GameModes;
-using Catan.Modes.Mini;
+using Catan;
 using Catan.Seafarers;
 using Catan.Server;
 using Catan.Standard;
@@ -25,7 +25,7 @@ builder.Services.AddSingleton<GameRegistry>();
 builder.Services.AddSingleton(_ =>
 {
     IEnumerable<IGameMode> builtIns =
-        new IExpansionPack[] { new StandardPack(), new SeafarersPack(), new MiniPack() }
+        new IExpansionPack[] { new StandardPack(), new SeafarersPack() }
             .SelectMany(pack => pack.Modes);
     return new ModeCatalog(builtIns);
 });

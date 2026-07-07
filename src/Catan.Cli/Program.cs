@@ -1,7 +1,7 @@
 using Catan.Game;
 using Catan.GameModes;
-using Catan.Modes.Mini;
 using Catan.Players;
+using Catan;
 using Catan.Seafarers;
 using Catan.Standard;
 using System.Diagnostics;
@@ -14,11 +14,22 @@ internal static class Program
     {
         CompositionRoot compositionRoot = new();
 
-        IEnumerable<IGameMode> builtIns =
-            new IExpansionPack[] { new StandardPack(), new SeafarersPack(), new MiniPack() }
-                .SelectMany(pack => pack.Modes);
+        var families = new (IExpansionPack Pack, BoardRenderer Renderer)[]
+        {
+            (new StandardPack(), new StandardRenderer()),
+            (new SeafarersPack(), new SeafarersRenderer()),
+        };
 
-        var catalog = new ModeCatalog(builtIns);
+        List<IGameMode> modes = [];
+        Dictionary<IGameMode, BoardRenderer> rendererByMode = [];
+        foreach (var (pack, renderer) in families)
+            foreach (var mode in pack.Modes)
+            {
+                modes.Add(mode);
+                rendererByMode[mode] = renderer;
+            }
+
+        var catalog = new ModeCatalog(modes);
 
         Console.WriteLine("Pick a game mode:");
         for (int i = 0; i < catalog.Modes.Count; i++)
@@ -40,11 +51,10 @@ internal static class Program
             compositionRoot.NumberTokenService,
             compositionRoot.HarbourService,
             compositionRoot.Robber,
-            compositionRoot.Markers,
             compositionRoot.Shuffler);
         gameMode.Start(services, players);
 
-        var html = HtmlBoardRenderer.ToHtml(compositionRoot.BoardService, compositionRoot.NumberTokenService, compositionRoot.HarbourService, compositionRoot.Robber, compositionRoot.Markers);
+        var html = rendererByMode[gameMode].ToHtml(compositionRoot.BoardService, compositionRoot.NumberTokenService, compositionRoot.HarbourService, compositionRoot.Robber);
         var path = Path.Combine(Path.GetTempPath(), "catan-board.html");
         File.WriteAllText(path, html);
 

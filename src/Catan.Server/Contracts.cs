@@ -19,13 +19,10 @@ public sealed record BoardView(
     IReadOnlyList<HexView> Hexes,
     IReadOnlyList<HarbourView> Harbours,
     PointView? Robber,
-    IReadOnlyList<MarkerView> Markers,
     IReadOnlyList<VertexView> Vertices,
     IReadOnlyList<EdgeView> Edges,
     IReadOnlyList<BuildingView> Settlements,
     IReadOnlyList<RoadView> Roads);
-
-public sealed record MarkerView(string Kind, double X, double Y, string Color, string Glyph);
 
 public sealed record HexView(int Q, int R, string Terrain, string Color, int? Token, double X, double Y);
 

@@ -3,7 +3,6 @@ using Catan.Game;
 using Catan.Geometry;
 using Catan.Players;
 using Catan.Seafarers.Scenario1;
-using Catan.Standard;
 
 namespace Catan.Tests;
 
@@ -11,7 +10,7 @@ public sealed class GameSessionTests
 {
     private static readonly PlayerId[] Players = [new(0), new(1), new(2)];
 
-    private static GameSession NewSession() => new(new StandardGame(), Players, new Random(1));
+    private static GameSession NewSession() => new(new Catan.Standard.Scenario1.Scenario1Game(), Players, new Random(1));
 
     [Fact]
     public void A_new_session_starts_at_the_first_player_and_is_not_complete()
@@ -63,7 +62,7 @@ public sealed class GameSessionTests
         var result = session.PlaceStartingSettlementAndRoad(Players[1], neighbour, touchingRoad);
 
         Assert.False(result.Success);
-        Assert.Contains("next to", result.Error);
+        Assert.Contains("next to", result.Reason);
     }
 
     [Fact]
@@ -89,7 +88,7 @@ public sealed class GameSessionTests
     [Fact]
     public void The_builtin_standard_mode_plays_through_setup()
     {
-        var session = new GameSession(new StandardGame(), Players, new Random(1));
+        var session = new GameSession(new Catan.Standard.Scenario1.Scenario1Game(), Players, new Random(1));
 
         PlayFullSetup(session);
 
@@ -112,7 +111,7 @@ public sealed class GameSessionTests
     public void A_plugin_mode_builds_its_custom_board_and_accepts_a_placement()
     {
         PlayerId[] two = [new(0), new(1)];
-        var session = new GameSession(new Catan.Modes.Mini.MiniGame(), two, new Random(1));
+        var session = new GameSession(new Catan.Standard.Scenario2.Scenario2Game(), two, new Random(1));
 
         Assert.Equal(7, session.Board.Hexes.Count);
         Assert.Equal(two[0], session.CurrentPlayer);

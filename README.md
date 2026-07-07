@@ -5,12 +5,12 @@ and run from the command line or as a web server.
 
 ## Structure
 
-    src/Catan                 core rules & types (library)
+    src/Catan.Core            core rules & types (library)
     src/Catan.Cli             console runner
     src/Catan.Server          ASP.NET Core + SignalR multiplayer server
-    src/Catan.Modes.Standard  built-in game modes (each its own project,
-    src/Catan.Modes.Seafarers   referenced by the hosts — see GAME-MODES.md)
-    src/Catan.Modes.Mini
+    src/Catan.Standard        built-in game modes (each its own project,
+    src/Catan.Seafarers         referenced by the hosts — see GAME-MODES.md)
+    src/Catan.Mini
     tests/Catan.Tests         headless tests
 
 ## Build
